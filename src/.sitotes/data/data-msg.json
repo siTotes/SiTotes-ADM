@@ -1,0 +1,412 @@
+[
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "4653BFB7087C07B1655DB17B6AA07767"
+    },
+    "messageTimestamp": 1685325814,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "https://youtu.be/-tKVN2mAKRI",
+        "matchedText": "https://youtu.be/-tKVN2mAKRI",
+        "previewType": "NONE",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "FE44F31A07A0A5AD52CAAEC9E71F37C1"
+    },
+    "messageTimestamp": 1685325823,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "https://youtu.be/-tKVN2mAKRI",
+        "matchedText": "https://youtu.be/-tKVN2mAKRI",
+        "canonicalUrl": "https://www.youtube.com/watch?v=-tKVN2mAKRI",
+        "description": "DAOKO × 米津玄師『打上花火』MUSIC VIDEO──────▶NEW Single：Daoko 「燐光」＞https://daoko.jp/news/2936/▶NEXT Daoko LIVE ＞https://daoko.jp/live/──────DAOKO × 米津玄師『打上花火』配信中！▽iT...",
+        "title": "DAOKO × 米津玄師『打上花火』MUSIC VIDEO",
+        "previewType": "VIDEO",
+        "jpegThumbnail": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCABaAFoDASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAABgcDBQgEAAIJ/8QAPhAAAQMDAgIFCAcIAwEAAAAAAQIDBAAFEQYhEjEHE0FRYRQiMnGBkaGxIzNCkpTB0RUXNFJTVeHwCGJj8f/EABoBAAIDAQEAAAAAAAAAAAAAAAQFAgMGAQD/xAApEQACAgICAQQBAwUAAAAAAAABAgARAwQSITEFEyJBBjJRcWGBobHB/9oADAMBAAIRAxEAPwBz/u5sP9nt/wCGR+le/dzYf7Pb/wAMj9KPzy2FRAKVvyroEgzV0IvpPR/YGmypVptyUgZJMdAA+FA2oH9G21K2Ylot8mQgHJ8nQEj4b0zuki8R7Dp52TJ4VuqBSy2r0c9qiO3FZOl3ZUyW8+rKipWd+0n86l1UI1NYu3uP4lxd7hHlLPVW6Ayg8giMgfIVVBLSklJixsH/AMk/pUiIbvE0t/0VJ40pB3V3Z7hUhYUl0oPpAednsqNxsMKAdCRW4sRJAWIcQjuUwkg/CmdpGXpa6KTGulntzDqtg6mMjHtGKVmSpCVY83fB78V0MOqaWFpJBSa7chk1seQURNIo6O7AhCXU2u3uNqGxEdB9vKpkdHun1pyLRb/wyP0od6HdZmRw2i4LCkq+qUrsPdTKkKVHlcO4QTU1Xn19zObxb09u+1MEW+jqx9Yc2q34zy8nR+lT/u80/wD2m3/hkfpRLLdWWgpBCarzcXwcbbVcNcv2Irb1ZNc8WBhZXicDNQQ3etaz3VzahubNns0qdIUA2ygq3PM9goUijUdo4yKGX7iO/wCS92YX5HBbdy8gZcSD3nYfn7qAdG6NlP3CEp5shK4hmhShlOTkJz7hjxxQfqq9SL/qF+U+oqLjhI99aQ0oifbo+koiQ4+7MipD5VgJbZ4chIGM5A7c88+yOc8BGuO0QCc0PR8OzWF+8yIqVzVtkxmMZS35vmk95AHESe6gDS+n25se7XGaSGILJc35LcPopPt+VaVu0WO9BcRJYW60UlKkIznB2IwN/dS6kxNNXASNPW6Y5Dmk/wAI8FJBWM88jfYnAB8d6H5UO/uSxbBbzEHNhrjMs8WyFoKkJ7cZxn4H3VXF7hmhs8lJyPXTQ6XbA3Z5sPqyMKZSnn/KkJ+YJ9tKqVgvhQ9JopPsJOaJQ2LhQaxYhHpuYqHcmXEKKSlY5Vqny1mZbYT6lDLiEqPtG9ZGhkh4Y76e2mpDztoiIdK9kAJzRupg90k34mb/ACfYODApAuzUaLcdDzBCeHJG1UrlhkFxRD4wSeyvm2y5MFKesQFtgb77gVaftpk77e+p1lxE8OxM6MmltIpzfFhOeOuRD84pPCaW+u5Ny1zdUWG1+ZEQfpXPs+Kj4f720d6zvKLVYnHkKHWufRt79p7a4dMORLZYW1JQfKHh1rm26ieXwxUOJyd13GGtkGghcv19X/mZz13ZbTZtWw7TbOJSGOFLzy/ScWdyfActq1xDioaaaQ2OFttICQPlWK9dXFT+q5cwnzlvqUPDf/Na16NNQo1Jo+BOQQp3gDbwzuFpGD79j7aE3F+UfIHGBSxs/f8AeFdLKXoy02e6yr7cHXHXE4WDkhXEDkY358htTMPLbnVdKtsd+QmRNPW9VuhCtkIPfjv8TmgnUGr+pLDk4E/1maOkmXdJ2oEP3RJbLzXWNtfyIzhI93zoGfhux7hJbeG6m0LHqKcj50xulW4sz9ay3ULCmWyloKTuMJGDy8c0FXe6s3e7yZMVBQzhDaeLmeEYzRCE9CN1/SJ9WhAcmtJP2lgVqVfkMHS8FJS31qGkcIHPiwKy1YnA3PZUeSVZ+NadnQ1XO0x3YrPEktpUkpHLbNHawBYcjQmb/JMjriCIt3c7epLkXjBAWpOyDUaIEYISFIGQN96qG9QhDKkLjPmUgYLaU8zQs9cL2t5axHeAUonHCdqaYtTK9gmpiGdBRC3JteRLjOECOlpaENFTiyRzA/8AlX77oQw2oJwOAYHhijO7Pxg2OPhUsggduxoWgNpfnKZcSFttjKAfkapw5Qw5laqG+oYwoTWVrr/syFrJ1JvElKD6Lqx8TRr0S9JcnRTMlpyGZcN8g8PGU8KhncHB/wBxQvrSyylzblc2m8w0y1NKUn7Kjkge0A+40MRnVNK+vDfgM/lS/OA5M32tTYgD+01dpvpri3y4JiJt6opUDwrW7xjIGcHYYqfU2t0utqYiL8pkK2Q23uAfHFZntL6nHUpQ8FqzsBnPxpg2fUD1uY4FtKbUNitttPEfeKAyYCT8YZiTGnddy+tWnHFz3356gVJbJWDuEqUDsT3439opXpaEIOIJHmkqURyokvesZ8iOqHAaXHaVnjcWvKlZ55x30JyTxtFrjypfNR7TViY2QnkblnPkLqp3x3eBwKB7Mj4Vpjoh1bGuNhRBkOhMmOPNB+0n/BrKsB1QaSlfpIJQfyq3sN9k22T1sVwodaONu6rkAJpvEG28bZcRCfq+psuNIgF91SFMpdJ84nAJqczImf4hn74rJj2sZ0kk9apKzzIzvXCq+zCSS+7n1mn2L0ZM680ckfwZkjn2cHwyqoP8ia2U3GETiUQTjOe6gOdcRDuglNLwhBIPcRXPcdVNH6FlRV371WyIj9zZHAlSUr7hUtXTOKzm8GZrZ2vfKlFqoEaFlwVovVr1AEGBdQXEK5kLQpQ27lbk+6lRqjS0q3XQoZbU5HcVhpaR6Q7Pb4U3zoaRGuPkklfUvKX1sY4yVcXIAevbFFkeyXOW2YT0ViMtgguOEhxIIGcjsGPadq9nwaiqfl3NDq7W0ufkq/E/R/2JT9CvRe000mfcxl7tOM8H/UePeab9z0Np+4xSzIgIBI+tQSFj21yWyxGHbW213megJTklCkITntOOH51UXO5SLVJZbgaoacW6ogNyyhadu9Q3HupBlynI3FPEfqDfInuLvpJ6KzY4hn2yQp+LnC0rGFIHZuOfwpLX9pcRDbiN+BW57q05c9fspZNv1VFTGafCm/KmFdayoFJHMcufiazrelNSeubSpKkHIyDkUXpIuVGUjuWPmyoRy8SqZcSvDiTstO/rrjlvmLKS8PQV5qxVdbZhbdVHWdwdq75PC62Uq5Eb0ERxNGMw3JbEtYkzhKXG1bcwRVwL4Mbx2Ce08POgFLj0EkoPWNdo7RUwu7ONyoeyjNbfz6wIxNQMD2dLX2iDmWyI/NBTrfG1Qy3dHkLZJwCo7Z7M093r1aoUcqcdjtNJGTy2Hqr8/TPmdak+VSM5/qH9aInr5dv2CG/2pO6tRwU+ULwfZmmHrLnK4eZn0rUXGvfdmagvXSDa7gZTFutz9xcCiAthHnEY/mx5g7M7+rtpW6h6Xr+p9yBAjMW9ttWCGsLOfFRzk0sUXi5sWmUhm4zG0EHKUPqAOw7Aap9NTJKZi1pkPBYGQoLORvSEk+JoE4Ak1De7X3Ul2SX50ia+jnlRUUj8hQy7cn+LznVE+Jrrut7urjKEuXOcpJJyFSFkfOgm8PvLfUpbrijzyVE1AHuoUmW1uoTLuC1jClk+s18iYpAPCr39tCCXneEfSL+8a8HncfWr+8asVyhtTOs4YURLZ5KxN60civJx2b1Z+UDh50LF53P1i/vGvdc7j6xf3jXGYt2Z5X49AS+ZkhXEkkcSTwnxqBTLJUTuKokOuBxRC1Z9dS9c5/UX94166nPdvyJ//9k=",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "thumbnailDirectPath": "/v/t62.36144-24/27351249_211749705008811_1722827304495767479_n.enc?ccb=11-4&oh=01_AdR8YkXdX6erdLaU_awXsg09IE45BF0sgJHTXmMqD3YRYw&oe=649B7FF0",
+        "thumbnailSha256": "ZiAVq7/KMgJY6/rP2lgs4EKUo8B+yJFym6J+uOn52ig=",
+        "thumbnailEncSha256": "QhfG32NUMy+WKHR+A+pfrDL9F63ORsCD+lrYSDa6J7k=",
+        "mediaKey": "tOdAw6Rv5B86HntbnG+sAMVjavWAwJZDWuOcsRHwOT4=",
+        "mediaKeyTimestamp": "1685325821",
+        "thumbnailHeight": 576,
+        "thumbnailWidth": 1024,
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "FE44F31A07A0A5AD52CAAEC9E71F37C1"
+    },
+    "messageTimestamp": 1685325825,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "https://youtu.be/-tKVN2mAKRI",
+        "matchedText": "https://youtu.be/-tKVN2mAKRI",
+        "canonicalUrl": "https://www.youtube.com/watch?v=-tKVN2mAKRI",
+        "description": "DAOKO × 米津玄師『打上花火』MUSIC VIDEO──────▶NEW Single：Daoko 「燐光」＞https://daoko.jp/news/2936/▶NEXT Daoko LIVE ＞https://daoko.jp/live/──────DAOKO × 米津玄師『打上花火』配信中！▽iT...",
+        "title": "DAOKO × 米津玄師『打上花火』MUSIC VIDEO",
+        "previewType": "VIDEO",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "thumbnailDirectPath": "/v/t62.36144-24/27351249_211749705008811_1722827304495767479_n.enc?ccb=11-4&oh=01_AdR8YkXdX6erdLaU_awXsg09IE45BF0sgJHTXmMqD3YRYw&oe=649B7FF0",
+        "thumbnailSha256": "ZiAVq7/KMgJY6/rP2lgs4EKUo8B+yJFym6J+uOn52ig=",
+        "thumbnailEncSha256": "QhfG32NUMy+WKHR+A+pfrDL9F63ORsCD+lrYSDa6J7k=",
+        "mediaKey": "tOdAw6Rv5B86HntbnG+sAMVjavWAwJZDWuOcsRHwOT4=",
+        "mediaKeyTimestamp": "1685325821",
+        "thumbnailHeight": 576,
+        "thumbnailWidth": 1024,
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "2F29B14666A62C6370FBC11222741AF4"
+    },
+    "messageTimestamp": 1685325853,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "https://chat.whatsapp.com/DmISzdNHtheVGEvAgF6dIL4",
+        "matchedText": "https://chat.whatsapp.com/DmISzdNHtheVGEvAgF6dIL4",
+        "description": "Undangan Grup WhatsApp",
+        "title": "Undangan Grup WhatsApp",
+        "previewType": "NONE",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "thumbnailDirectPath": "/v/t62.36144-24/13782740_580566130597803_4423659815433011245_n.enc?ccb=11-4&oh=01_AdRMLSdc1pv3O6jsSJNiAH2MFt5XZZyxcZHG25hNg1pWSA&oe=649B71D8",
+        "thumbnailSha256": "iIyWbTkVSAlut6VW9RBGY751DPYiMT+T754sx6iubUE=",
+        "thumbnailEncSha256": "kJjOIe8T3bjkgqYXtuStOeUek3rDzu8tr+RkT3EwZQ0=",
+        "mediaKey": "8EjSl4ZA8hK1roNlJtxZDrIkfeOhE9GKH7vWm4n6ZOU=",
+        "mediaKeyTimestamp": "1685325847",
+        "thumbnailHeight": 630,
+        "thumbnailWidth": 630,
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "273345683E8C452DABDBA9DCCFE65F88"
+    },
+    "messageTimestamp": 1685325883,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "Buka tautan ini untuk bergabung ke grup WhatsApp saya: https://chat.whatsapp.com/H2u6GDKAua09mDQBGmeKoz",
+        "matchedText": "https://chat.whatsapp.com/H2u6GDKAua09mDQBGmeKoz",
+        "description": "Undangan Grup WhatsApp",
+        "title": "❒→ (MESSAGE-DELETE)",
+        "previewType": "NONE",
+        "jpegThumbnail": "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",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "thumbnailDirectPath": "/v/t62.36144-24/34694893_1279775772975867_8914124865894809589_n.enc?ccb=11-4&oh=01_AdRUykND_7K2QT1q7p6PkoXhgAHcli01sO66HJGKMpwU-g&oe=649B8CAD",
+        "thumbnailSha256": "mWv8OVa+cczCML7eKTh0Ng78oMZE09h2YFi3h0Ji0+k=",
+        "thumbnailEncSha256": "+I2zWI9Uu3Nmb+EwMzFO80obK9L4XKGqO2kPrJcRbMg=",
+        "mediaKey": "nXY4Oy1wHQ/GTIIsZh2AXXDTsUs7zNTpc2zGN6tF2jE=",
+        "mediaKeyTimestamp": "1685325881",
+        "thumbnailHeight": 640,
+        "thumbnailWidth": 640,
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "613D5BCF5423D26596B392143B9E80E9"
+    },
+    "messageTimestamp": 1685326149,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "f",
+        "previewType": "NONE",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "CCD0E3D6161818C738D22CC8829F408B"
+    },
+    "messageTimestamp": 1685326203,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "f",
+        "previewType": "NONE",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "017A1D0A6D5E0B2B9CE2B4C81B0B44F7"
+    },
+    "messageTimestamp": 1685326255,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "d",
+        "previewType": "NONE",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "9CDE01D252A1F7986E149AEA0A6BB581"
+    },
+    "messageTimestamp": 1685326389,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "ydyd",
+        "previewType": "NONE",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "D2EAB0570ED74CD3E64F537374024415"
+    },
+    "messageTimestamp": 1685326418,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "gs",
+        "previewType": "NONE",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  },
+  {
+    "key": {
+      "remoteJid": "6288989781626@s.whatsapp.net",
+      "fromMe": false,
+      "id": "7F4309E59DEA7288C93BE139CD726F58"
+    },
+    "messageTimestamp": 1685326553,
+    "pushName": "Saiful Anam",
+    "broadcast": false,
+    "message": {
+      "extendedTextMessage": {
+        "text": "h",
+        "previewType": "NONE",
+        "contextInfo": {
+          "expiration": 86400,
+          "ephemeralSettingTimestamp": "1682896799",
+          "disappearingMode": {
+            "initiator": "CHANGED_IN_CHAT"
+          }
+        },
+        "inviteLinkGroupTypeV2": "DEFAULT"
+      },
+      "messageContextInfo": {
+        "deviceListMetadata": {
+          "senderKeyHash": "Mlr/NUQ/PC6dcw==",
+          "senderTimestamp": "1685186176",
+          "recipientKeyHash": "7+VyfVOL3zbBzQ==",
+          "recipientTimestamp": "1684127034"
+        },
+        "deviceListMetadataVersion": 2
+      }
+    }
+  }
+]
