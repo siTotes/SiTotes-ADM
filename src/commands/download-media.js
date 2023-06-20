@@ -152,19 +152,23 @@ module.exports = onic = async (onic, m, command, mek) => {
                     }
                     let url = await _video[resohigh[0]].download()
                     await onic.sendReaction(m.chat, m.key, '✈️')
-                    await reply(lang.sending(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}`))
-                    await onic.sendVideoUrl(m.chat, url, false, lang.ok()).catch(async _ => {
-                        await onic.sendReaction(m.chat, m.key, '🤔')
+                    if(_video[resohigh[0]].fileSize*1000 > 50000000){
+                        await reply(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}\n${url}\n\nUkuran Media terlalu besar, jadi kami kirim kan link alternatif aja 😉`)
+                    }else{
+                        await reply(lang.sending(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}`))
                         await onic.sendVideoUrl(m.chat, url, false, lang.ok()).catch(async _ => {
-                            await onic.sendReaction(m.chat, m.key, '❌')
-                            await onic.sendMessage(m.chat, {
-                                text: 'Download Berhasil 📁.\nTetapi bot Gagal Mengirimkan video ke anda. Coba ulang ya 😔,\n\njika terjadi kesalahan terus menerus coba tanyakan owner ya 😉'
-                            }, {
-                                quoted: m
+                            await onic.sendReaction(m.chat, m.key, '🤔')
+                            await onic.sendVideoUrl(m.chat, url, false, lang.ok()).catch(async _ => {
+                                await onic.sendReaction(m.chat, m.key, '❌')
+                                await onic.sendMessage(m.chat, {
+                                    text: 'Download Berhasil 📁.\nTetapi bot Gagal Mengirimkan video ke anda. Coba ulang ya 😔,\n\njika terjadi kesalahan terus menerus coba tanyakan owner ya 😉'
+                                }, {
+                                    quoted: m
+                                })
+                                return ''
                             })
-                            return ''
                         })
-                    })
+                    }
                     await onic.sendReaction(m.chat, m.key, '✅')
                     
                 }else{

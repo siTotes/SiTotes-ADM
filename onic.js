@@ -347,16 +347,15 @@ async function startonic() {
         return await vv
     }
     
-    onic.caculedSize = (v) => {
-        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
-        if (v === 0) {
-            v = 'n/a';
-        } else {
-            const i = parseInt(Math.floor(Math.log(v) / Math.log(1024)), 10)
-            if (i === 0) v = `${v} ${sizes[i]}`
-            v = `${(v / (1024 ** i)).toFixed(1)} ${sizes[i]}`
-        }
-        return v
+    onic.caculedSize = (bytes) => {
+        if (!+bytes) return '0 Bytes'
+
+        const k = 1024
+        const dm = 2 < 0 ? 0 : 2
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+        const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
     }
 
     onic.fetchUrlToBuffer = async (path) => {
