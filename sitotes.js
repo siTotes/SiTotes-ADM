@@ -19,7 +19,7 @@ function runSlebeww() {
         })
         .on('exit', code => {
             console.error('Keluar dengan kode:', code)
-            if (code == '.' || code == 1) runSlebeww()
+            if (code == '.' || code == 1) setTimeout(runSlebeww, 60000)
         })
 }
 runSlebeww()

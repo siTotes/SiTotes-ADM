@@ -385,12 +385,17 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             break
             case 'ttp':
             case 'attp':
-                if (!text) return reply(lang.contoh(prefix, command, 'SLEBEWW'))
-                let encmedia = await onic.sendMediaAsSticker(m.chat, `https://api-sitotes.indowarestudio.repl.co/api/${command}?text=${text}`, m, {
+                if (!text){
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    return reply(lang.contoh(prefix, command, 'SLEBEWW'))
+                }
+                await onic.sendReaction(m.chat, m.key, '⏳')
+                let encmedia = await onic.sendImageAsSticker(m.chat, `https://api-sitotes.indowarestudio.repl.co/api/${command}?text=${text}`, m, {
                         packname: global.packname,
                         author: global.author
                     })
                     .catch((err) => {
+                        await onic.sendReaction(m.chat, m.key, '❌')
                         reply('Gagal Membuat sticker coba ulang, jika masih tidak bisa chat owner')
                     })
                 await fs.unlinkSync(encmedia)

@@ -204,7 +204,7 @@ async function startonic() {
                 startonic();
             } else onic.end(chalk.hex('#FF6158')(`SENDER → Alasan Putus Tidak Diketahui: ${reason}|${connection}`))
 
-            if (ttlerr > 5) {
+            if (ttlerr > 3) {
                 console.log(chalk.white.bgRed.bold('Crash by → Connection Loop'))
                 throw new Error('Bot Crash → By sitotes anti loop')
             }
@@ -1170,13 +1170,13 @@ function risetSesi() {
 
 
 setInterval(() => {
-    if (ttlerr > 5) {
+    if (ttlerr > 3) {
         console.log(chalk.white.bgRed.bold('Crash by → Connection Loop'))
         throw new Error('Bot Crash → By sitotes anti loop')
     } else {
         ttlerr = ttlerr * 0
     }
-}, 20000)
+}, 30000)
 
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {

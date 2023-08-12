@@ -3,53 +3,6 @@
     "game": {},
     "proses": {
       "reaload": {
-        "messages": [
-          {
-            "key": {
-              "remoteJid": "6288989781626@s.whatsapp.net",
-              "fromMe": false,
-              "id": "1D46BBA52A7D9AAF0A1C588E078EF57D"
-            },
-            "messageTimestamp": 1691847400,
-            "pushName": "͏",
-            "broadcast": false,
-            "message": {
-              "extendedTextMessage": {
-                "text": ".tt https://vm.tiktok.com/ZSLqAMebP/",
-                "matchedText": "https://vm.tiktok.com/ZSLqAMebP/",
-                "canonicalUrl": "https://www.tiktok.com/@/video/7260034087769869574/?_r=1&_d=secCgYIASAHKAESPgo8u7YFEOKhEnMPPalDnKwshxeP59pNoIwK%2FES7UfaDydLxUBPaG4cwlkAFeKYDFSYR4xiT16tRMiNXf9jqGgA%3D&checksum=&mid=7260034427890928390&preview_pb=0&region=ID&sec_user_id=&share_app_id=1340&share_item_id=7260034087769869574&share_link_id=130ca4be-4d4e-480d-9cbf-a29916be31d1&sharer_language=id&source=h5_t&timestamp=1691836692&u_code=0&ugbiz_name=Main&user_id=&utm_campaign=client_share&utm_source=copy",
-                "description": "55.6K suka, 330 komentar. \"DJ OH SAYANG VERSI VANIA BANGERS SLOW 🎧”",
-                "title": "TikTok · DJ EKO",
-                "previewType": "NONE",
-                "jpegThumbnail": "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",
-                "contextInfo": {
-                  "expiration": 86400,
-                  "ephemeralSettingTimestamp": "1682896799",
-                  "disappearingMode": {
-                    "initiator": "CHANGED_IN_CHAT"
-                  }
-                },
-                "thumbnailDirectPath": "/v/t62.36144-24/32380917_230729236607437_414356858128194351_n.enc?ccb=11-4&oh=01_AdTJFR92H6_bHS7CvcrxK2syO592Aeb9NxCQQwftAHImEA&oe=64FEF579",
-                "thumbnailSha256": "2eB5azl6XnhxkwaTWU7lL+EUE5EI5ti0bPXp2RoYcQI=",
-                "thumbnailEncSha256": "zDjCSX2jYuu9lUwdFHNpk0z+fWfLQqr9oX8QuQARPqE=",
-                "mediaKey": "uCIq4wzKWgUw+/qlSNAheCWyDKpaGV7+1fQz0XWkWLo=",
-                "mediaKeyTimestamp": "1691847399",
-                "thumbnailHeight": 630,
-                "thumbnailWidth": 630,
-                "inviteLinkGroupTypeV2": "DEFAULT"
-              },
-              "messageContextInfo": {
-                "deviceListMetadata": {
-                  "recipientKeyHash": "PcRJlhNjKhAC1A==",
-                  "recipientTimestamp": "1690722082"
-                },
-                "deviceListMetadataVersion": 2,
-                "messageSecret": "DoDXfDkVo61H63AX3rrxR+GHnr0Yi4oCVLD7c1/yL6Y="
-              }
-            },
-            "count": 2
-          }
-        ]
       }
     }
   }

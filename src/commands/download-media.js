@@ -126,13 +126,21 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'youtubemp3':
             case 'ytmp4':
             case 'ytmp3': {
-                if (!text) return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
-                if (!isUrl(q)) return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
-                if (!text.includes('youtu.be') && !text.includes('youtube.com')) return reply(lang.contoh(prefix, command, 'https://youtu.be/7wfSvv4AHsQ'))
+                if (!text){
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
+                }
+                if (!isUrl(q)){
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
+                }
+                if (!text.includes('youtu.be') && !text.includes('youtube.com')){
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    return reply(lang.contoh(prefix, command, 'https://youtu.be/7wfSvv4AHsQ'))
+                }
                 
                 await onic.addProsMsg()
                 await onic.sendReaction(m.chat, m.key, '⏳')
-                await reply(lang.wait())
                 let noerr = true
                 
                 const {
@@ -166,10 +174,9 @@ module.exports = onic = async (onic, m, command, mek) => {
                     reply(listreso)
                     let url = await _video[resohigh[0]].download()
                     await onic.sendReaction(m.chat, m.key, '✈️')
-                    if(_video[resohigh[0]].fileSize*1000 > 50000000){
-                        await reply(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}\n${url}\n\nUkuran Media terlalu besar, jadi kami kirim kan link alternatif aja 😉`)
-                    }else{
-                        await reply(lang.sending(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}`))
+                    // if(_video[resohigh[0]].fileSize*1000 > 50000000){
+                        // await reply(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}\n${url}\n\nUkuran Media terlalu besar, jadi kami kirim kan link alternatif aja 😉`)
+                    // }else{
                         await onic.sendVideoUrl(m.chat, url, false, lang.ok()).catch(async _ => {
                             await onic.sendReaction(m.chat, m.key, '🤔')
                             await onic.sendVideoUrl(m.chat, url, false, lang.ok()).catch(async _ => {
@@ -182,7 +189,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                                 return ''
                             })
                         })
-                    }
+                    // }
                     await onic.sendReaction(m.chat, m.key, '✅')
                     
                 }else{
