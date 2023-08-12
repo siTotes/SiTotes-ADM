@@ -120,8 +120,7 @@ module.exports = onic = async (onic, m, command, mek) => {
     }
 
     isInGame = false
-    let gameNo = 0;
-    for (gameNo < lgm.gamelist.length; gameNo++) {
+    for (let gameNo = 0; gameNo < lgm.gamelist.length; gameNo++) {
         var ver = db.data.game[lgm.gamelist[gameNo]] ? db.data.game[lgm.gamelist[gameNo]] : false
         if (ver[m.chat] ? true : false) {
             isInGame = true

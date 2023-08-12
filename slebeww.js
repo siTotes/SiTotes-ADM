@@ -19,7 +19,8 @@ const {
 const fs = require('fs')
 const chalk = require('chalk')
 const speed = require('performance-now')
-const moment = require("moment-timezone");
+const moment = require("moment-timezone")
+const path = require('path')
 
 
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
@@ -54,6 +55,8 @@ const {
     webp2mp4File,
     TelegraPh
 } = require('./lib/uploader')
+const gdapis = require('./lib/gdriveapis')
+const cv = require('./lib/con2vert')
 const lang = require('./src/options/lang_id')
 
 
@@ -108,36 +111,49 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
 
         if (m.isGroup && !allowGrub) return
 
-        onic.addProses = () => {
-            let pe = db.data.proses.messages? db.data.proses.messages.length:0
+        onic.addProsMsg = () => {
+            let pe = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0) : 0
             if (pe > 0) {
-                for (let i = 0; i < db.data.proses.messages.length; i++) {
-                    if (db.data.proses.messages[i] == null) {
-                        db.data.proses.messages.splice(i, 1);
-                    }else if(db.data.proses.messages[i].key.id == m.id){
-                    
-                    }else{
-                        db.data.proses.messages.push(mek)
+                for (let i = 0; i < db.data.proses.reaload.messages.length; i++) {
+                    if (db.data.proses.reaload.messages[i] == null) {
+                        db.data.proses.reaload.messages.splice(i, 1);
+                    } else if (db.data.proses.reaload.messages[i].key.id == m.id) {
+
+                    } else {
+                        db.data.proses.reaload.messages.push(mek)
                     }
                 }
             } else {
                 db.data.proses = {}
-                db.data.proses.messages = []
-                db.data.proses.messages.push(mek)
+                db.data.proses.reaload = {}
+                db.data.proses.reaload.messages = []
+                db.data.proses.reaload.messages.push(mek)
             }
         }
-        onic.endProses = () => {
-            let pe = db.data.proses.messages? db.data.proses.messages.length:0
+        onic.endProsMsg = () => {
+            let pe = db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0
             if (pe > 0) {
-                for (let i = 0; i < db.data.proses.messages.length; i++) {
-                    if (db.data.proses.messages[i] == null) {
-                        db.data.proses.messages.splice(i, 1);
-                    }else if(db.data.proses.messages[i].key.id == m.id){
-                        db.data.proses.messages.splice(i, 1);
+                for (let i = 0; i < db.data.proses.reaload.messages.length; i++) {
+                    if (db.data.proses.reaload.messages[i] == null) {
+                        db.data.proses.reaload.messages.splice(i, 1);
+                    } else if (db.data.proses.reaload.messages[i].key.id == m.id) {
+                        db.data.proses.reaload.messages.splice(i, 1);
                     }
                 }
             }
         }
+        onic.addProsessInv = (ivent, evid, ccmd) => {
+            if (db.data.proses.event ? false : true) db.data.proses.event = {}
+            if (db.data.proses.event[ivent] ? false : true) db.data.proses.event[ivent] = []
+            db.data.proses.event[ivent].push({
+                jid: m.chat,
+                qid: evid,
+                cmd: ccmd
+            })
+        }
+        onic.rmvProsessInv = () => {}
+
+        onic.addProsessInv('youtubedl', 'hsi7sh2o9shwb8d9s8h29e8he982hhr93', ['1', '2', '3', '4', '5', '6'])
         let nua = 0
         const reply = async (teks) => {
             if (nua < 4) {
@@ -177,13 +193,13 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         if (!onic.public) {
             if (!m.key.fromMe && !isCreator) return
         }
-        
+
         console.log(
             chalk.black(chalk.bgWhite('\n |=| MSG |-> ')),
             chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
             chalk.black(chalk.bgBlue(`\n ${budy || m.mtype} `)),
             chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
-            chalk.greenBright(chalk.bgGray.bold(`\n |=> `,m.isGroup ? groupName : 'Private Chat', m.chat))
+            chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
         )
         //console.log(chalk.black(chalk.bgWhite('[ CMD ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> From'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> In'), chalk.green())
 
@@ -198,24 +214,49 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             }
 
         }
+        const checkcid = (dataapa, chatny, jalok, runto) => {
+            for (let i = 0; i < chatny.length; i++) {
+                var ver = dataapa[chatny[i]] ? dataapa[chatny[i]] : false
+                ver = ver[m.chat] ? ver[m.chat] : 'emanf eak'
+                if (m.quoted) {
+                    if (!isCmd) {
+                        if (ver[jalok] == m.quoted.id) {
+                            require(casee(runto))(onic, m, command, mek)
+                        }
+                    }
+                }
+            }
+        }
         console.log(mime)
 
         switch (command) {
             case 'smeme': {
-                if (!text) return reply(lang.SmemeErr(prefix, command))
+                if (!text) {
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await reply(lang.SmemeErr(prefix, command))
+                    return;
+                }
                 if (/image/.test(mime) || /video/.test(mime) || /webp/.test(mime)) {
-                    reply(lang.wait())
-                    dadl = await onic.downloadAndSaveMediaMessage(quoted, pathbufc)
-                    if (/video/.test(mime)) dadl = await onic.videoToWebp(pathbufc)
+                    await onic.sendReaction(m.chat, m.key, '⬇️')
+                    let dadl = await onic.downloadAndSaveMediaMessage(quoted, pathbufc)
 
-                    mem = await UploadFileUgu(dadl).catch().finally(() => {
+                    if (/video/.test(mime)) {
+                        await fs.writeFileSync(pathbufc + '.webp', await onic.videoToWebp(await cv.pathToBuffer(dadl)))
+                        dadl = pathbufc + '.webp'
+                    }
+                    await onic.sendReaction(m.chat, m.key, '⏳')
+                    let urlout = await gdapis.gdriveUpload(await cv.pathToBuffer(dadl), path.extname(dadl), '1jQk7lovSaz64K-W2mnCgzT0AXdDB5X-z').catch().finally(async () => {
                         fs.unlinkSync(dadl)
-                        reply('Memperbarui file... 🗃️')
+                        await onic.sendReaction(m.chat, m.key, '🗃️')
                     })
-
                     let spelit = []
                     let texme = c.split("\n>")[0] ? c.split("\n>")[0] : text
-                    let memetemp = `?background=${mem.url}`
+                    if (urlout.pref ? false : true) {
+                        await onic.sendReaction(m.chat, m.key, '✖️')
+                        reply('Gagal membuat memegen, coba ulang')
+                        return;
+                    }
+                    let memetemp = `?background=${await urlout.pref}`
 
                     let textnya = `-/${await onic.smemeTools(texme)}`
 
@@ -247,56 +288,99 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                     }
                     if (!memetemp) return reply('Gagal Memperbarui file. kirim ulang / Chat owner jika perlu')
 
-                    if (/jpeg/.test(mime)) {
+                    if (/video/.test(mime)) {
+                        memetemp = `https://api.memegen.link/images/custom/${textnya}2.webp${memetemp}`
+                        memetemp = await onic.fetchUrlToBuffer(memetemp)
+                        console.log(memetemp)
+                        await onic.sendWebpAsSticker(m.chat, memetemp, m)
+                        /*.catch(async _ => await onic.sendMessage(m.chat, {
+                                                    text: lang.doneErr('Sticker')
+                                                }, {
+                                                    quoted: m
+                                                }))*/
+                    } else if (/image/.test(mime)) {
                         memetemp = `https://api.memegen.link/images/custom/${textnya}1.png${memetemp}`
                         await onic.sendImageAsSticker(m.chat, memetemp, m, {
                             packname: global.packname,
                             author: global.author
                         }).catch(async _ => await onic.sendMessage(m.chat, {
-                            text: 'Convert Berhasil. Tetapi bot Gagal Mengirim sticker ke anda. Coba ulang'
-                        }, {
-                            quoted: m
-                        }))
-                    } else if (/video/.test(mime) || /webp/.test(mime)) {
-                        memetemp = `https://api.memegen.link/images/custom/${textnya}2.webp${memetemp}`
-                        await onic.sendWebpAsSticker(m.chat, memetemp, m, {
-                            packname: global.packname,
-                            author: global.author
-                        }).catch(async _ => await onic.sendMessage(m.chat, {
-                            text: 'Convert Berhasil. Tetapi bot Gagal Mengirim sticker ke anda. Coba ulang'
+                            text: lang.doneErr('Sticker')
                         }, {
                             quoted: m
                         }))
                     }
                     console.log(memetemp)
                 } else {
-                    reply(lang.SmemeErr(prefix, command))
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await reply(lang.SmemeErr(prefix, command))
                 }
             }
             break
-            case 'sgif':
-            case 'stikerin':
+            case 'b': {
+                let buff = await onic.fetchUrlToBuffer(text)
+                let buffer
+                await onic.sendReaction(m.chat, m.key, '✈️')
+                await onic.sendMessage(m.chat, {
+                    sticker: buff,
+                }, {
+                    m
+                })
+                await onic.sendReaction(m.chat, m.key, '✅')
+            }
+            break
             case 's':
             case 'sticker':
             case 'stiker': {
-                if (!quoted) return reply(lang.NoToStik(prefix, command))
-                if (true) { ///image/.test(mime)) {
+                if (!quoted) {
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    return reply(lang.NoToStik(prefix, command))
+                }
+
+                if (/image/.test(mime)) {
+                    await onic.sendReaction(m.chat, m.key, '⬇️')
                     let media = await quoted.download()
-                    fs.writeFileSync(`./pe.png`, media)
-                    let encmedia = await onic.sendImageAsSticker(m.chat, media, m, {
-                        packname: global.packname,
-                        author: global.author
-                    })
-                    await fs.unlinkSync(encmedia)
+                    await onic.sendReaction(m.chat, m.key, '⏳')
+                    let encmedia
+
+                    if (/webp/.test(mime)) {
+                        encmedia = await onic.sendWebpAsSticker(m.chat, media, m)
+                        /*.catch(async _ => await onic.sendMessage(m.chat, {
+                            text: lang.doneErr('Sticker')
+                        }, {
+                            quoted: m
+                        }))*/
+
+                    } else {
+                        encmedia = await onic.sendImageAsSticker(m.chat, media, m, {
+                            packname: global.packname,
+                            author: global.author
+                        }).catch(async _ => await onic.sendMessage(m.chat, {
+                            text: lang.doneErr('Sticker')
+                        }, {
+                            quoted: m
+                        }))
+                    }
+
                 } else if (/video/.test(mime)) {
-                    if ((quoted.msg || quoted).seconds > 11) return reply(lang.NoToStik(prefix, command))
+                    if ((quoted.msg || quoted).seconds > 11) {
+                        await onic.sendReaction(m.chat, m.key, '📽️')
+                        return reply('Video terlalu panjang minimal kurang dari 11 detik')
+                    }
+
+                    await onic.sendReaction(m.chat, m.key, '⬇️')
                     let media = await quoted.download()
+                    await onic.sendReaction(m.chat, m.key, '⏳')
                     let encmedia = await onic.sendVideoAsSticker(m.chat, media, m, {
                         packname: global.packname,
                         author: global.author
-                    })
-                    await fs.unlinkSync(encmedia)
+                    }).catch(async _ => await onic.sendMessage(m.chat, {
+                        text: lang.doneErr('Sticker')
+                    }, {
+                        quoted: m
+                    }))
+
                 } else {
+                    await onic.sendReaction(m.chat, m.key, '❓')
                     reply(lang.NoToStik(prefix, command))
                 }
             }
@@ -315,11 +399,10 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 break
             default:
         }
-        let lgm
 
-
-        lgm = {
-            "gamelist": [
+        checkcid(
+            db.data.game,
+            [
                 'tebakgambar',
                 'caklontong',
                 'family100',
@@ -332,21 +415,14 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 'susunkata',
                 'tebakbendera',
                 'tebaklirik',
-                'tebaktebakan'
-            ]
-        }
+                'tebaktebakan',
 
-        for (let i = 0; i < lgm.gamelist.length; i++) {
-            var ver = db.data.game[lgm.gamelist[i]] ? db.data.game[lgm.gamelist[i]] : false
-            ver = ver[m.chat] ? ver[m.chat] : 'emanf eak'
-            if (m.quoted) {
-                if (!isCmd) {
-                    if (ver.gameid == m.quoted.id) {
-                        require(casee('game-rpg'))(onic, m, command, mek)
-                    }
-                }
-            }
-        }
+                'm.saiful.anam.r.creator'
+            ],
+            'gameid',
+            'game-rpg'
+        )
+
 
         chekcase([
             'bantuan',
@@ -378,7 +454,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         chekcase([
             'tt',
             'tiktok',
-            
+
             'youtube',
             'youtubedownload',
             'youtubedl',
@@ -395,6 +471,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
 
     } catch (err) {
         console.log(onic.printErr(err))
+        await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
     } finally {
         console.log('SLEBEWW → global.db ')
         svdata()

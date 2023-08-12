@@ -27,6 +27,7 @@ const cgl = require('gradient-string')
 const {
     Boom
 } = require('@hapi/boom')
+const axios = require('axios')
 const moment = require('moment-timezone')
 const chalk = require('chalk')
 const fetch = require('node-fetch')
@@ -211,19 +212,18 @@ async function startonic() {
         if (update.connection == "open" || update.receivedPendingNotifications == "true") {
             await store.chats.all()
             console.log(chalk.hex('#FFAD99').bold(`Terhubung dengan = ` + JSON.stringify(onic.user, null, 2)))
-            
-            let restorechat = db.data.proses.messages ? db.data.proses.messages : 0
+
+            let restorechat = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages : 0) : 0
             for (let i = 0; i < restorechat.length; i++) {
-                if(db.data.proses.messages[i] == null){
-                }else{
+                if (db.data.proses.reaload.messages[i] == null) {} else {
                     let raobj = {}
                     raobj.messages = []
                     raobj.messages.push(restorechat[i])
                     await onic.ev.emit("messages.upsert", raobj)
                 }
             }
-            if(0<restorechat.length) console.log(chalk.hex('#FFDF66')(`\nMemuat ${restorechat.length} Prosess yang belum selesai...`))
-            
+            if (0 < restorechat.length) console.log(chalk.hex('#FFDF66')(`\nMemuat ${restorechat.length} Prosess yang belum selesai...`))
+
             await delete pe
         }
     })
@@ -259,14 +259,14 @@ async function startonic() {
                     resetcache = 0
                 }
 
-                // let lcInfo = './src/.sitotes/data/data-msg.json'
-                // let infoMSG = JSON.parse(fs.readFileSync(lcInfo))
-                // infoMSG.push(JSON.parse(JSON.stringify(mek)))
-                // fs.writeFileSync(lcInfo, JSON.stringify(infoMSG, null, 2))
-                // if (infoMSG.length === 5000) {
-                // infoMSG.splice(0, 3000)
-                // fs.writeFileSync(lcInfo, JSON.stringify(infoMSG, null, 2))
-                // }
+                let lcInfo = './src/.sitotes/data/data-msg.json'
+                let infoMSG = JSON.parse(fs.readFileSync(lcInfo))
+                infoMSG.push(JSON.parse(JSON.stringify(mek)))
+                fs.writeFileSync(lcInfo, JSON.stringify(infoMSG, null, 2))
+                if (infoMSG.length === 5000) {
+                    infoMSG.splice(0, 3000)
+                    fs.writeFileSync(lcInfo, JSON.stringify(infoMSG, null, 2))
+                }
 
 
                 require("./slebeww")(onic, m, chatUpdate, mek, store)
@@ -317,16 +317,16 @@ async function startonic() {
 
     onic.printErr = (err) => {
         aux = err.stack
-        aux = '\n|-→ '+aux+'\n'
-        aux = aux.replaceAll('\n    at Module._compile (node:internal/modules/cjs/loader:1275:14)','')
-        aux = aux.replaceAll('\n    at Module._extensions..js (node:internal/modules/cjs/loader:1329:10)','')
-        aux = aux.replaceAll('\n    at Module.load (node:internal/modules/cjs/loader:1133:32)','')
-        aux = aux.replaceAll('\n    at Module._load (node:internal/modules/cjs/loader:972:12)','')
-        aux = aux.replaceAll('\n    at Module.require (node:internal/modules/cjs/loader:1157:19)','')
-        aux = aux.replaceAll('\n    at require (node:internal/modules/helpers:119:18)','')
-        aux = aux.replaceAll('\n    at StatWatcher.emit (node:events:512:28)','')
-        aux = aux.replaceAll('\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:83:12)','')
-        aux = aux.replaceAll('\n    at node:internal/main/run_main_module:23:47','')
+        aux = '\n|-→ ' + aux + '\n'
+        aux = aux.replaceAll('\n    at Module._compile (node:internal/modules/cjs/loader:1275:14)', '')
+        aux = aux.replaceAll('\n    at Module._extensions..js (node:internal/modules/cjs/loader:1329:10)', '')
+        aux = aux.replaceAll('\n    at Module.load (node:internal/modules/cjs/loader:1133:32)', '')
+        aux = aux.replaceAll('\n    at Module._load (node:internal/modules/cjs/loader:972:12)', '')
+        aux = aux.replaceAll('\n    at Module.require (node:internal/modules/cjs/loader:1157:19)', '')
+        aux = aux.replaceAll('\n    at require (node:internal/modules/helpers:119:18)', '')
+        aux = aux.replaceAll('\n    at StatWatcher.emit (node:events:512:28)', '')
+        aux = aux.replaceAll('\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:83:12)', '')
+        aux = aux.replaceAll('\n    at node:internal/main/run_main_module:23:47', '')
         aux = aux.replaceAll('\n', '\n|=================================================√\n')
         aux = aux.replaceAll('    at', '|-→')
         aux = aux.replaceAll(' (', ' |-↓\n|------------------------------------|||||\n| •••• (')
@@ -334,7 +334,7 @@ async function startonic() {
 
         return chalk.yellow.bold.visible(aux)
     }
-    
+
     onic.getUrlTotalSize = async (url) => {
         let vv
         await fetch(url, {
@@ -346,7 +346,7 @@ async function startonic() {
         })
         return await vv
     }
-    
+
     onic.caculedSize = (bytes) => {
         if (!+bytes) return '0 Bytes'
 
@@ -359,8 +359,50 @@ async function startonic() {
     }
 
     onic.fetchUrlToBuffer = async (path) => {
-        const buff = await (await fetch(path)).buffer()
+        const buff = await onic.axiosUrlToBuffer(path)
         return buff
+    }
+
+    onic.axiosUrlToBuffer = (url) => {
+        let retryCount = 0;
+        const maxRetries = 3;
+        const retryDelay = 3000; // dalam milidetik
+
+        function fetch() {
+            return axios.get(url, {
+                    responseType: 'arraybuffer'
+                })
+                .then(function(response) {
+                    const buffer = Buffer.from(response.data, 'binary');
+                    return buffer;
+                })
+                .catch(function(error) {
+                    console.error(error);
+                    if (retryCount < maxRetries) {
+                        retryCount++;
+                        console.log(`Retrying (${retryCount}/${maxRetries}) after ${retryDelay}ms...`);
+                        return new Promise(resolve => setTimeout(resolve, retryDelay)).then(fetch);
+                    } else {
+                        throw error;
+                    }
+                });
+        }
+
+        return fetch();
+    }
+
+    onic.axiosUrlToBuffer = (url) => {
+        return axios.get(url, {
+                responseType: 'arraybuffer'
+            })
+            .then(function(response) {
+                const buffer = Buffer.from(response.data, 'binary');
+                return buffer;
+            })
+            .catch(function(error) {
+                console.error(error);
+                throw error;
+            });
     }
 
     onic.videoToWebp = async (path) => {
@@ -742,7 +784,7 @@ async function startonic() {
      * @returns 
      */
     onic.sendImage = async (jid, path, caption = '', quoted = '', options) => {
-        let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await (await fetch(path)).buffer() : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+        let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         return await onic.sendMessage(jid, {
             image: buffer,
             caption: caption,
@@ -774,7 +816,7 @@ async function startonic() {
     }
 
     onic.sendVideo = async (jid, path, gif = false, caption = '', quoted = '', options) => {
-        let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await (await fetch(path)).buffer() : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+        let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         return await onic.sendMessage(jid, {
             video: buffer,
             caption: caption,
@@ -795,7 +837,7 @@ async function startonic() {
      * @returns 
      */
     onic.sendAudio = async (jid, path, quoted = '', ptt = false, options) => {
-        let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await (await fetch(path)).buffer() : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+        let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         return await onic.sendMessage(jid, {
             audio: buffer,
             ptt: ptt,
@@ -873,15 +915,14 @@ async function startonic() {
     }
 
     onic.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
-        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await (await fetch(path)).buffer() : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         let buffer
         if (options && (options.packname || options.author)) {
             buffer = await writeExifImg(buff, options)
         } else {
             buffer = await imageToWebp(buff)
         }
-
-        await reply(jid, lang.sending(), quoted)
+        await onic.sendReaction(quoted.chat, quoted.key, '✈️')
 
         await onic.sendMessage(jid, {
             sticker: {
@@ -891,18 +932,40 @@ async function startonic() {
         }, {
             quoted
         })
+        await onic.sendReaction(quoted.chat, quoted.key, '✅')
+        return buffer
+    }
+
+    onic.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
+        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+        let buffer
+        if (options && (options.packname || options.author)) {
+            buffer = await writeExifVid(buff, options)
+        } else {
+            buffer = await videoToWebp(buff)
+        }
+        await onic.sendReaction(quoted.chat, quoted.key, '✈️')
+
+        await onic.sendMessage(jid, {
+            sticker: {
+                url: buffer
+            },
+            ...options
+        }, {
+            quoted
+        })
+        await onic.sendReaction(quoted.chat, quoted.key, '✅')
         return buffer
     }
 
     onic.sendWebpAsSticker = async (jid, path, quoted, options = {}) => {
-        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.fetchUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
 
         let buffer
         if (options && (options.packname || options.author)) {
             buffer = await writeExifWebp(buff, options)
 
-            await reply(jid, lang.sending(), quoted)
-
+            await onic.sendReaction(quoted.chat, quoted.key, '✈️')
             await onic.sendMessage(jid, {
                 sticker: {
                     url: buffer
@@ -911,16 +974,17 @@ async function startonic() {
             }, {
                 quoted
             })
+            await onic.sendReaction(quoted.chat, quoted.key, '✅')
             return buffer
         } else {
-            await reply(lang.sending())
-
+            await onic.sendReaction(quoted.chat, quoted.key, '✈️')
             await onic.sendMessage(jid, {
                 sticker: buff,
                 ...options
             }, {
                 quoted
             })
+            await onic.sendReaction(quoted.chat, quoted.key, '✅')
             return buff
         }
     }
@@ -1111,16 +1175,25 @@ fs.watchFile(file, () => {
     throw new Error('Ini Memang Di buat Error Untuk menghentikan kode dan memulai ulang ');
 })
 
-function nocache(module, cb = () => {}) {
+function logModifed(module, cb = () => {}) {
     fs.watchFile(require.resolve(module), async () => {
         require(module)
-        await uncache(require.resolve(module))
+        await logOpened(require.resolve(module))
         cb(module)
-        console.log(chalk.greenBright(' [ MODIFED ]  ') + new Date() + chalk.cyanBright(` "${module}" Cache Di buka!`))
+        d = new Date();
+        console.log((chalk.greenBright('(' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ' → Opened)==> ') + chalk.cyanBright(module)).replaceAll(__dirname, '.'))
+        console.log()
     })
 }
 
-function uncache(module = '.') {
+function logCrash(module, cb = () => {}) {
+    fs.watchFile(require.resolve(module), async () => {
+        throw new Error('Ini Memang Di buat Error Untuk menghentikan kode dan memulai ulang ');
+    })
+}
+
+
+function logOpened(module = '.') {
     return new Promise((resolve, reject) => {
         require(module)
         try {
@@ -1129,16 +1202,21 @@ function uncache(module = '.') {
         } catch (e) {
             reject(e)
         }
-        console.log(chalk.greenBright(' [ MODIFED ]  ') + new Date() + chalk.cyanBright(` "${module}" Cache Di Reset!`))
+        d = new Date();
+        console.log((chalk.greenBright('(' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ' → Modifed)==> ') + chalk.cyanBright(module)).replaceAll(__dirname, '.'))
     })
 }
 
-nocache('./src/options/settings')
+logModifed('./src/options/settings')
 
-nocache('./src/commands/game-rpg')
-nocache('./src/commands/download-media')
+logModifed('./src/commands/game-rpg')
+logModifed('./src/commands/download-media')
 
 
-nocache('./slebeww')
+logModifed('./slebeww')
 
-nocache('./lib/dbmongosle')
+logModifed('./lib/dbmongosle')
+
+logCrash('./lib/exif')
+logCrash('./lib/gdriveapis')
+logCrash('./lib/con2vert')

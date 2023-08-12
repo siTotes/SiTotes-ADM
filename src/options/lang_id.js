@@ -16,6 +16,14 @@ exports.sending = (pe) => {
     }
 }
 
+exports.doneErr = (pe) => {
+    if (pe) {
+        return `Convert Berhasil. Tetapi bot Gagal Mengirim ${pe} ke anda. Coba ulang`
+    } else {
+        return `Convert Berhasil. Tetapi bot Gagal Mengirim File ke anda. Coba ulang`
+    }
+}
+
 exports.waitt = () => {
     return '⏳'
 }

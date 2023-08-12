@@ -8,7 +8,7 @@ const moment = require("moment-timezone")
 const chalk = require('chalk')
 
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
+const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), onic.addProsMsg(db, null, 2))
 const {
     smsg,
     getGroupAdmins,
@@ -49,7 +49,7 @@ module.exports = onic = async (onic, m, command, mek) => {
     try {
         var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') && m.message.buttonsResponseMessage.selectedButtonId ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') && m.message.listResponseMessage.singleSelectReply.selectedRowId ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') && m.message.templateButtonReplyMessage.selectedId ? m.message.templateButtonReplyMessage.selectedId : (m.mtype == 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ""
         var budy = (typeof m.text == 'string' ? m.text : '')
-        const content = JSON.stringify(mek.message)
+        const content = onic.addProsMsg(mek.message)
         const type = Object.keys(mek.message)[0];
         const isCmd = mek.key.fromMe ? /^[$]/.test(body) : /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/$%^&.+-,\\\©^]/.test(body)
         const prefix = isCmd ? budy[0] : ''
@@ -140,8 +140,12 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if(noerr){
                     let resoluse = Object.getOwnPropertyNames(_video)
                     let resohigh = []
+                    let listreso = 'Pilih salasatu resolusi yang sesuai contoh ketik 1 untuk yang paling hd\n'
                     for(let i = 0; i < resoluse.length; i++){
-                        resohigh.push(resoluse[i].split('p')[0])
+                        if(resohigh[i] == 'auto'){
+                        }else{
+                            resohigh.push(resoluse[i].split('p')[0])
+                        }
                     }
                     resohigh = resohigh.sort(function(a, b){return b - a})
                     for(let i = 0; i < resohigh.length; i++){
@@ -149,7 +153,13 @@ module.exports = onic = async (onic, m, command, mek) => {
                         }else{
                             resohigh[i] = resohigh[i]+'p'
                         }
+                        sizevid = _video[resohigh[i]].fileSize*1000
+                        if(!+sizevid) sizevid = await onic.getUrlTotalSize(await _video[resohigh[0]].download())
+                        listreso = listreso+'\n'+(i+1)+'. '+resohigh[i] + ' → ' + await onic.caculedSize(await sizevid)
+                        if(resohigh.length -1 == i) listreso = listreso + '\n\nInfo Aja Jika ukuran nya lebih dari 48 mb video akan di kirim bentuk link, yang harus didownload manual'
                     }
+                    console.log(onic.addProsMsg(listreso, null, 2))
+                    reply(listreso)
                     let url = await _video[resohigh[0]].download()
                     await onic.sendReaction(m.chat, m.key, '✈️')
                     if(_video[resohigh[0]].fileSize*1000 > 50000000){
@@ -185,7 +195,7 @@ module.exports = onic = async (onic, m, command, mek) => {
     } catch (err) {
         console.log(onic.printErr(err))
     } finally {
-        onic.endProses()
+        onic.addProsMsg()
         console.log(__dirname + ' Done ')
         svdata()
     }
