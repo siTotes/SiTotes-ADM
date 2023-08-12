@@ -214,17 +214,29 @@ async function startonic() {
             console.log(chalk.hex('#FFAD99').bold(`Terhubung dengan = ` + JSON.stringify(onic.user, null, 2)))
 
             let restorechat = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages : 0) : 0
+            let lop = 0
             for (let i = 0; i < restorechat.length; i++) {
                 if (db.data.proses.reaload.messages[i] == null) {} else {
                     let raobj = {}
                     raobj.messages = []
                     raobj.messages.push(restorechat[i])
-                    await onic.ev.emit("messages.upsert", raobj)
+                    let lop = db.data.proses.reaload.messages[i].count? db.data.proses.reaload.messages[i].count : 0
+                    lop++
+                    db.data.proses.reaload.messages[i].count = lop
+                    if(db.data.proses.reaload.messages[i].count == 3){
+                        await onic.sendReaction(db.data.proses.reaload.messages[i].key.remoteJid, db.data.proses.reaload.messages[i].key, '❌')
+                        await onic.sendMessage(db.data.proses.reaload.messages[i].key.remoteJid, {
+                            text: 'Terjadi Kesalahan terus menerus Tolong hubungi pembuat jika menurut anda merasa tidak ada yang salah, atau coba lagi'
+                        })
+                        db.data.proses.reaload.messages.splice(i, 1);
+                        fs.writeFileSync(`./src/.sitotes/data/database.json`, JSON.stringify(global.db, null, 2))
+                        
+                    }else{
+                        await onic.ev.emit("messages.upsert", raobj)
+                    }
                 }
             }
             if (0 < restorechat.length) console.log(chalk.hex('#FFDF66')(`\nMemuat ${restorechat.length} Prosess yang belum selesai...`))
-
-            await delete pe
         }
     })
 
@@ -252,12 +264,12 @@ async function startonic() {
                 if (m.id == chekid[m.chat]) return console.log('dobel detek')
                 chekid[m.chat] = m.id
 
-                console.log(chekid)
                 resetcache++
                 if (resetcache > 50) {
                     risetSesi()
                     resetcache = 0
                 }
+                /*
 
                 let lcInfo = './src/.sitotes/data/data-msg.json'
                 let infoMSG = JSON.parse(fs.readFileSync(lcInfo))
@@ -266,7 +278,7 @@ async function startonic() {
                 if (infoMSG.length === 5000) {
                     infoMSG.splice(0, 3000)
                     fs.writeFileSync(lcInfo, JSON.stringify(infoMSG, null, 2))
-                }
+                }*/
 
 
                 require("./slebeww")(onic, m, chatUpdate, mek, store)

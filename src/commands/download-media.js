@@ -8,7 +8,7 @@ const moment = require("moment-timezone")
 const chalk = require('chalk')
 
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), onic.addProsMsg(db, null, 2))
+const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
 const {
     smsg,
     getGroupAdmins,
@@ -76,12 +76,17 @@ module.exports = onic = async (onic, m, command, mek) => {
         switch (command) {
             case 'tt':
             case 'tiktok': {
-                if (!text) return reply(lang.contoh(prefix, command, 'url tiktok video'))
-                if (!isUrl(nrgs) && !nrgs.includes('tiktok.com')) return reply(lang.contoh(prefix, command, 'url tiktok video'))
+                if (!text){
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    return reply(lang.contoh(prefix, command, 'Url / link Video Tiktok'))
+                }
+                if (!isUrl(nrgs) && !nrgs.includes('tiktok.com')){
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    return reply(lang.contoh(prefix, command, text + ' 👈Ini bukan Url / Link Video tiktok'))
+                }
 
-                await onic.addProses()
+                await onic.addProsMsg()
                 await onic.sendReaction(m.chat, m.key, '⏳')
-                await reply(lang.wait())
                 let noerr = true
                 const {
                     video
@@ -90,10 +95,9 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if (noerr) {
                     const url = video.no_watermark_raw || video.no_watermark || video.no_watermark_hd || video.with_watermark
                     await onic.sendReaction(m.chat, m.key, '✈️')
-                    await reply(lang.sending(`🗃️ ${await onic.getUrlTotalSize(url)}`))
-                    await onic.sendVideoUrl(m.chat, url, false, lang.ok()).catch(async _ => {
+                    await onic.sendVideoUrl(m.chat, url, false).catch(async _ => {
                         await onic.sendReaction(m.chat, m.key, '🤔')
-                        await onic.sendVideoUrl(m.chat, url, false, lang.ok()).catch(async _ => {
+                        await onic.sendVideoUrl(m.chat, url, false).catch(async _ => {
                             await onic.sendReaction(m.chat, m.key, '❌')
                             await onic.sendMessage(m.chat, {
                                 text: 'Download Berhasil 📁.\nTetapi bot Gagal Mengirimkan video ke anda. Coba ulang ya 😔,\n\njika terjadi kesalahan terus menerus coba tanyakan owner ya 😉'
@@ -126,7 +130,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if (!isUrl(q)) return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
                 if (!text.includes('youtu.be') && !text.includes('youtube.com')) return reply(lang.contoh(prefix, command, 'https://youtu.be/7wfSvv4AHsQ'))
                 
-                await onic.addProses()
+                await onic.addProsMsg()
                 await onic.sendReaction(m.chat, m.key, '⏳')
                 await reply(lang.wait())
                 let noerr = true
@@ -193,10 +197,11 @@ module.exports = onic = async (onic, m, command, mek) => {
         }
 
     } catch (err) {
-        console.log(onic.printErr(err))
+        /**/console.log(onic.printErr(err))
+        await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
     } finally {
-        onic.addProsMsg()
-        console.log(__dirname + ' Done ')
+        onic.endProsMsg()
+        /**/console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
         svdata()
     }
 }

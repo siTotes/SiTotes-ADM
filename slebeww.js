@@ -65,7 +65,6 @@ moment.tz.setDefault("Asia/Jakarta").locale("id");
 
 module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
     try {
-        // console.log(JSON.stringify(chatUpdate, null, 2))
         var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') && m.message.buttonsResponseMessage.selectedButtonId ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') && m.message.listResponseMessage.singleSelectReply.selectedRowId ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') && m.message.templateButtonReplyMessage.selectedId ? m.message.templateButtonReplyMessage.selectedId : (m.mtype == 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ""
         var budy = (typeof m.text == 'string' ? m.text : '')
         const content = JSON.stringify(mek.message)
@@ -117,6 +116,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 for (let i = 0; i < db.data.proses.reaload.messages.length; i++) {
                     if (db.data.proses.reaload.messages[i] == null) {
                         db.data.proses.reaload.messages.splice(i, 1);
+                    } else if (db.data.proses.reaload.messages[i].count) {
                     } else if (db.data.proses.reaload.messages[i].key.id == m.id) {
 
                     } else {
@@ -153,7 +153,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         }
         onic.rmvProsessInv = () => {}
 
-        onic.addProsessInv('youtubedl', 'hsi7sh2o9shwb8d9s8h29e8he982hhr93', ['1', '2', '3', '4', '5', '6'])
+        //onic.addProsessInv('youtubedl', 'hsi7sh2o9shwb8d9s8h29e8he982hhr93', ['1', '2', '3', '4', '5', '6'])
         let nua = 0
         const reply = async (teks) => {
             if (nua < 4) {
@@ -187,7 +187,8 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             try {
                 await onic.ev.emit("viewOnceMessage", m);
             } catch (err) {
-                console.log(err)
+                /**/await console.log(err)
+                await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
             }
         }
         if (!onic.public) {
@@ -201,7 +202,6 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
             chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
         )
-        //console.log(chalk.black(chalk.bgWhite('[ CMD ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> From'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> In'), chalk.green())
 
         const casee = (lib) => './src/commands/' + lib
         const chekcase = (casenya, runto) => {
@@ -227,7 +227,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 }
             }
         }
-        console.log(mime)
+        /**/console.log(mime)
 
         switch (command) {
             case 'smeme': {
@@ -252,7 +252,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                     let spelit = []
                     let texme = c.split("\n>")[0] ? c.split("\n>")[0] : text
                     if (urlout.pref ? false : true) {
-                        await onic.sendReaction(m.chat, m.key, '✖️')
+                        await onic.sendReaction(m.chat, m.key, '❌')
                         reply('Gagal membuat memegen, coba ulang')
                         return;
                     }
@@ -291,7 +291,6 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                     if (/video/.test(mime)) {
                         memetemp = `https://api.memegen.link/images/custom/${textnya}2.webp${memetemp}`
                         memetemp = await onic.fetchUrlToBuffer(memetemp)
-                        console.log(memetemp)
                         await onic.sendWebpAsSticker(m.chat, memetemp, m)
                         /*.catch(async _ => await onic.sendMessage(m.chat, {
                                                     text: lang.doneErr('Sticker')
@@ -309,7 +308,6 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                             quoted: m
                         }))
                     }
-                    console.log(memetemp)
                 } else {
                     await onic.sendReaction(m.chat, m.key, '❓')
                     await reply(lang.SmemeErr(prefix, command))
@@ -470,10 +468,10 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
 
 
     } catch (err) {
-        console.log(onic.printErr(err))
+        /**/console.log(onic.printErr(err))
         await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
     } finally {
-        console.log('SLEBEWW → global.db ')
+        /**/console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
         svdata()
     }
 }
