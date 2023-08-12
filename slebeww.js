@@ -394,7 +394,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                         packname: global.packname,
                         author: global.author
                     })
-                    .catch((err) => {
+                    .catch(async (err) => {
                         await onic.sendReaction(m.chat, m.key, '❌')
                         reply('Gagal Membuat sticker coba ulang, jika masih tidak bisa chat owner')
                     })
