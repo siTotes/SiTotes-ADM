@@ -170,7 +170,6 @@ module.exports = onic = async (onic, m, command, mek) => {
                         listreso = listreso+'\n'+(i+1)+'. '+resohigh[i] + ' → ' + await onic.caculedSize(await sizevid)
                         if(resohigh.length -1 == i) listreso = listreso + '\n\nInfo Aja Jika ukuran nya lebih dari 48 mb video akan di kirim bentuk link, yang harus didownload manual'
                     }
-                    console.log(onic.addProsMsg(listreso, null, 2))
                     reply(listreso)
                     let url = await _video[resohigh[0]].download()
                     await onic.sendReaction(m.chat, m.key, '✈️')
