@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node sitotes",
-    "test": "nodemon onic"
+    "test": "npm i -g pm2 && pm2 start sitotes.js && pm2 save && pm2 logs"
   },
   "keywords": [
     "2023",
