@@ -1,6 +1,7 @@
 require('./src/options/settings')
 const {
     default: makeWASocket,
+    MessageType, Mimetype,
     BufferJSON,
     WAMessageStubType,
     WA_DEFAULT_EPHEMERAL,
@@ -399,7 +400,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                         reply('Gagal Membuat sticker coba ulang, jika masih tidak bisa chat owner')
                     })
                 await fs.unlinkSync(encmedia)
-                break
+            break
             default:
         }
 

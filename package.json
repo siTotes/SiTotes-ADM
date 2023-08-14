@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node sitotes",
-    "test": "npm i -g pm2 && pm2 start onic.js && pm2 save && pm2 logs"
+    "test": "npm i -g pm2 && pm2 start sitotes.js && pm2 save && pm2 logs"
   },
   "keywords": [
     "2023",

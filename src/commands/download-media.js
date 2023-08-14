@@ -95,9 +95,9 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if (noerr) {
                     const url = video.no_watermark_raw || video.no_watermark || video.no_watermark_hd || video.with_watermark
                     await onic.sendReaction(m.chat, m.key, '✈️')
-                    await onic.sendVideoUrl(m.chat, url, false).catch(async _ => {
+                    await onic.sendVideoUrl(m.chat, url, false, '', m).catch(async _ => {
                         await onic.sendReaction(m.chat, m.key, '🤔')
-                        await onic.sendVideoUrl(m.chat, url, false).catch(async _ => {
+                        await onic.sendVideoUrl(m.chat, url, false, '', m).catch(async _ => {
                             await onic.sendReaction(m.chat, m.key, '❌')
                             await onic.sendMessage(m.chat, {
                                 text: 'Download Berhasil 📁.\nTetapi bot Gagal Mengirimkan video ke anda. Coba ulang ya 😔,\n\njika terjadi kesalahan terus menerus coba tanyakan owner ya 😉'
@@ -170,25 +170,14 @@ module.exports = onic = async (onic, m, command, mek) => {
                         listreso = listreso+'\n'+(i+1)+'. '+resohigh[i] + ' → ' + await onic.caculedSize(await sizevid)
                         if(resohigh.length -1 == i) listreso = listreso + '\n\nInfo Aja Jika ukuran nya lebih dari 48 mb video akan di kirim bentuk link, yang harus didownload manual'
                     }
-                    reply(listreso)
                     let url = await _video[resohigh[0]].download()
+                    //await reply(url)
                     await onic.sendReaction(m.chat, m.key, '✈️')
-                    // if(_video[resohigh[0]].fileSize*1000 > 50000000){
-                        // await reply(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}\n${url}\n\nUkuran Media terlalu besar, jadi kami kirim kan link alternatif aja 😉`)
-                    // }else{
-                        await onic.sendVideoUrl(m.chat, url, false, lang.ok()).catch(async _ => {
-                            await onic.sendReaction(m.chat, m.key, '🤔')
-                            await onic.sendVideoUrl(m.chat, url, false, lang.ok()).catch(async _ => {
-                                await onic.sendReaction(m.chat, m.key, '❌')
-                                await onic.sendMessage(m.chat, {
-                                    text: 'Download Berhasil 📁.\nTetapi bot Gagal Mengirimkan video ke anda. Coba ulang ya 😔,\n\njika terjadi kesalahan terus menerus coba tanyakan owner ya 😉'
-                                }, {
-                                    quoted: m
-                                })
-                                return ''
-                            })
-                        })
-                    // }
+                    if(_video[resohigh[0]].fileSize*1000 > 70000000){
+                        await reply(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}\n${url}\n\nUkuran Media terlalu besar, jadi kami kirim kan link alternatif aja 😉`)
+                    }else{
+                        await onic.sendVideoUrl(m.chat, url, false, '', m)
+                    }
                     await onic.sendReaction(m.chat, m.key, '✅')
                     
                 }else{
