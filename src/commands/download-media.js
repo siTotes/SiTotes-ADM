@@ -180,7 +180,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                         for(let i = 0; i < resohigh.length; i++){
                             if(v == 1){
                             }else{
-                                if(_video[resohigh[i]].fileSize*1000 > 100000000){
+                                if(_video[resohigh[i]].fileSize*1000 > 70000000){
                                     url = await _video[resohigh[0]].download()
                                     v++
                                 }
