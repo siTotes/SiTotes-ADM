@@ -174,7 +174,25 @@ module.exports = onic = async (onic, m, command, mek) => {
                     //await reply(url)
                     await onic.sendReaction(m.chat, m.key, '✈️')
                     if(_video[resohigh[0]].fileSize*1000 > 70000000){
-                        await reply(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}\n${url}\n\nUkuran Media terlalu besar, jadi kami kirim kan link alternatif aja 😉`)
+                        let nu = ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+                        
+                        let v = 0
+                        for(let i = 0; i < resohigh.length; i++){
+                            if(v == 1){
+                            }else{
+                                if(_video[resohigh[i]].fileSize*1000 > 100000000){
+                                    url = await _video[resohigh[0]].download()
+                                    v++
+                                }
+                            }
+                        }
+                        
+                        await onic.sendReaction(m.chat, m.key, nu[resohigh.length])
+                        if(v == 1){
+                            await onic.sendVideoUrl(m.chat, url, false, '', m)
+                        }else{
+                            await reply(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}\n${url}\n\nUkuran Media terlalu besar, jadi kami kirim kan link alternatif aja 😉`)
+                        }
                     }else{
                         await onic.sendVideoUrl(m.chat, url, false, '', m)
                     }
