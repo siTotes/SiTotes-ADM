@@ -181,7 +181,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                             if(v == 1){
                             }else{
                                 if(_video[resohigh[i]].fileSize*1000 > 70000000){
-                                    url = await _video[resohigh[0]].download()
+                                    url = await _video[resohigh[i]].download()
                                     v++
                                 }
                             }
