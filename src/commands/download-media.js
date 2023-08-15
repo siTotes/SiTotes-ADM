@@ -139,7 +139,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     return reply(lang.contoh(prefix, command, 'https://youtu.be/7wfSvv4AHsQ'))
                 }
                 
-                await onic.addProsMsg()
+               // await onic.addProsMsg()
                 await onic.sendReaction(m.chat, m.key, '⏳')
                 let noerr = true
                 
@@ -180,16 +180,17 @@ module.exports = onic = async (onic, m, command, mek) => {
                         for(let i = 0; i < resohigh.length; i++){
                             if(v == 1){
                             }else{
-                                if(_video[resohigh[i]].fileSize*1000 > 70000000){
+                                if(_video[resohigh[i]].fileSize*1000 < 80000000){
                                     url = await _video[resohigh[i]].download()
                                     v++
                                 }
                             }
                         }
                         
+                        
                         await onic.sendReaction(m.chat, m.key, nu[resohigh.length])
                         if(v == 1){
-                            await onic.sendVideoUrl(m.chat, url, false, '', m)
+                            await onic.sendVideoUrl(m.chat, await url, false, '', m)
                         }else{
                             await reply(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}\n${url}\n\nUkuran Media terlalu besar, jadi kami kirim kan link alternatif aja 😉`)
                         }
