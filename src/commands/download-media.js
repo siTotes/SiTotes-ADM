@@ -173,14 +173,14 @@ module.exports = onic = async (onic, m, command, mek) => {
                     let url = await _video[resohigh[0]].download()
                     //await reply(url)
                     await onic.sendReaction(m.chat, m.key, '✈️')
-                    if(_video[resohigh[0]].fileSize*1000 > 70000000){
+                    if(_video[resohigh[0]].fileSize*1000 > 50000000){
                         let nu = ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
                         
                         let v = 0
                         for(let i = 0; i < resohigh.length; i++){
                             if(v == 1){
                             }else{
-                                if(_video[resohigh[i]].fileSize*1000 < 60000000){
+                                if(_video[resohigh[i]].fileSize*1000 < 50000000){
                                     url = await _video[resohigh[i]].download()
                                     console.log(url)
                                     v++
