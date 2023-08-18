@@ -152,7 +152,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if (noerr) {
                     if(output.data? false : true) return reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + output + '```')
                     for(let i = 0; i < output.data.length; i++){
-                        console.log(output)
+                        if (i === 5) { break; }
                         let url = output.data[i].url
                         if(output.data[i].type == 'video'){
                             await onic.sendReaction(m.chat, m.key, '✈️')
