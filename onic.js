@@ -814,6 +814,19 @@ async function startonic() {
      * @param {*} options 
      * @returns 
      */
+     
+    onic.sendImageUrl = async (jid, path, caption = '', quoted = '', options) => {
+        return await onic.sendMessage(jid, {
+            image: {
+                url: path
+            },
+            caption: caption,
+            ...options
+        }, {
+            quoted
+        })
+    }
+    
     onic.sendVideoUrl = async (jid, path, gif = false, caption = '', quoted = '', options) => {
         return await onic.sendMessage(jid, {
             video: {

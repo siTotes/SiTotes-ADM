@@ -458,6 +458,19 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         chekcase([
             'tt',
             'tiktok',
+            
+            'ig',
+            'igdl',
+            'igdownload',
+            'igsv',
+            'instagramdl',
+            'instagram',
+            'instagrams',
+            'instagramsdl',
+            'igreel',
+            'igvideo',
+            'igimage',
+            'igpost',
 
             'youtube',
             'youtubedownload',

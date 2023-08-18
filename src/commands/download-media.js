@@ -31,6 +31,7 @@ const {
     parseMention,
     getRandom
 } = require(home('./lib/myfunc'))
+const { igGetUrlDownload } = require(home('./lib/igdownapis'))
 const lang = require(home('./src/options/lang_id'))
 
 //━━━[ @BOCHILTEAM ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
@@ -118,6 +119,90 @@ module.exports = onic = async (onic, m, command, mek) => {
                 }
             }
             break
+            case 'ig':
+            case 'igdl':
+            case 'igdownload':
+            case 'igsv':
+            case 'instagramdl':
+            case 'instagram':
+            case 'instagrams':
+            case 'instagramsdl':
+            case 'igreel':
+            case 'igvideo':
+            case 'igimage':
+            case 'igpost': {
+                if (!text){
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    return reply(lang.contoh(prefix, command, 'Url / link Video, gambar, story atau reels orang yang bisa di copy atau di bagikan di instagram'))
+                }
+                if (!isUrl(nrgs) && !nrgs.includes('instagram.com')){
+                    await onic.sendReaction(m.chat, m.key, '❓')
+                    return reply(lang.contoh(prefix, command, text + ' 👈Ini bukan Url / Link url instagram'))
+                }
+
+                await onic.addProsMsg()
+                await onic.sendReaction(m.chat, m.key, '⏳')
+                let noerr = true
+                const output = await igGetUrlDownload(nrgs).catch(async _ => noerr = false)
+               /* igGetUrlDownload(nrgs)
+                    .then((output) => {
+                    console.log(asu.data);
+                })*/
+
+                if (noerr) {
+                    if(output.data? false : true) return reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + output + '```')
+                    for(let i = 0; i < output.data.length; i++){
+                        console.log(output)
+                        let url = output.data[i].url
+                        if(output.data[i].type == 'video'){
+                            await onic.sendReaction(m.chat, m.key, '✈️')
+                            await onic.sendVideoUrl(m.chat, url, false, '', m).catch(async _ => {
+                                await onic.sendReaction(m.chat, m.key, '🤔')
+                                await onic.sendVideoUrl(m.chat, url, false, '', m).catch(async _ => {
+                                    await onic.sendReaction(m.chat, m.key, '❌')
+                                    await onic.sendMessage(m.chat, {
+                                        text: 'Download Berhasil 📁.\nTetapi bot Gagal Mengirimkan video ke anda. Coba ulang ya 😔,\n\njika terjadi kesalahan terus menerus coba tanyakan owner ya 😉'
+                                    }, {
+                                        quoted: m
+                                    })
+                                    return ''
+                                })
+                            })
+                        }else if(output.data[i].type == 'image'){
+                            await onic.sendReaction(m.chat, m.key, '✈️')
+                            await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
+                                await onic.sendReaction(m.chat, m.key, '🤔')
+                                await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
+                                    await onic.sendReaction(m.chat, m.key, '❌')
+                                    await onic.sendMessage(m.chat, {
+                                        text: 'Download Berhasil 📁.\nTetapi bot Gagal Mengirimkan video ke anda. Coba ulang ya 😔,\n\njika terjadi kesalahan terus menerus coba tanyakan owner ya 😉'
+                                    }, {
+                                        quoted: m
+                                    })
+                                    return ''
+                                })
+                            })
+                        }else{
+                            reply('Bot belum bisa mendownload dan mengirim format ini ' + output[i].type)
+                        }
+                        await onic.sendReaction(m.chat, m.key, '✅')
+                    }
+                } else {
+                    await onic.sendReaction(m.chat, m.key, '❌')
+                    await onic.sendMessage(m.chat, {
+                        text: 'Terjadi Kesalahan 🤔,\nPeriksa link anda apakah error, jika tidak Coba kirim ulang,\n\njika terjadi kesalahan terus menerus coba tanyakan owner ya😉'
+                    }, {
+                        quoted: m
+                    })
+                }
+            }
+            break
+            
+            
+            
+            
+            
+            
             case 'youtube':
             case 'youtubedownload':
             case 'youtubedl':
@@ -126,6 +211,7 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'youtubemp3':
             case 'ytmp4':
             case 'ytmp3': {
+                return reply('Fitur sedang di perbaiki dan tidak bisa di gunakan terlebih dahulu')
                 if (!text){
                     await onic.sendReaction(m.chat, m.key, '❓')
                     return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))

@@ -1,119 +1,46 @@
-const fs = require('fs');
-const path = require('path');
-const mime = require('mime-types');
-const {
-    google
-} = require('googleapis');
 const axios = require('axios');
-const cv = require('../lib/con2vert')
 
 
-const KEYFILEPATH = './lib/api/GDriveService.json';
-const SCOPES = ['https://www.googleapis.com/auth/drive'];
-const auth = new google.auth.GoogleAuth({
-    keyFile: KEYFILEPATH,
-    scopes: SCOPES
-});
-
-
-async function gdriveUpload(buffe, format, parent, name = '', maxRetries = 3) {
-  const now = new Date();
-  const daysOfWeek = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
-  const monthsOfYear = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
-  const year = now.getFullYear().toString().substr(2, 2);
-  const formatNumber = (num) => (num < 10 ? `0${num}` : num);
-  let formattedDate = `${daysOfWeek[now.getDay()]}, ${formatNumber(now.getDate())} ${monthsOfYear[now.getMonth()]} ${year}   ||   ${formatNumber(now.getHours())}:${formatNumber(now.getMinutes())}:${formatNumber(now.getSeconds())}           by SI-TOTES`;
-
-  let fileExtension = format;
-  const mimeType = mime.lookup(fileExtension);
-
-  fileExtension = '.' + fileExtension;
-
-  if (name == '' ? false : true) {
-    formattedDate = name;
-    fileExtension = '';
-  }
-
-  const driveService = google.drive({
-    version: 'v3',
-    auth
-  });
-
-  const fileMetadata = {
-    'name': formattedDate + fileExtension,
-    'parents': [parent]
-  };
-  const media = {
-    mimeType,
-    body: await cv.bufferToReadStream(buffe)
-  };
-
-  try {
-    const response = await driveService.files.create({
-      resource: fileMetadata,
-      media,
-      fields: 'id, webContentLink'
-    });
-    return {
-      id: response.data.id,
-      link: response.data.webContentLink,
-      pref: await getResponseUrl(response.data.webContentLink)
-    };
-  } catch (error) {
-    throw new Error('Error uploading the file: ' + error.message);
-  }
-}
-
-async function gdriveUploadWithRetry(buffe, format, parent, name = '', maxRetries = 3) {
-  let retryCount = 0;
-
-  async function gdriveUploadRetry() {
-    try {
-      return await gdriveUpload(buffe, format, parent, name);
-    } catch (error) {
-      if (retryCount < maxRetries) {
-        retryCount++;
-        console.log(`Retrying (${retryCount}/${maxRetries})...`);
-        return new Promise(resolve => setTimeout(resolve, 1000)).then(gdriveUploadRetry);
-      } else {
-        throw error;
-      }
-    }
-  }
-
-  return gdriveUploadRetry();
-}
+async function v(){
+const url = 'https://www.instagram.com/reel/CuhJ1FdA_qK/?igshid=MzRlODBiNWFlZA=='
+const data = await instagramdlv4(url)
+console.log(data)
+}v()
 
 
 
 
 
-async function getResponseUrl(url) {
-    return axios.head(url)
-        .then(response => {
-            const clientRequest = response.request;
-            if (clientRequest.res.responseUrl) {
-                return clientRequest.res.responseUrl
-            } else if (clientRequest._redirectable._currentUrl) {
-                return clientRequest._redirectable._currentUrl
-            } else {
-                return ''
-            }
-        })
-        .
-    catch(error => {
-        if(error.code == 'ERR_SOCKET_CONNECTION_TIMEOUT'){
-            getResponseUrl(url);
-        }
-        console.log(error)
-        
-    });
-}
-const v = async () => {
 
-}
-//v()
-module.exports = {
-    gdriveUpload,
-    getResponseUrl
+async function instagramdlv4(url) {
+    return new Promise(async (resolve) => {
+         try {
+            let json = await (await axios.post("https://saveig.app/api/ajaxSearch", require('querystring').stringify({ q: url, t: "media", lang: "en" }), {
+               headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                  'Accept-Encoding': 'gzip, deflate, br',
+                  'Origin': 'https://saveig.app/en',
+                  'Referer': 'https://saveig.app/en',
+                  'Referrer-Policy': 'strict-origin-when-cross-origin',
+                  'User-Agent': 'PostmanRuntime/7.31.1'
+               }
+            })).data
+            let $ = cheerio.load(json.data)
+            let data = []
+            $('div[class="download-items__btn"]').each((i, e) => data.push({ type: $(e).find('a').attr('href').match('.jpg') ? 'image' : 'video', url: $(e).find('a').attr('href') }))
+            if (!data.length) return resolve({
+               status: false
+            }) 
+            resolve({
+               status: true,
+               data
+            })
+         } catch (e) {
+            console.log(e)
+            return resolve({
+               status: false,
+               msg: e.message
+            })
+         }
+      })
 }
