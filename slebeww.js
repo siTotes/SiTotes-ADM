@@ -403,6 +403,10 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             break
             default:
         }
+        
+        
+        
+        if(!isCmd) return
 
         checkcid(
             db.data.game,
@@ -457,16 +461,20 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
 
         chekcase([
             'tt',
+            'downloadtiktok',
+            'tiktokunduh',
             'tiktok',
             
             'ig',
             'igdl',
             'igdownload',
+            'igunduh',
             'igsv',
             'instagramdl',
             'instagram',
             'instagrams',
             'instagramsdl',
+            'instagramunduh',
             'igreel',
             'igvideo',
             'igimage',

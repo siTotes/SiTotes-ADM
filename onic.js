@@ -346,6 +346,15 @@ async function startonic() {
 
         return chalk.yellow.bold.visible(aux)
     }
+    
+    onic.isJson = (str) => {
+        try {
+            JSON.parse(str);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
 
     onic.getUrlTotalSize = async (url) => {
         let vv
