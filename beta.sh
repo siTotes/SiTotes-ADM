@@ -9,6 +9,10 @@ console.log() {
   echo -e "${bold}${color}${message}${reset}"
 }
 
+clear_console() {
+  printf "\033c"  # Escape sequence untuk membersihkan konsol
+}
+
 console.log "Membenarkan file..."
 rsync -av --exclude='node_modules' ~/gay/botwa/ /storage/emulated/0/.bot/3D72-45DB/
 find /storage/emulated/0/.bot/3D72-45DB/src/session/sender/ -type f ! -name 'creds.json' ! -name 'baileys_store.json' -exec rm -f {} \;
@@ -38,9 +42,9 @@ else
         angka[0]=$((angka[0] + 1))
     fi
 fi
-
+clear_console
 versi="${angka[0]}.${angka[1]}.${angka[2]}"
-console.log "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nVersi Pembaruan: $versi"
+console.log "Versi Pembaruan: $versi"
 
 git add .
 git commit -m "m"
