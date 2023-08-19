@@ -44,7 +44,7 @@ else
 fi
 clear_console
 versi="${angka[0]}.${angka[1]}.${angka[2]}"
-console.log "Versi Pembaruan: $versi\n==============================================================="
+console.log "Versi Pembaruan: $versi\n======================================="
 
 git add .
 git commit -m "m"
