@@ -60,6 +60,4 @@ console.log "Token ->   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"
 console.log "\n==================================================="
 git push -f origin master
 echo "$versi" > /storage/emulated/0/.bot/3D72-45DB/versi
-
-
-console.log "Proses selesai: $versi"
+console.log "===================================================\nProses selesai: $versi"
