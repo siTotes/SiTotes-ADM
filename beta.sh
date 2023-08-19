@@ -19,7 +19,29 @@ echo '{"data":{"game":{},"proses":{"reaload":{"messages":[]}}}}' > /storage/emul
 
 console.log "Mengupload proses..."
 cd /storage/emulated/0/.bot/3D72-45DB/
-node ./.git/versi
+
+versi=$(cat /storage/emulated/0/.bot/3D72-45DB/versi)
+IFS='.' read -ra angka <<< "$versi"
+
+for i in "${!angka[@]}"; do
+    angka[i]=$(echo "${angka[i]}" | tr -d '[:alpha:]')
+done
+
+if [ "${angka[2]}" -lt 23 ]; then
+    angka[2]=$((angka[2] + 1))
+else
+    angka[2]=0
+    angka[1]=$((angka[1] + 1))
+
+    if [ "${angka[1]}" -gt 17 ]; then
+        angka[1]=0
+        angka[0]=$((angka[0] + 1))
+    fi
+fi
+
+versi="${angka[0]}.${angka[1]}.${angka[2]}"
+console.log "Versi Pembaruan: $versi"
+
 git add .
 git commit -m "m"
 
@@ -36,6 +58,8 @@ console.log "Token ->   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"
 console.log "Token ->   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"
 console.log "Token ->   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"
 console.log "Token ->   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"
-#git push -f origin master
+git push -f origin master
+echo "$versi" > /storage/emulated/0/.bot/3D72-45DB/versi
 
-console.log "Proses selesai..."
+
+console.log "Proses selesai: $versi"
