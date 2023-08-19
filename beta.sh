@@ -49,15 +49,15 @@ console.log "Versi Pembaruan: $versi\n==========================================
 git add .
 git commit -m "m"
 
-console.log ""
+console.log "==================================================="
 console.log "User  ->   siTotes"
 console.log "User  ->   siTotes"
 console.log "User  ->   siTotes"
-console.log ""
+console.log "==================================================="
 console.log "Token ->   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"
 console.log "Token ->   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"
 console.log "Token ->   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"
-console.log ""
+console.log "==================================================="
 git push -f origin master
 echo "$versi" > /storage/emulated/0/.bot/3D72-45DB/versi
 
