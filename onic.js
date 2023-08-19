@@ -53,6 +53,10 @@ const {
     TelegraPh
 } = require('./lib/uploader')
 const {
+    checkCommitUpdate,
+    setVersiCommited
+} = require('./lib/dbmongosle')
+const {
     imageToWebp,
     videoToWebp,
     writeExifImg,
@@ -213,12 +217,17 @@ async function startonic() {
             await store.chats.all()
             console.log(chalk.hex('#FFAD99').bold(`Terhubung dengan = ` + JSON.stringify(onic.user, null, 2)))
 
-            axios.get('https://raw.githubusercontent.com/siTotes/SiTotes-ADM/master/versi').then(versi => {
-                if(versi == fs.readFileSync('./versi')){
-                    onic.sendMessage('6288989781626@s.whatsapp.net', 'Commit Changed: SiTotesBot v'+versi+'dev')
-                    fs.writeFileSync('./versi', '0')
-                }
-            })
+            let bcsk = await checkCommitUpdate()
+            let vcp = bcsk.commit
+            bcsk.versi = bcsk.versi.split('.')
+            bcsk.commit = bcsk.commit.split('.')
+            bcsk.versi = (((bcsk.versi[2]) + (bcsk.versi[1])) + (bcsk.versi[0]))
+            bcsk.commit = (((bcsk.commit[2]) + (bcsk.commit[1])) + (bcsk.commit[0]))
+            
+            if(bcsk.commit > bcsk.versi){
+                onic.sendMessage('6288989781626@s.whatsapp.net', {text: `Refresh Deploy SiTotes : v${vcp}Dev`}).then((result) => setVersiCommited(vcp))
+                
+            }
             
             let restorechat = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages : 0) : 0
             let lop = 0
