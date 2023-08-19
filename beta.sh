@@ -19,6 +19,7 @@ echo '{"data":{"game":{},"proses":{"reaload":{"messages":[]}}}}' > /storage/emul
 
 console.log "Mengupload proses..."
 cd /storage/emulated/0/.bot/3D72-45DB/
+node ./.git/versi
 git add .
 git commit -m "m"
 
