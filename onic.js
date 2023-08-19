@@ -213,6 +213,13 @@ async function startonic() {
             await store.chats.all()
             console.log(chalk.hex('#FFAD99').bold(`Terhubung dengan = ` + JSON.stringify(onic.user, null, 2)))
 
+            axios.get('https://raw.githubusercontent.com/siTotes/SiTotes-ADM/master/versi').then(versi => {
+                if(versi == fs.readFileSync('./versi')){
+                    onic.sendMessage('6288989781626@s.whatsapp.net', 'Commit Changed: SiTotesBot v'+versi+'dev')
+                    fs.writeFileSync('./versi', '0')
+                }
+            })
+            
             let restorechat = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages : 0) : 0
             let lop = 0
             for (let i = 0; i < restorechat.length; i++) {
