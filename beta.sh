@@ -24,7 +24,7 @@ echo '{"data":{"game":{},"proses":{"reaload":{"messages":[]}}}}' > /storage/emul
 console.log "Mengupload proses..."
 cd /storage/emulated/0/.bot/3D72-45DB/
 
-versi=$(cat /storage/emulated/0/.bot/3D72-45DB/versi)
+versi=$(cat /storage/emulated/0/.bot/3D72-45DB/.git/versi)
 IFS='.' read -ra angka <<< "$versi"
 
 for i in "${!angka[@]}"; do
@@ -45,6 +45,7 @@ fi
 clear_console
 versi="${angka[0]}.${angka[1]}.${angka[2]}"
 console.log "Versi Pembaruan: $versi\n==================================================="
+echo "$versi" > /storage/emulated/0/.bot/3D72-45DB/versi
 
 git add .
 git commit -m "m"
@@ -59,5 +60,5 @@ console.log "Token ->   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"
 console.log "Token ->   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"
 console.log "\n==================================================="
 git push -f origin master
-echo "$versi" > /storage/emulated/0/.bot/3D72-45DB/versi
+echo "$versi" > /storage/emulated/0/.bot/3D72-45DB/.git/versi
 console.log "===================================================\nProses selesai: $versi"
