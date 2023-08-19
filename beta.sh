@@ -40,7 +40,7 @@ else
 fi
 
 versi="${angka[0]}.${angka[1]}.${angka[2]}"
-console.log "\n\nVersi Pembaruan: $versi\n"
+console.log "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nVersi Pembaruan: $versi"
 
 git add .
 git commit -m "m"
