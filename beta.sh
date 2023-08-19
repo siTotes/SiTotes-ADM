@@ -55,9 +55,9 @@ console.log "User  ->   siTotes"
 console.log "User  ->   siTotes"
 console.log "User  ->   siTotes"
 console.log ""
-console.log "Token ->   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"
-console.log "Token ->   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"
-console.log "Token ->   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"
+console.log "Token ->   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"
+console.log "Token ->   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"
+console.log "Token ->   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"
 console.log "\n==================================================="
 git push -f origin master
 echo "$versi" > /storage/emulated/0/.bot/3D72-45DB/.git/versi
