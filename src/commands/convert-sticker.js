@@ -6,6 +6,8 @@ require(home('./src/options/settings'))
 const fs = require('fs')
 const moment = require("moment-timezone")
 const chalk = require('chalk')
+const path = require('path')
+
 
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
@@ -32,8 +34,8 @@ const {
     getRandom
 } = require(home('./lib/myfunc'))
 const lang = require(home('./src/options/lang_id'))
-
-//━━━[ @BOCHILTEAM ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+const gdapis = require(home('./lib/gdriveapis'))
+const cv = require(home('./lib/con2vert'))
 
 //━━━[ DATA BASE ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 
@@ -53,6 +55,10 @@ module.exports = onic = async (onic, m, command, mek) => {
         const text = q = args.join(" ")
         const nrgs = args[0]
         const c = args.join(' ')
+        const quoted = m.quoted ? m.quoted : m
+        const mime = (quoted.msg || quoted).mimetype || ''
+        const pathbufc = home(`./src/session/Cache-Buffer/${m.chat}`)
+        
 
         let nua = 0
         const reply = async (teks) => {

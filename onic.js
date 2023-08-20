@@ -57,6 +57,9 @@ const {
     setVersiCommited
 } = require('./lib/dbmongosle')
 const {
+    SitotesError
+} = require('./lib/sitotesLog')
+const {
     imageToWebp,
     videoToWebp,
     writeExifImg,
@@ -1222,7 +1225,7 @@ fs.watchFile(file, () => {
     console.log(chalk.redBright(`→ MODIFED '${__filename}'`))
     delete require.cache[file]
     require(file)
-    throw new Error('Ini Memang Di buat Error Untuk menghentikan kode dan memulai ulang ');
+    throw new SitotesError('Ini Memang Di buat Error Untuk menghentikan kode dan memulai ulang ');
 })
 
 function logModifed(module, cb = () => {}) {
@@ -1261,7 +1264,7 @@ logModifed('./src/options/settings')
 
 logModifed('./src/commands/game-rpg')
 logModifed('./src/commands/download-media')
-
+logModifed('./src/commands/convert-sticker')
 
 logModifed('./slebeww')
 
