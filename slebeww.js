@@ -231,176 +231,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         /**/console.log(mime)
 
         switch (command) {
-            case 'smeme': {
-                if (!text) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
-                    await reply(lang.SmemeErr(prefix, command))
-                    return;
-                }
-                if (/image/.test(mime) || /video/.test(mime) || /webp/.test(mime)) {
-                    await onic.sendReaction(m.chat, m.key, '⬇️')
-                    let dadl = await onic.downloadAndSaveMediaMessage(quoted, pathbufc)
-
-                    if (/video/.test(mime)) {
-                        await fs.writeFileSync(pathbufc + '.webp', await onic.videoToWebp(await cv.pathToBuffer(dadl)))
-                        dadl = pathbufc + '.webp'
-                    }
-                    await onic.sendReaction(m.chat, m.key, '⏳')
-                    let urlout = await gdapis.gdriveUpload(await cv.pathToBuffer(dadl), path.extname(dadl), '1jQk7lovSaz64K-W2mnCgzT0AXdDB5X-z').catch().finally(async () => {
-                        fs.unlinkSync(dadl)
-                        await onic.sendReaction(m.chat, m.key, '🗃️')
-                    })
-                    let spelit = []
-                    let texme = c.split("\n>")[0] ? c.split("\n>")[0] : text
-                    if (urlout.pref ? false : true) {
-                        await onic.sendReaction(m.chat, m.key, '❌')
-                        reply('Gagal membuat memegen, coba ulang')
-                        return;
-                    }
-                    let memetemp = `?background=${await urlout.pref}`
-
-                    let textnya = `-/${await onic.smemeTools(texme)}`
-
-                    for (let i = 1; i < 9; i++) {
-                        var editsm = c.split("\n>")[i]
-                        if (editsm) {
-                            spelit.push(editsm)
-                        }
-                    }
-                    for (let i = 0; i < 9; i++) {
-                        var istyp = spelit[i]
-                        if (istyp) {
-                            if (istyp.split("gaya=")[1]) {
-                                if (istyp.split("gaya=")[1] == '0') {
-                                    memetemp = memetemp + '?font=titilliumweb'
-                                } else if (istyp.split("gaya=")[1] == '1') {
-                                    memetemp = memetemp + '?font=kalam'
-                                } else if (istyp.split("gaya=")[1] == '2') {
-                                    memetemp = memetemp + '?font=impact'
-                                } else if (istyp.split("gaya=")[1] == '3') {
-                                    memetemp = memetemp + '?font=notosans'
-                                } else if (istyp.split("gaya=")[1] == '4') {
-                                    memetemp = memetemp + '?layout=top'
-                                } else {
-                                    return reply('Hanya nomer kak, Contoh:\n>gaya=1')
-                                }
-                            }
-                        }
-                    }
-                    if (!memetemp) return reply('Gagal Memperbarui file. kirim ulang / Chat owner jika perlu')
-
-                    if (/video/.test(mime)) {
-                        memetemp = `https://api.memegen.link/images/custom/${textnya}2.webp${memetemp}`
-                        memetemp = await onic.fetchUrlToBuffer(memetemp)
-                        await onic.sendWebpAsSticker(m.chat, memetemp, m)
-                        /*.catch(async _ => await onic.sendMessage(m.chat, {
-                                                    text: lang.doneErr('Sticker')
-                                                }, {
-                                                    quoted: m
-                                                }))*/
-                    } else if (/image/.test(mime)) {
-                        memetemp = `https://api.memegen.link/images/custom/${textnya}1.png${memetemp}`
-                        await onic.sendImageAsSticker(m.chat, memetemp, m, {
-                            packname: global.packname,
-                            author: global.author
-                        }).catch(async _ => await onic.sendMessage(m.chat, {
-                            text: lang.doneErr('Sticker')
-                        }, {
-                            quoted: m
-                        }))
-                    }
-                } else {
-                    await onic.sendReaction(m.chat, m.key, '❓')
-                    await reply(lang.SmemeErr(prefix, command))
-                }
-            }
-            break
-            case 'b': {
-                let buff = await onic.fetchUrlToBuffer(text)
-                let buffer
-                await onic.sendReaction(m.chat, m.key, '✈️')
-                await onic.sendMessage(m.chat, {
-                    sticker: buff,
-                }, {
-                    m
-                })
-                await onic.sendReaction(m.chat, m.key, '✅')
-            }
-            break
-            case 's':
-            case 'sticker':
-            case 'stiker': {
-                if (!quoted) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
-                    return reply(lang.NoToStik(prefix, command))
-                }
-
-                if (/image/.test(mime)) {
-                    await onic.sendReaction(m.chat, m.key, '⬇️')
-                    let media = await quoted.download()
-                    await onic.sendReaction(m.chat, m.key, '⏳')
-                    let encmedia
-
-                    if (/webp/.test(mime)) {
-                        encmedia = await onic.sendWebpAsSticker(m.chat, media, m)
-                        /*.catch(async _ => await onic.sendMessage(m.chat, {
-                            text: lang.doneErr('Sticker')
-                        }, {
-                            quoted: m
-                        }))*/
-
-                    } else {
-                        encmedia = await onic.sendImageAsSticker(m.chat, media, m, {
-                            packname: global.packname,
-                            author: global.author
-                        }).catch(async _ => await onic.sendMessage(m.chat, {
-                            text: lang.doneErr('Sticker')
-                        }, {
-                            quoted: m
-                        }))
-                    }
-
-                } else if (/video/.test(mime)) {
-                    if ((quoted.msg || quoted).seconds > 11) {
-                        await onic.sendReaction(m.chat, m.key, '📽️')
-                        return reply('Video terlalu panjang minimal kurang dari 11 detik')
-                    }
-
-                    await onic.sendReaction(m.chat, m.key, '⬇️')
-                    let media = await quoted.download()
-                    await onic.sendReaction(m.chat, m.key, '⏳')
-                    let encmedia = await onic.sendVideoAsSticker(m.chat, media, m, {
-                        packname: global.packname,
-                        author: global.author
-                    }).catch(async _ => await onic.sendMessage(m.chat, {
-                        text: lang.doneErr('Sticker')
-                    }, {
-                        quoted: m
-                    }))
-
-                } else {
-                    await onic.sendReaction(m.chat, m.key, '❓')
-                    reply(lang.NoToStik(prefix, command))
-                }
-            }
-            break
-            case 'ttp':
-            case 'attp':
-                if (!text){
-                    await onic.sendReaction(m.chat, m.key, '❓')
-                    return reply(lang.contoh(prefix, command, 'SLEBEWW'))
-                }
-                await onic.sendReaction(m.chat, m.key, '⏳')
-                let encmedia = await onic.sendImageAsSticker(m.chat, `https://api-sitotes.indowarestudio.repl.co/api/${command}?text=${text}`, m, {
-                        packname: global.packname,
-                        author: global.author
-                    })
-                    .catch(async (err) => {
-                        await onic.sendReaction(m.chat, m.key, '❌')
-                        reply('Gagal Membuat sticker coba ulang, jika masih tidak bisa chat owner')
-                    })
-                await fs.unlinkSync(encmedia)
-            break
+            
             default:
         }
         
@@ -408,6 +239,8 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         
         if(!isCmd) return
 
+
+//━━━[ game-rpg ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
         checkcid(
             db.data.game,
             [
@@ -430,7 +263,6 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             'gameid',
             'game-rpg'
         )
-
 
         chekcase([
             'bantuan',
@@ -459,6 +291,8 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             'm.saiful.anam.r.creator'
         ], 'game-rpg')
 
+
+//━━━[ download-media ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
         chekcase([
             'tt',
             'downloadtiktok',
@@ -491,6 +325,24 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
 
             'm.saiful.anam.r.creator'
         ], 'download-media')
+
+
+//━━━[ convert-sticker ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+        chekcase([
+            's',
+            'sticker',
+            'stiker',
+            
+            'smeme',
+            'smemegen',
+            'stickermeme',
+            'smeme2',
+            
+            'ttp',
+            'attp',
+
+            'm.saiful.anam.r.creator'
+        ], 'convert-sticker')
 
 
 

@@ -103,7 +103,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                         await onic.sendVideoUrl(m.chat, url, false, '', m).catch(async _ => {
                             await onic.sendReaction(m.chat, m.key, '❌')
                             await onic.sendMessage(m.chat, {
-                                text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,\njika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                                text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
                             }, {
                                 quoted: m
                             })
@@ -114,7 +114,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 } else {
                     await onic.sendReaction(m.chat, m.key, '❌')
                     await onic.sendMessage(m.chat, {
-                        text: '*Terjadi kesalahan Coba ulang kak,\njika masih tidak bisa periksa link di web,\ntolong bagikan ke owner:*\n\n```' + noerr.l + '```'
+                        text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa periksa link di web,*\n*tolong bagikan ke owner:*\n\n```' + noerr.l + '```'
                     }, {
                         quoted: m
                     })
@@ -158,7 +158,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if (noerr.s) {
                     if(output.data? false : true){
                         await onic.sendReaction(m.chat, m.key, '❌')
-                        return reply('*Terjadi kesalahan Coba ulang kak,\njika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + (onic.isJson(output)? JSON.stringify(output, null, 2) : output) + '```')
+                        return reply('*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + (onic.isJson(output)? JSON.stringify(output, null, 2) : output) + '```')
                     }
                     for(let i = 0; i < output.data.length; i++){
                         if (i === 5) { break; }
@@ -170,7 +170,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                                 await onic.sendVideoUrl(m.chat, url, false, '', m).catch(async _ => {
                                     await onic.sendReaction(m.chat, m.key, '❌')
                                     await onic.sendMessage(m.chat, {
-                                        text: '*Terjadi kesalahan mengirimkan ke anda Coba ulang kak,\njika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                                        text: '*Terjadi kesalahan mengirimkan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
                                     }, {
                                         quoted: m
                                     })
@@ -184,7 +184,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                                 await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
                                     await onic.sendReaction(m.chat, m.key, '❌')
                                     await onic.sendMessage(m.chat, {
-                                        text: '*Terjadi kesalahan Coba ulang kak,\njika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                                        text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
                                     }, {
                                         quoted: m
                                     })
@@ -199,7 +199,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 } else {
                     await onic.sendReaction(m.chat, m.key, '❌')
                     await onic.sendMessage(m.chat, {
-                        text: '*Terjadi kesalahan Coba ulang kak,\njika masih tidak bisa periksa link di web,\ntolong bagikan ke owner:*\n\n```' + noerr.l + '```'
+                        text: '*Terjadi kesalahan Coba ulang kak*,\n*jika masih tidak bisa periksa link di web,\ntolong bagikan ke owner:*\n\n```' + noerr.l + '```'
                     }, {
                         quoted: m
                     })
