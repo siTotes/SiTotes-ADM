@@ -231,7 +231,36 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         /**/console.log(mime)
 
         switch (command) {
-            
+            case 'info':
+            case 'menu':
+            case 'fitur': {
+                let fakedoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf']
+                fakedoc = fakedoc[Math.floor(fakedoc.length * Math.random())]
+
+                onic.sendMessage(m.chat, {
+                    document: pp_bot,
+                    mimetype: fakedoc,
+                    fileName: 'Author : @m.saiful.anam.r',
+                    fileLength: '999999999999',
+                    pageCount: '999',
+                    caption: lang.allmenu(prefix),
+                    contextInfo: {
+                        externalAdReply: {
+                            title: 'Selamat '+salam+' '+pushname,
+                            body: '© '+ownername,
+                            thumbnail: pp_bot,
+                            sourceUrl: myweb,
+                            mediaUrl: '',
+                            renderLargerThumbnail: true,
+                            showAdAttribution: true,
+                            mediaType: 1
+                        }
+                    }
+                }, {
+                    m
+                })
+            }
+            break
             default:
         }
         
@@ -352,6 +381,18 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             'keluarkan',
             'hapus',
             'remove',
+            
+            'add',
+            'tambah',
+            'new',
+            
+            'promote',
+            'naikan',
+            'jabatkan',
+            
+            'demote',
+            'turunkan',
+            'kucilkan',
 
             'm.saiful.anam.r.creator'
         ], 'group-only')

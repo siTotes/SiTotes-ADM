@@ -86,18 +86,54 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'keluarkan':
             case 'hapus':
             case 'remove':{
-                if (!isBotAdmins) return reply(lang.bukanadmin())
-                if (!(isGroupAdmins || isGroupOwner)) return reply(lang.adminOnly())
-                if (!m.quoted && !text) return reply(lang.targetkick())
+                await onic.sendReaction(m.chat, m.key, '⏳')
+                if (!isBotAdmins) return replyError(lang.bukanadmin(), '❌')
+                if (!(isGroupAdmins || isGroupOwner)) return replyError(lang.adminOnly(), '❌')
+                if (!m.quoted && !text) return replyError(lang.targetkick(), '❌')
                 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+                if(users == groupOwner) return replyError(lang.nokickpemilik(), '❌')
                 if(users == botNumber) if(isGroupOwner){
                     return await onic.groupParticipantsUpdate(m.chat, [users], 'remove').then(async(res) => await onic.sendReaction(m.chat, m.key, '✅')).catch((_) => replyError('*Terjadi kesalahan Coba ulang, tolong bagikan ke owner:*\n\n```'+_+'```', '❌'))
                 }else{
-                    return reply('Yang dapat mengeluarkan bot hanya pemilik grub, admin hanya bisa mengeluarkan secara manual')
+                    return replyError('Yang dapat mengeluarkan bot hanya pemilik grub, admin hanya bisa mengeluarkan secara manual')
                 }
-                if(users == groupOwner) return reply(nokickpemilik())
                 await onic.groupParticipantsUpdate(m.chat, [users], 'remove').then(async(res) => await onic.sendReaction(m.chat, m.key, '✅')).catch((_) => replyError('*Terjadi kesalahan Coba ulang, tolong bagikan ke owner:*\n\n```'+_+'```', '❌'))
             }
+            break
+            case 'add':
+            case 'tambah':
+            case 'new':{
+                await onic.sendReaction(m.chat, m.key, '⏳')
+                if (!isBotAdmins) return replyError(lang.bukanadmin(), '❌')
+                if (!(isGroupAdmins || isGroupOwner)) return replyError(lang.adminOnly(), '❌')
+                if (!m.quoted && !text) return replyError(lang.useradd(), '❌')
+                let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+                await onic.groupParticipantsUpdate(m.chat, [users], 'add').then(async(res) => await onic.sendReaction(m.chat, m.key, '✅')).catch((_) => replyError('*Terjadi kesalahan Coba ulang, tolong bagikan ke owner:*\n\n```'+_+'```', '❌'))
+            }
+            break
+            case 'promote':
+            case 'naikan':
+            case 'jabatkan':{
+                await onic.sendReaction(m.chat, m.key, '⏳')
+                if (!isBotAdmins) return replyError(lang.bukanadmin(), '❌')
+                if (!(isGroupAdmins || isGroupOwner)) return replyError(lang.adminOnly(), '❌')
+                if (!m.quoted && !text) return replyError(lang.userpromot(), '❌')
+                let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+                await onic.groupParticipantsUpdate(m.chat, [users], 'promote').then(async(res) => await onic.sendReaction(m.chat, m.key, '✅')).catch((_) => replyError('*Terjadi kesalahan Coba ulang, tolong bagikan ke owner:*\n\n```'+_+'```', '❌'))
+            }
+            break
+            case 'demote':
+            case 'turunkan':
+            case 'kucilkan':{
+                await onic.sendReaction(m.chat, m.key, '⏳')
+                if (!isBotAdmins) return replyError(lang.bukanadmin(), '❌')
+                if (!(isGroupAdmins || isGroupOwner)) return replyError(lang.adminOnly(), '❌')
+                if (!m.quoted && !text) return replyError(lang.userdemot(), '❌')
+                let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+                //if(users.includes('@')) return
+                await onic.groupParticipantsUpdate(m.chat, [users], 'demote').then(async(res) => await onic.sendReaction(m.chat, m.key, '✅')).catch((_) => replyError('*Terjadi kesalahan Coba ulang, tolong bagikan ke owner:*\n\n```'+_+'```', '❌'))
+            }
+            break
         }
 
     } catch (err) {
