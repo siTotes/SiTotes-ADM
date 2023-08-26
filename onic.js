@@ -311,7 +311,7 @@ async function startonic() {
     onic.ev.process(
         async (events) => {
             if(!events['messages.upsert']){
-                console.log(JSON.stringify(events, null, 2))
+                //console.log(JSON.stringify(events, null, 2))
             }
             if (events['presence.update']) {
                 await onic.sendPresenceUpdate('available')
