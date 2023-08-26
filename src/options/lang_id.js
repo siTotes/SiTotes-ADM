@@ -34,6 +34,24 @@ exports.okk = () => {
     return `✅`
 }
 
+
+//━━━[ Kusus Grub ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+exports.bukanadmin = () => {
+    return 'Tolong Jadikan Admin grub untuk menggunakan fitur ini😉'
+}
+
+exports.adminOnly = () => {
+    return 'Fitur ini khusus admin saja😉'
+}
+
+exports.targetkick = () => {
+    return `Kirim nomer/tag/reply target yang ingin di kick !`
+}
+
+exports.nokickpemilik = () => {
+    return `Kamu tidak dapat mengeluarkan SiTotes dan Pembuat grub`
+}
+
 //━━━[ Game ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 exports.JwbTrue = (soalapa, rpmoney, totalxp, mainlagi) => {
     return `╭─❒ 「 *🎉 SELAMAT 🎉* 」 

@@ -71,7 +71,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         const content = JSON.stringify(mek.message)
         const type = Object.keys(mek.message)[0];
         if (m && type == "protocolMessage") onic.ev.emit("message.delete", m.message.protocolMessage.key);
-        const isCmd = mek.key.fromMe ? /^[$]/.test(body) : /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/$%^&.+-,\\\©^]/.test(body)
+        const isCmd = mek.key.fromMe ? /^[$]/.test(body) : /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/%^&.+-,\\\©^]/.test(body)
         const prefix = isCmd ? budy[0] : ''
         const command = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : ''
         const from = mek.key.remoteJid
@@ -344,6 +344,17 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             'm.saiful.anam.r.creator'
         ], 'convert-sticker')
 
+
+
+//━━━[ group-only ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+        chekcase([
+            'kick',
+            'keluarkan',
+            'hapus',
+            'remove',
+
+            'm.saiful.anam.r.creator'
+        ], 'group-only')
 
 
     } catch (err) {

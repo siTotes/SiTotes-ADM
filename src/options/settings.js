@@ -1,3 +1,5 @@
+const home = (path) => __base + path
+
 const fs = require('fs')
 const chalk = require('chalk')
 
@@ -7,8 +9,8 @@ global.anticall = true //anti call, jika true maka org yg nelpon bot auto di blo
 global.allowGrub = true
 
 global.botname = "SiTotes-Md" //namabot kalian
-global.ownername = "ᴹᴿ᭄ SiTotes ×፝֟͜×" //nama kalian
-global.myweb = "https://xnxx.com" //bebas asal jan hapus
+global.ownername = 'Bot᭄ SiTotes ×፝֟͜×  |  v' + fs.readFileSync(home('./versi'), 'utf-8').trim()+'-dev' //nama kalian
+global.myweb = "https://web.sitotes.repl.co" //bebas asal jan hapus
 global.email = "si.totes.ofc@gmail.com" //bebas
 global.negara = "Indonesia" //bebas
 global.timezone = 'Asia/Jakarta' //  timezone wib

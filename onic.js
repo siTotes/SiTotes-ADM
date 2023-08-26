@@ -1,5 +1,5 @@
-require('./src/options/settings')
 global.__base = __dirname + '/';
+require('./src/options/settings')
 
 //require("http").createServer((_, res) => res.end("Uptime!")).listen(8080)
 
@@ -310,6 +310,9 @@ async function startonic() {
     onic.serializeM = (m) => smsg(onic, m, store)
     onic.ev.process(
         async (events) => {
+            if(!events['messages.upsert']){
+                console.log(JSON.stringify(events, null, 2))
+            }
             if (events['presence.update']) {
                 await onic.sendPresenceUpdate('available')
             }
@@ -1182,7 +1185,8 @@ async function startonic() {
 
     return onic
 }
-startonic()
+startonic();
+
 
 
 function risetSesi() {
@@ -1218,6 +1222,15 @@ setInterval(() => {
         ttlerr = ttlerr * 0
     }
 }, 30000)
+
+
+
+
+
+
+
+
+
 
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {
@@ -1265,6 +1278,7 @@ logModifed('./src/options/settings')
 logModifed('./src/commands/game-rpg')
 logModifed('./src/commands/download-media')
 logModifed('./src/commands/convert-sticker')
+logModifed('./src/commands/group-only')
 
 logModifed('./slebeww')
 
