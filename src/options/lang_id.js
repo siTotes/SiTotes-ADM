@@ -206,8 +206,6 @@ exports.allmenu = (prefix) => {
 ││├ ${prefix}jabatkan
 ││╰×
 ││
-│╰──────────•
-│
 *│├╭→ #Demote / Jadikan Tidak Admin*
 │││
 ││├ ${prefix}demote

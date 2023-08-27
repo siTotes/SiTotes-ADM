@@ -1279,6 +1279,7 @@ logModifed('./src/commands/game-rpg')
 logModifed('./src/commands/download-media')
 logModifed('./src/commands/convert-sticker')
 logModifed('./src/commands/group-only')
+logModifed('./src/commands/openai-gpt')
 
 logModifed('./slebeww')
 

@@ -74,6 +74,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         const isCmd = mek.key.fromMe ? /^[$]/.test(body) : /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/%^&.+-,\\\©^]/.test(body)
         const prefix = isCmd ? budy[0] : ''
         const command = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : ''
+        const cimmind = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : body.trim().split(' ').shift().toLowerCase()
         const from = mek.key.remoteJid
         const time = moment(Date.now()).tz(timezone).locale('id').format('HH:mm:ss z')
         const wita = moment(Date.now()).tz('Asia/Makassar').locale('id').format('HH:mm:ss z')
@@ -205,12 +206,22 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         )
 
         const casee = (lib) => './src/commands/' + lib
-        const chekcase = (casenya, runto) => {
-            let lgbm = {}
-            lgbm.casse = casenya
-            for (let i = 0; i < lgbm.casse.length; i++) {
-                if (isCmd && command == lgbm.casse[i]) {
-                    require(casee(runto))(onic, m, command, mek)
+        const chekcase = (casenya, runto , perfic = true) => {
+            if(perfic){
+                let lgbm = {}
+                lgbm.casse = casenya
+                for (let i = 0; i < lgbm.casse.length; i++) {
+                    if (isCmd && command == lgbm.casse[i]) {
+                        require(casee(runto))(onic, m, command, mek)
+                    }
+                }
+            }else{
+                let lgbm = {}
+                lgbm.casse = casenya
+                for (let i = 0; i < lgbm.casse.length; i++) {
+                    if (cimmind == lgbm.casse[i]) {
+                        require(casee(runto))(onic, m, cimmind, mek)
+                    }
                 }
             }
 
@@ -229,6 +240,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             }
         }
         /**/console.log(mime)
+        console.log('→→→=≈'+cimmind)
 
         switch (command) {
             case 'info':
@@ -266,7 +278,20 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         
         
         
-        if(!isCmd) return
+        
+        
+        if(!isCmd){
+            chekcase([
+                'gambarkan',
+                'bot',
+                'ai',
+    
+                'm.saiful.anam.r.creator'
+            ], 'openai-gpt', false)
+            
+            
+            return
+        }
 
 
 //━━━[ game-rpg ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
