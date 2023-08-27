@@ -37,7 +37,7 @@ const lang = require(home('./src/options/lang_id'))
 //━━━[ OpenAi Chat Gpt ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const { OpenAI } = require('openai');
 
-const apia = JSON.parse(fs.readFileSync(home('./lib/.api/openai-gpt.json')))[0]
+const apia = JSON.parse(fs.readFileSync(home('./lib/.api/.openai-gpt.json')))[0]
 const openai = new OpenAI({
   apiKey: apia,
 });
