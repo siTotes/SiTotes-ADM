@@ -197,9 +197,8 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             if (!m.key.fromMe && !isCreator) return
         }
 
-        console.log()
         console.log(
-            chalk.black(chalk.bgWhite('|=| MSG |-> ')),
+            chalk.black(chalk.bgWhite(' \n|=| MSG |-> ')),
             chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
             chalk.black(chalk.bgBlue(`\n ${budy || m.mtype} `)),
             chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
