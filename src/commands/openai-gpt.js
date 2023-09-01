@@ -44,7 +44,6 @@ const openai = new OpenAI({
 
 //━━━[ DATA BASE ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 
-
 //━━━[ If user chat download-media ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 module.exports = onic = async (onic, m, command, mek) => {
     try {
@@ -85,19 +84,22 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if(text.length < 10) return replyError('Coba yang lebih jelas lagi contoh:\nGambarkan kuda terbang di langit', '❌')
                 
                 await onic.sendPresenceUpdate('composing', m.chat)
-                const completion = await openai.chat.completions.create({
+                let completion = await openai.chat.completions.create({
                     messages: [{ role: 'user', content: text }],
                     model: 'gpt-3.5-turbo',
                 });
+                completion = completion.choices[0].message.content
+                
+                
             
-                await reply(completion.choices[0].message.content)
+                await reply(completion)
                 await onic.sendPresenceUpdate('available', m.chat) 
                 await onic.sendReaction(m.chat, m.key, '✅')
                 
             }
             break
         }
-
+        
     } catch (err) {
         /**/console.log(onic.printErr(err))
         await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')

@@ -190,25 +190,25 @@ async function startonic() {
             let reason = new Boom(lastDisconnect?.error)?.output.statusCode
             if (reason === DisconnectReason.badSession) {
                 console.log(chalk.hex('#FF6158')(`SENDER → File Sesi Buruk, Harap Hapus Sesi dan Pindai Lagi`));
-                startonic();
+                setTimeout(startonic, 10000)
             } else if (reason === DisconnectReason.connectionClosed) {
                 console.log(chalk.hex('#FF6158')("SENDER → Koneksi ditutup, menghubungkan kembali...."));
-                startonic();
+                setTimeout(startonic, 10000)
             } else if (reason === DisconnectReason.connectionLost) {
                 console.log(chalk.hex('#FF6158')("SENDER → Koneksi Hilang dari Server, menyambungkan kembali..."));
-                startonic();
+                setTimeout(startonic, 10000)
             } else if (reason === DisconnectReason.connectionReplaced) {
                 console.log(chalk.hex('#FF6158')("SENDER → Koneksi Diganti, Sesi Baru Lain Dibuka, menghubungkan kembali..."));
-                startonic();
+                setTimeout(startonic, 10000)
             } else if (reason === DisconnectReason.loggedOut) {
                 console.log(chalk.hex('#FF6158')(`SENDER → Perangkat Keluar, Harap Pindai Lagi Dan Jalankan.`));
-                onic.logout();
+                setTimeout(startonic, 10000)
             } else if (reason === DisconnectReason.restartRequired) {
                 console.log(chalk.hex('#FF6158')("SENDER → Restart Diperlukan, Restart..."));
-                startonic();
+                setTimeout(startonic, 10000)
             } else if (reason === DisconnectReason.timedOut) {
                 console.log(chalk.hex('#FF6158')("SENDER → Koneksi Habis, Menghubungkan..."));
-                startonic();
+                setTimeout(startonic, 10000)
             } else onic.end(chalk.hex('#FF6158')(`SENDER → Alasan Putus Tidak Diketahui: ${reason}|${connection}`))
 
             if (ttlerr > 3) {
@@ -471,6 +471,35 @@ async function startonic() {
         outpot = await outpot.replaceAll(' ', '_');
 
         return outpot
+    }
+    
+    onic.vcardGetJid = async (m) => {
+        let phoneNumbers = []
+        
+        if(m.quoted? ( m.quoted.contacts? false:true):true) return phoneNumbers
+        
+        await m.quoted.contacts.forEach(contact => {
+            const vCard = contact.vcard;
+            const telLine = vCard.match(/TEL;.*:(.*)/);
+            if (telLine && telLine.length > 1) {
+                const phoneNumber = telLine[1].replace(/[^0-9]/g, '') + '@s.whatsapp.net';
+                phoneNumbers.push(phoneNumber);
+            }
+        })
+        return phoneNumbers
+        
+    }
+    
+    onic.textGetJid = async (inputString) => {
+        const regex = /(\+?\d+)\s?(\d{3}\d{4}\d{5,7})/g;
+        const formattedNumbers = [];
+        let match;
+        
+        while ((match = regex.exec(inputString.replaceAll('-', ''))) !== null) {
+            const formattedNumber = match[1] + match[2].replace(/\D/g, '') + '@s.whatsapp.net';
+            formattedNumbers.push(formattedNumber.replace('+', ''));
+        }
+        return formattedNumbers;
     }
 
     /**
@@ -1221,7 +1250,7 @@ setInterval(() => {
     } else {
         ttlerr = ttlerr * 0
     }
-}, 30000)
+}, 60000)
 
 
 

@@ -197,8 +197,9 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             if (!m.key.fromMe && !isCreator) return
         }
 
+        console.log()
         console.log(
-            chalk.black(chalk.bgWhite('\n |=| MSG |-> ')),
+            chalk.black(chalk.bgWhite('|=| MSG |-> ')),
             chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
             chalk.black(chalk.bgBlue(`\n ${budy || m.mtype} `)),
             chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
@@ -240,7 +241,6 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             }
         }
         /**/console.log(mime)
-        console.log('→→→=≈'+cimmind)
 
         switch (command) {
             case 'info':
@@ -273,7 +273,10 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 })
             }
             break
-            default:
+            // default:{
+                // let users = m.mentionedJid[0] ? m.mentionedJid : (m.quoted?.contacts)? await onic.vcardGetJid(m) : m.quoted ? m.quoted.sender : text.includes('+')? await onic.textGetJid(text) : text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+                // reply(JSON.stringify(users, null, 2))
+            // }
         }
         
         
