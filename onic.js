@@ -324,9 +324,9 @@ async function startonic() {
 
                                 emptyImage.print(customFont, (500 / 4 + 25), (500 / 2 + 149), currentTime);
 
-                                await emptyImage.writeAsync('./src/.sitotes/media/image/output.png');
+                                emptyImage.writeAsync('./src/.sitotes/media/image/output.png');
                                 
-                                await onic.updateProfilePicture(onic.user.id, {
+                                return onic.updateProfilePicture(onic.user.id, {
                                     url: './src/.sitotes/media/image/output.png'
                                 })
                             });
