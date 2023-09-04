@@ -351,7 +351,7 @@ async function startonic() {
         }
     })
     
-    const interval = 5 * 60 * 1000
+    const interval = 20 * 60 * 1000
 
     setInterval(function(){
         Jimp.read('./src/.sitotes/media/image/sitotes.png')

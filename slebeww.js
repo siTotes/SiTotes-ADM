@@ -110,7 +110,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         const latensii = speed() - timestampi
         const pathbufc = `./src/session/Cache-Buffer/${m.chat}`
 
-        if (m.isGroup && !allowGrub) return
+        //if (m.isGroup && !allowGrub) return
 
         onic.addProsMsg = () => {
             let pe = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0) : 0
