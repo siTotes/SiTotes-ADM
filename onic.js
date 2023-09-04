@@ -306,7 +306,7 @@ async function startonic() {
                 
                 try{
                 Jimp.read('./src/.sitotes/media/image/sitotes.png')
-                    .then(image => {
+                    .then(async image => {
                         const emptyImage = new Jimp(image.getWidth(), image.getHeight(), 0x00000000)
 
                         emptyImage.composite(image, 0, 0);
@@ -319,14 +319,14 @@ async function startonic() {
                             hour12: true
                         });
 
-                        Jimp.loadFont(Jimp.FONT_SANS_32_WHITE).then(font => {
+                        Jimp.loadFont(Jimp.FONT_SANS_32_WHITE).then(async font => {
                             Jimp.loadFont('./src/.sitotes/media/font/fnt/proxima-soft.fnt').then(customFont => {
 
-                                emptyImage.print(customFont, (500 / 4 + 25), (500 / 2 + 149), currentTime);
+                                await emptyImage.print(customFont, (500 / 4 + 25), (500 / 2 + 149), currentTime);
 
-                                emptyImage.writeAsync('./src/.sitotes/media/image/output.png');
+                                await emptyImage.writeAsync('./src/.sitotes/media/image/output.png');
                                 
-                                return onic.updateProfilePicture(onic.user.id, {
+                                return await onic.updateProfilePicture(onic.user.id, {
                                     url: './src/.sitotes/media/image/output.png'
                                 })
                             });
