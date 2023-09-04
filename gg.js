@@ -1,14 +1,9 @@
-const questionResponses = {
-    'pemilikmu': "Aku diciptakan oleh M. Saiful Anam.",
-    'siapa yang membuatmu': "Aku diciptakan oleh M. Saiful Anam.",
-}
-let text = 'pemilikmu'
-
-
-async function customChatGpt(){
-    for (const questionPattern in questionResponses) {
-        if (text.includes(questionPattern)) {
-            console.log(questionResponses[questionPattern])
-        }
+async function printEverySecond() {
+    while (true) {
+        console.log('Pesan setiap 1 detik');
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Menunggu 1 detik sebelum melanjutkan iterasi berikutnya
     }
 }
+
+printEverySecond();
+printEverySecond();

@@ -220,18 +220,19 @@ async function startonic() {
             await store.chats.all()
             console.log(chalk.hex('#FFAD99').bold(`Terhubung dengan = ` + JSON.stringify(onic.user, null, 2)))
 
-            let bcsk = await checkCommitUpdate()
-            let vcp = bcsk.commit
-            bcsk.versi = bcsk.versi.split('.')
-            bcsk.commit = bcsk.commit.split('.')
-            bcsk.versi = (((bcsk.versi[2]) + (bcsk.versi[1])) + (bcsk.versi[0]))
-            bcsk.commit = (((bcsk.commit[2]) + (bcsk.commit[1])) + (bcsk.commit[0]))
-            
-            if(bcsk.commit > bcsk.versi){
-                onic.sendMessage('6288989781626@s.whatsapp.net', {text: `Refresh Deploy SiTotes : v${vcp}Dev`}).then((result) => setVersiCommited(vcp))
-                
-            }
-            
+            checkCommitUpdate().then(async bcsk => {
+                let vcp = bcsk.versi.split('.')
+                vcp = (((vcp[2]) + (vcp[1])) + (vcp[0])).trim()
+                let ccp = bcsk.commit.split('.')
+                ccp = (((ccp[2]) + (ccp[1])) + (ccp[0])).trim()
+
+                if (parseInt(ccp) > parseInt(vcp)) {
+                    await onic.sendMessage('6288989781626@s.whatsapp.net', {
+                        text: `Refresh Deploy SiTotes : v${bcsk.commit}Dev`
+                    }).then((result) => setVersiCommited(bcsk.commit))
+                }
+            })
+
             let restorechat = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages : 0) : 0
             let lop = 0
             for (let i = 0; i < restorechat.length; i++) {
@@ -239,18 +240,18 @@ async function startonic() {
                     let raobj = {}
                     raobj.messages = []
                     raobj.messages.push(restorechat[i])
-                    let lop = db.data.proses.reaload.messages[i].count? db.data.proses.reaload.messages[i].count : 0
+                    let lop = db.data.proses.reaload.messages[i].count ? db.data.proses.reaload.messages[i].count : 0
                     lop++
                     db.data.proses.reaload.messages[i].count = lop
-                    if(db.data.proses.reaload.messages[i].count == 3){
+                    if (db.data.proses.reaload.messages[i].count == 3) {
                         await onic.sendReaction(db.data.proses.reaload.messages[i].key.remoteJid, db.data.proses.reaload.messages[i].key, '❌')
                         await onic.sendMessage(db.data.proses.reaload.messages[i].key.remoteJid, {
                             text: 'Terjadi Kesalahan terus menerus Tolong hubungi pembuat jika menurut anda merasa tidak ada yang salah, atau coba lagi'
                         })
                         db.data.proses.reaload.messages.splice(i, 1);
                         fs.writeFileSync(`./src/.sitotes/data/database.json`, JSON.stringify(global.db, null, 2))
-                        
-                    }else{
+
+                    } else {
                         await onic.ev.emit("messages.upsert", raobj)
                     }
                 }
@@ -288,6 +289,7 @@ async function startonic() {
                     risetSesi()
                     resetcache = 0
                 }
+
                 /*
 
                 let lcInfo = './src/.sitotes/data/data-msg.json'
@@ -301,6 +303,38 @@ async function startonic() {
 
 
                 require("./slebeww")(onic, m, chatUpdate, mek, store)
+                
+                try{
+                Jimp.read('./src/.sitotes/media/image/sitotes.png')
+                    .then(image => {
+                        const emptyImage = new Jimp(image.getWidth(), image.getHeight(), 0x00000000)
+
+                        emptyImage.composite(image, 0, 0);
+
+                        const date = new Date();
+                        const daysOfWeek = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+                        const currentTime = daysOfWeek[date.getDay()] + ' ' + date.toLocaleTimeString('en-US', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                        });
+
+                        Jimp.loadFont(Jimp.FONT_SANS_32_WHITE).then(font => {
+                            Jimp.loadFont('./src/.sitotes/media/font/fnt/proxima-soft.fnt').then(customFont => {
+
+                                emptyImage.print(customFont, (500 / 4 + 25), (500 / 2 + 149), currentTime);
+
+                                await emptyImage.writeAsync('./src/.sitotes/media/image/output.png');
+                                
+                                await onic.updateProfilePicture(onic.user.id, {
+                                    url: './src/.sitotes/media/image/output.png'
+                                })
+                            });
+                        });
+                    })
+                }catch(e){
+                    onic.sendMessage(m.chat, {text:'Abaikan ini'+ e})
+                }
             }
         } catch (err) {
             console.log(onic.printErr(err))
@@ -310,7 +344,7 @@ async function startonic() {
     onic.serializeM = (m) => smsg(onic, m, store)
     onic.ev.process(
         async (events) => {
-            if(!events['messages.upsert']){
+            if (!events['messages.upsert']) {
                 //console.log(JSON.stringify(events, null, 2))
             }
             if (events['presence.update']) {
@@ -368,7 +402,7 @@ async function startonic() {
 
         return chalk.yellow.bold.visible(aux)
     }
-    
+
     onic.isJson = (str) => {
         try {
             JSON.parse(str);
@@ -472,12 +506,12 @@ async function startonic() {
 
         return outpot
     }
-    
+
     onic.vcardGetJid = async (m) => {
         let phoneNumbers = []
-        
-        if(m.quoted? ( m.quoted.contacts? false:true):true) return phoneNumbers
-        
+
+        if (m.quoted ? (m.quoted.contacts ? false : true) : true) return phoneNumbers
+
         await m.quoted.contacts.forEach(contact => {
             const vCard = contact.vcard;
             const telLine = vCard.match(/TEL;.*:(.*)/);
@@ -487,14 +521,14 @@ async function startonic() {
             }
         })
         return phoneNumbers
-        
+
     }
-    
+
     onic.textGetJid = async (inputString) => {
         const regex = /(\+?\d+)\s?(\d{3}\d{4}\d{5,7})/g;
         const formattedNumbers = [];
         let match;
-        
+
         while ((match = regex.exec(inputString.replaceAll('-', ''))) !== null) {
             const formattedNumber = match[1] + match[2].replace(/\D/g, '') + '@s.whatsapp.net';
             formattedNumbers.push(formattedNumber.replace('+', ''));
@@ -874,7 +908,7 @@ async function startonic() {
      * @param {*} options 
      * @returns 
      */
-     
+
     onic.sendImageUrl = async (jid, path, caption = '', quoted = '', options) => {
         return await onic.sendMessage(jid, {
             image: {
@@ -886,7 +920,7 @@ async function startonic() {
             quoted
         })
     }
-    
+
     onic.sendVideoUrl = async (jid, path, gif = false, caption = '', quoted = '', options) => {
         return await onic.sendMessage(jid, {
             video: {
