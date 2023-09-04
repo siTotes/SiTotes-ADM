@@ -351,8 +351,9 @@ async function startonic() {
         }
     })
     
+    const interval = 20 * 60 * 1000
+
     setInterval(async function(){
-        const interval = 20 * 60 * 1000
         const image = await Jimp.read('./src/.sitotes/media/image/sitotes.png')
         const emptyImage = new Jimp(image.getWidth(), image.getHeight(), 0x00000000)
 
