@@ -22,7 +22,6 @@ const chalk = require('chalk')
 const speed = require('performance-now')
 const moment = require("moment-timezone")
 const path = require('path')
-const Jimp = require('jimp')
 
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const svdata = () => fs.writeFileSync(`./src/.sitotes/data/database.json`, JSON.stringify(global.db, null, 2))

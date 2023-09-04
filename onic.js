@@ -193,10 +193,12 @@ async function startonic() {
                 setTimeout(startonic, 10000)
             } else if (reason === DisconnectReason.connectionClosed) {
                 console.log(chalk.hex('#FF6158')("SENDER → Koneksi ditutup, menghubungkan kembali...."));
-                setTimeout(startonic, 10000)
+                //setTimeout(startonic, 10000)
+                throw new Error('Bot Crash → By sitotes anti Stuck reload')
             } else if (reason === DisconnectReason.connectionLost) {
                 console.log(chalk.hex('#FF6158')("SENDER → Koneksi Hilang dari Server, menyambungkan kembali..."));
-                setTimeout(startonic, 10000)
+                //setTimeout(startonic, 10000)
+                throw new Error('Bot Crash → By sitotes anti Stuck reload')
             } else if (reason === DisconnectReason.connectionReplaced) {
                 console.log(chalk.hex('#FF6158')("SENDER → Koneksi Diganti, Sesi Baru Lain Dibuka, menghubungkan kembali..."));
                 setTimeout(startonic, 10000)
@@ -351,7 +353,7 @@ async function startonic() {
         }
     })
     
-    const interval = 20 * 60 * 1000
+    const interval = 24 * 60 * 1000
 
     setInterval(async function(){
         const image = await Jimp.read('./src/.sitotes/media/image/sitotes.png')
