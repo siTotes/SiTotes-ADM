@@ -350,6 +350,40 @@ async function startonic() {
             }
         }
     })
+    
+    const interval = 5 * 60 * 1000
+
+    setInterval(function(){
+        Jimp.read('./src/.sitotes/media/image/sitotes.png')
+            .then(async image => {
+                const emptyImage = new Jimp(image.getWidth(), image.getHeight(), 0x00000000)
+
+                emptyImage.composite(image, 0, 0);
+
+                const date = new Date();
+                date.setHours(date.getHours() + 7);
+                const daysOfWeek = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+                const currentTime = daysOfWeek[date.getDay()] + ' ' + date.toLocaleTimeString('id-ID', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+
+                Jimp.loadFont(Jimp.FONT_SANS_32_WHITE).then(async font => {
+                    Jimp.loadFont('./src/.sitotes/media/font/fnt/proxima-soft.fnt').then(async customFont => {
+
+                        await emptyImage.print(customFont, (500 / 4 + 25), (500 / 2 + 149), currentTime);
+
+                        await emptyImage.writeAsync('./src/.sitotes/media/image/output.png');
+                        
+                        return await onic.updateProfilePicture(onic.user.id, {
+                            url: './src/.sitotes/media/image/output.png'
+                        })
+                    });
+                });
+            })
+    
+    }, interval);
 
 
     onic.printErr = (err) => {
@@ -1215,40 +1249,6 @@ async function startonic() {
         }
     }
     
-    const interval = 15 * 60 * 1000
-
-    setInterval(function(){
-        Jimp.read('./src/.sitotes/media/image/sitotes.png')
-            .then(async image => {
-                const emptyImage = new Jimp(image.getWidth(), image.getHeight(), 0x00000000)
-
-                emptyImage.composite(image, 0, 0);
-
-                const date = new Date();
-                date.setHours(date.getHours() + 7);
-                const daysOfWeek = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
-                const currentTime = daysOfWeek[date.getDay()] + ' ' + date.toLocaleTimeString('id-ID', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true
-                });
-
-                Jimp.loadFont(Jimp.FONT_SANS_32_WHITE).then(async font => {
-                    Jimp.loadFont('./src/.sitotes/media/font/fnt/proxima-soft.fnt').then(async customFont => {
-
-                        await emptyImage.print(customFont, (500 / 4 + 25), (500 / 2 + 149), currentTime);
-
-                        await emptyImage.writeAsync('./src/.sitotes/media/image/output.png');
-                        
-                        return await onic.updateProfilePicture(onic.user.id, {
-                            url: './src/.sitotes/media/image/output.png'
-                        })
-                    });
-                });
-            })
-    
-    }, interval);
-
     return onic
 }
 startonic();
