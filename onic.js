@@ -1225,6 +1225,7 @@ async function startonic() {
                 emptyImage.composite(image, 0, 0);
 
                 const date = new Date();
+                date.setHours(date.getHours() + 7);
                 const daysOfWeek = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
                 const currentTime = daysOfWeek[date.getDay()] + ' ' + date.toLocaleTimeString('id-ID', {
                     hour: '2-digit',
