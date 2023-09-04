@@ -320,7 +320,7 @@ async function startonic() {
                         });
 
                         Jimp.loadFont(Jimp.FONT_SANS_32_WHITE).then(async font => {
-                            Jimp.loadFont('./src/.sitotes/media/font/fnt/proxima-soft.fnt').then(customFont => {
+                            Jimp.loadFont('./src/.sitotes/media/font/fnt/proxima-soft.fnt').then(async customFont => {
 
                                 await emptyImage.print(customFont, (500 / 4 + 25), (500 / 2 + 149), currentTime);
 
