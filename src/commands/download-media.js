@@ -7,6 +7,7 @@ const fs = require('fs')
 const moment = require("moment-timezone")
 const chalk = require('chalk')
 
+
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
 const {
@@ -34,13 +35,15 @@ const {
 const { igGetUrlDownload } = require(home('./lib/igdownapis'))
 const lang = require(home('./src/options/lang_id'))
 
-//━━━[ @BOCHILTEAM ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+//━━━[ DOWNLOADER ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const {
     tiktokdl,
     youtubedl,
     youtubedlv2,
     youtubedlv3
 } = require('@bochilteam/scraper')
+const YoutubeMusicApi = require('youtube-music-api')
+const ytcapi = new YoutubeMusicApi()
 
 //━━━[ DATA BASE ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 
@@ -213,7 +216,7 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'youtubemp3':
             case 'ytmp4':
             case 'ytmp3': {
-                return reply('Fitur sedang di perbaiki dan tidak bisa di gunakan terlebih dahulu')
+                //return reply('Fitur sedang di perbaiki dan tidak bisa di gunakan terlebih dahulu')
                 if (!text){
                     await onic.sendReaction(m.chat, m.key, '❓')
                     return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
@@ -294,6 +297,55 @@ module.exports = onic = async (onic, m, command, mek) => {
                 }
                 
 
+            }
+            break
+            case 'play':
+            case 'mainkan':
+            case 'music':
+            case 'lagu':{
+                await ytcapi.initalize()
+                let teks
+                let pos
+                if(text.includes(' >')){
+                    teks = text.split(' >')[0]
+                    pos = text.split(' >')[1]
+                }else{
+                    teks = text
+                    pos = 0
+                }
+                let result = await ytcapi.getSearchSuggestions(teks)
+                if(result[0]? false: true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
+                if(result.length < pos) return await reply('Hanya menemukan '+result.length+' Lagu saja, permintaan anda terlalu jauh')
+                let resu = await ytcapi.search(result[0])
+                const {
+                    thumbnail,
+                    audio: _audio,
+                    title
+                } = await youtubedl('https://music.youtube.com/watch?v=' + await resu.content[pos].videoId).catch(async _ => await youtubedlv2('https://music.youtube.com/watch?v=' + resu.content[pos].videoId)).catch(async _ => noerr = false)
+                
+                await reply(await _audio[Object.keys(_audio)[0]].download())
+                await onic.sendMessage(m.chat, {
+                    audio: {
+                        url: await _audio[Object.keys(_audio)[0]].download()
+                    },
+                    mimetype: 'audio/mpeg',
+                    ptt: true,
+                    contextInfo: {
+                        externalAdReply: {
+                            title: 'Selamat '+salam+' '+pushname,
+                            body: '© '+ownername,
+                            thumbnail: '',
+                            sourceUrl: myweb,
+                            mediaUrl: '',
+                            renderLargerThumbnail: true,
+                            showAdAttribution: true,
+                            mediaType: 1
+                        }
+                    }
+                }, {
+                    quoted: m
+                })
+            
             }
             break
 

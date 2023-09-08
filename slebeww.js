@@ -377,6 +377,11 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             'youtubemp3',
             'ytmp4',
             'ytmp3',
+            
+            'play',
+            'mainkan',
+            'music',
+            'lagu',
 
             'm.saiful.anam.r.creator'
         ], 'download-media')

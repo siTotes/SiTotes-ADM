@@ -468,7 +468,7 @@ async function startonic() {
         return fetch();
     }
 
-    onic.axiosUrlToBuffer = (url) => {
+    onic.axiosUrlToBuffer2 = (url) => {
         return axios.get(url, {
                 responseType: 'arraybuffer'
             })
@@ -955,6 +955,18 @@ async function startonic() {
      * @param {*} options 
      * @returns 
      */
+    onic.sendAudioUrl = async (jid, path, quoted = '', ptt = false, options) => {
+        return await onic.sendMessage(jid, {
+            audio: {
+                url: path
+            },
+            ptt: ptt,
+            ...options
+        }, {
+            quoted
+        })
+    }
+    
     onic.sendAudio = async (jid, path, quoted = '', ptt = false, options) => {
         let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         return await onic.sendMessage(jid, {
