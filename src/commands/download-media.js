@@ -323,8 +323,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     title
                 } = await youtubedl('https://music.youtube.com/watch?v=' + await resu.content[pos].videoId).catch(async _ => await youtubedlv2('https://music.youtube.com/watch?v=' + resu.content[pos].videoId)).catch(async _ => noerr = false)
                 
-                await reply('Memutar lagu *'+title+'...*')
-                await onic.sendMessage(m.chat, {
+                const alok = await onic.sendMessage(m.chat, {
                     audio: {
                         url: await _audio[Object.keys(_audio)[0]].download()
                     },
@@ -344,6 +343,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 }, {
                     quoted: m
                 })
+                reply(JSON.stringify(alok))
             
             }
             break
