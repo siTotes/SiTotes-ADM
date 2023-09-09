@@ -335,6 +335,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                             body: '© '+ownername,
                             thumbnail: await onic.axiosUrlToBuffer2(thumbnail),
                             sourceUrl: myweb,
+                            mediaKey: await resu.content[pos].videoId,
                             renderLargerThumbnail: true,
                             showAdAttribution: true,
                             mediaType: 1
