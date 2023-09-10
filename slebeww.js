@@ -382,6 +382,16 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             'mainkan',
             'music',
             'lagu',
+            
+            'play:',
+            'mainkan:',
+            'music:',
+            'lagu:',
+            
+            'play>',
+            'mainkan>',
+            'music>',
+            'lagu>',
 
             'm.saiful.anam.r.creator'
         ], 'download-media')
