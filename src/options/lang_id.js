@@ -153,6 +153,24 @@ exports.allmenu = (prefix) => {
 ││├ ${prefix}ytmp3
 ││╰×
 ││
+*│├╭→ #Youtube Music Apis*
+│││
+││├ ${prefix}mainkan  *judul >3
+││├ ${prefix}music    *judul
+││├ ${prefix}play     *judul
+││├ ${prefix}lagu     *judul
+│││
+││├ ${prefix}mainkan: *saran
+││├ ${prefix}music:   *saran
+││├ ${prefix}play:    *saran
+││├ ${prefix}lagu:    *saran
+│││
+││├ ${prefix}mainkan> *shift
+││├ ${prefix}music>   *shift
+││├ ${prefix}play>    *shift
+││├ ${prefix}lagu>    *shift
+││╰×
+││
 │╰──────────•
 │
 │

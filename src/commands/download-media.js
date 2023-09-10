@@ -75,6 +75,11 @@ module.exports = onic = async (onic, m, command, mek) => {
                 })
             }
         }
+        
+        const replyError = async (text, emoji) => {
+            await onic.sendReaction(m.chat, m.key, emoji)
+            await reply(text)
+        }
 
         switch (command) {
             case 'tt':
@@ -303,6 +308,7 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'mainkan':
             case 'music':
             case 'lagu':{
+                await onic.sendReaction(m.chat, m.key, '⏳')
                 await ytcapi.initalize()
                 let teks
                 let pos
@@ -323,7 +329,9 @@ module.exports = onic = async (onic, m, command, mek) => {
                     title
                 } = await youtubedl('https://music.youtube.com/watch?v=' + await resu.content[pos].videoId).catch(async _ => await youtubedlv2('https://music.youtube.com/watch?v=' + resu.content[pos].videoId)).catch(async _ => noerr = false)
                 
-                const alok = await onic.sendMessage(m.chat, {
+                await reply(JSON.stringify(result))
+                await onic.sendReaction(m.chat, m.key, '✈️')
+                await onic.sendMessage(m.chat, {
                     audio: {
                         url: await _audio[Object.keys(_audio)[0]].download()
                     },
@@ -342,8 +350,51 @@ module.exports = onic = async (onic, m, command, mek) => {
                     }
                 }, {
                     quoted: m
-                })
+                }).catch(async _ => await replyError('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```', '❌'))
+                
+                await onic.sendReaction(m.chat, m.key, '✅')
             
+            }
+            break
+            case 'play:':
+            case 'mainkan:':
+            case 'music:':
+            case 'lagu:':{
+                await onic.sendReaction(m.chat, m.key, '⏳')
+                await ytcapi.initalize()
+                
+                let result = await ytcapi.getSearchSuggestions(text)
+                if(result[0]? false: true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
+                let hasil = "Hasil pencarian di YouTube Music:\n\n";
+                for (let i = 0; i < result.length; i++) {
+                    hasil += `❒ ${result[i]}\n`;
+                }
+                await onic.sendReaction(m.chat, m.key, '✈️')
+                await reply(hasil)
+                
+                await onic.sendReaction(m.chat, m.key, '✅')
+            }
+            break
+            case 'play>':
+            case 'mainkan>':
+            case 'music>':
+            case 'lagu>':{
+                await onic.sendReaction(m.chat, m.key, '⏳')
+                await ytcapi.initalize()
+                
+                let result = await ytcapi.getSearchSuggestions(text)
+                if(result[0]? false: true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
+                if(result.length < pos) return await reply('Hanya menemukan '+result.length+' Lagu saja, permintaan anda terlalu jauh')
+                let resu = await ytcapi.search(result[0])
+                
+                let hasil = "Hasil urutan lagu di YouTube Music:\n\n";
+                /*for (let i = 0; i < result.length; i++) {
+                    hasil += `${i + 1}. ${kata[i]}\n`;
+                }*/
+                await onic.sendReaction(m.chat, m.key, '✈️')
+                await reply(JSON.stringify(resu))
+                
+                await onic.sendReaction(m.chat, m.key, '✅')
             }
             break
 
