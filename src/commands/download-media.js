@@ -384,7 +384,6 @@ module.exports = onic = async (onic, m, command, mek) => {
                 
                 let result = await ytcapi.getSearchSuggestions(text)
                 if(result[0]? false: true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
-                if(result.length < pos) return await reply('Hanya menemukan '+result.length+' Lagu saja, permintaan anda terlalu jauh')
                 let resu = await ytcapi.search(result[0])
                 
                 let hasil = "Hasil urutan lagu di YouTube Music:\n\n";
