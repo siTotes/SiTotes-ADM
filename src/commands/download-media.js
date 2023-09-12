@@ -350,7 +350,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     }
                 }, {
                     quoted: m
-                }).catch(async _ => await replyError('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```', '❌'))
+                }).catch(async _ => await replyError('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```', '❌'))
                 
                 await onic.sendReaction(m.chat, m.key, '✅')
             
@@ -384,14 +384,13 @@ module.exports = onic = async (onic, m, command, mek) => {
                 
                 let result = await ytcapi.getSearchSuggestions(text)
                 if(result[0]? false: true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
-                let resu = await ytcapi.search(result[0])
+                let data = await ytcapi.search(result[0])
                 
                 let hasil = "Hasil urutan lagu di YouTube Music:\n\n";
-                /*for (let i = 0; i < result.length; i++) {
-                    hasil += `${i + 1}. ${kata[i]}\n`;
-                }*/
+                const contentNames = hasil + (data.content.map((item, index) => `${index + 1}. ${item.name}`)).join('\n');
+
                 await onic.sendReaction(m.chat, m.key, '✈️')
-                await reply(JSON.stringify(resu))
+                await reply(contentNames)
                 
                 await onic.sendReaction(m.chat, m.key, '✅')
             }
@@ -401,7 +400,7 @@ module.exports = onic = async (onic, m, command, mek) => {
 
     } catch (err) {
         /**/console.log(onic.printErr(err))
-        await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
+        await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```')
     } finally {
         onic.endProsMsg()
         /**/console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
