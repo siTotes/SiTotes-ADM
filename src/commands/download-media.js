@@ -324,13 +324,13 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if(result[0]? false: true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
                 if(result.length < pos) return await reply('Hanya menemukan '+result.length+' Lagu saja, permintaan anda terlalu jauh')
                 let resu = await ytcapi.search(result[0])
+                resu.content = resu.content.filter(item => item.type === "song")
                 try{
                 const {
                     thumbnail,
                     audio: _audio,
                     title
                 } = await youtubedl('https://music.youtube.com/watch?v=' + await resu.content[pos].videoId).catch(async _ => await youtubedlv2('https://music.youtube.com/watch?v=' + resu.content[pos].videoId)).catch(async _ => noerr = false)
-                console.log(_audio)
                 await onic.sendReaction(m.chat, m.key, '✈️')
                 await onic.sendMessage(m.chat, {
                     audio: {
@@ -390,6 +390,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 let result = await ytcapi.getSearchSuggestions(text)
                 if(result[0]? false: true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
                 let data = await ytcapi.search(result[0])
+                data.content = data.content.filter(item => item.type === "song")
                 await reply(JSON.stringify(data))
                 let hasil = "Hasil urutan lagu di YouTube Music:\n\n";
                 const contentNames = hasil + (data.content.map((item, index) => `${index + 1}. ${item.name}`)).join('\n');
