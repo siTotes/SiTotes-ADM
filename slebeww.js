@@ -271,6 +271,9 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 })
             }
             break
+            case 'u':{
+                await reply(`Runtime : ${runtime(process.uptime())}`)
+            }
             // default:{
                 // let users = m.mentionedJid[0] ? m.mentionedJid : (m.quoted?.contacts)? await onic.vcardGetJid(m) : m.quoted ? m.quoted.sender : text.includes('+')? await onic.textGetJid(text) : text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
                 // reply(JSON.stringify(users, null, 2))

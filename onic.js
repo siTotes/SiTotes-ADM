@@ -42,7 +42,8 @@ const {
 } = require('qrcode')
 const express = require('express')
 const {
-    smsg
+    smsg,
+    runtime
 } = require('./lib/myfunc')
 const {
     bytesToSize,
@@ -353,7 +354,7 @@ async function startonic() {
         }
     })
     
-    const interval = 24 * 60 * 1000
+    const interval = 14 * 60 * 1000
 
     setInterval(async function(){
         const image = await Jimp.read('./src/.sitotes/media/image/sitotes.png')
@@ -379,6 +380,7 @@ async function startonic() {
         await onic.updateProfilePicture(onic.user.id, {
             url: './src/.sitotes/media/image/output.png'
         })
+        await onic.setStatus(`Jika Bot selep, Bot Capek😉 On ${runtime(process.uptime())}`)
     
     }, interval);
 
