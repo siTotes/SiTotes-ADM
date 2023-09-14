@@ -355,7 +355,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await onic.sendReaction(m.chat, m.key, '✅')
                 } catch (err) {
                     /**/console.log(onic.printErr(err))
-                    await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack +'\n\n'+JSON.stringify(result, null 2)+'\n\n'+JSON.stringify(resu, null 2)+ '```')
+                    await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack +'\n\n'+JSON.stringify(result, null, 2)+'\n\n'+JSON.stringify(resu, null, 2)+ '```')
                 }
             
             }
