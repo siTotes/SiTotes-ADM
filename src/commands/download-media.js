@@ -330,7 +330,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     audio: _audio,
                     title
                 } = await youtubedl('https://music.youtube.com/watch?v=' + await resu.content[pos].videoId).catch(async _ => await youtubedlv2('https://music.youtube.com/watch?v=' + resu.content[pos].videoId)).catch(async _ => noerr = false)
-                await reply(JSON.stringify(_audio))
+                console.log(_audio)
                 await onic.sendReaction(m.chat, m.key, '✈️')
                 await onic.sendMessage(m.chat, {
                     audio: {
