@@ -246,7 +246,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 const {
                     thumbnail,
                     video: _video,
-                    audio: _audio
+                    audio: _audio,
                     title
                 } = await youtubedl(nrgs).catch(async _ => await youtubedlv2(nrgs)).catch(async _ => noerr = false)
 
