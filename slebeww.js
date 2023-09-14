@@ -110,6 +110,13 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         const pathbufc = `./src/session/Cache-Buffer/${m.chat}`
 
         //if (m.isGroup && !allowGrub) return
+        console.log(
+            chalk.black(chalk.bgWhite(' \n|=| MSG |-> ')),
+            chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
+            chalk.black(chalk.bgBlue(`\n ${budy || m.mtype} `)),
+            chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
+            chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
+        )
 
         onic.addProsMsg = () => {
             let pe = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0) : 0
@@ -192,17 +199,6 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
             }
         }
-        if (!onic.public) {
-            if (!m.key.fromMe && !isCreator) return
-        }
-
-        console.log(
-            chalk.black(chalk.bgWhite(' \n|=| MSG |-> ')),
-            chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
-            chalk.black(chalk.bgBlue(`\n ${budy || m.mtype} `)),
-            chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
-            chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
-        )
 
         const casee = (lib) => './src/commands/' + lib
         const chekcase = (casenya, runto , perfic = true) => {

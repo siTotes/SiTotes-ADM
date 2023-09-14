@@ -292,6 +292,7 @@ async function startonic() {
                     risetSesi()
                     resetcache = 0
                 }
+                require("./slebeww")(onic, m, chatUpdate, mek, store)
 
                 /*
 
@@ -303,9 +304,6 @@ async function startonic() {
                     infoMSG.splice(0, 3000)
                     fs.writeFileSync(lcInfo, JSON.stringify(infoMSG, null, 2))
                 }*/
-
-
-                require("./slebeww")(onic, m, chatUpdate, mek, store)
                 
             }
         } catch (err) {
@@ -316,9 +314,9 @@ async function startonic() {
     onic.serializeM = (m) => smsg(onic, m, store)
     onic.ev.process(
         async (events) => {
-            if (!events['messages.upsert']) {
+            /*if (!events['messages.upsert']) {
                 //console.log(JSON.stringify(events, null, 2))
-            }
+            }*/
             if (events['presence.update']) {
                 await onic.sendPresenceUpdate('available')
             }
@@ -327,6 +325,8 @@ async function startonic() {
                 for (let msg of upsert.messages) {
                     if (msg.key.remoteJid === 'status@broadcast') {
                         if (msg.message?.protocolMessage) return
+                        await delay(3000)
+                        await onic.readMessages([msg.key])
                     }
                 }
             }
