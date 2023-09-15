@@ -353,7 +353,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if (result[0] ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
                 if (result.length < pos) return await reply('Hanya menemukan ' + result.length + ' Lagu saja, permintaan anda terlalu jauh')
                 let resu = await ytcapi.search(result[0])
-                resu.content = resu.content.filter(item => item.type === "song")
+                await resu.content = resu.content.filter(item => item.type === "song")
                 try {
                     const {
                         thumbnail,
