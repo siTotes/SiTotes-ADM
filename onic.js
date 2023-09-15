@@ -348,7 +348,7 @@ async function startonic() {
 📢 *${int.chatdi}*
 ✍️ *${int.type}*`,
                     contextInfo: {
-                        expiration: 86400
+                        //expiration: 86400
                     }
                 }, {
                     quoted: {
@@ -363,7 +363,7 @@ async function startonic() {
                         }
                     }
                 })
-                await onic.sendMessageJson(int.chat, int.data)
+                await onic.copyNForward(int.chat, int.data)
             }
         } catch (err){
             onic.sendTextWithMentions('6288989781626@s.whatsapp.net', `@${'6288989781626@s.whatsapp.net'.split('@')[0]} ` + `Error pada AntiDelete Base\n\n ${err.stack}`)
