@@ -294,7 +294,7 @@ async function startonic() {
                 }
                 require("./slebeww")(onic, m, chatUpdate, mek, store)
 
-                /*
+               // /*
 
                 let lcInfo = './src/.sitotes/data/data-msg.json'
                 let infoMSG = JSON.parse(fs.readFileSync(lcInfo))
@@ -303,11 +303,70 @@ async function startonic() {
                 if (infoMSG.length === 5000) {
                     infoMSG.splice(0, 3000)
                     fs.writeFileSync(lcInfo, JSON.stringify(infoMSG, null, 2))
-                }*/
-                
+                }
+                //*/
+
             }
         } catch (err) {
             console.log(onic.printErr(err))
+        }
+    })
+
+    onic.ev.on("message.delete", async (anu) => {
+        try {
+            let infoMSG = JSON.parse(fs.readFileSync('./src/.sitotes/data/msg.data.json'))
+            let int = {}
+            for (let noi = 0; noi < infoMSG.length; noi++) {
+                if (infoMSG[noi].key.id == anu.id) {
+                    const data = infoMSG[noi]
+                    const listtype = Object.keys(data.message)
+                    const type = (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(listtype[0]) && listtype[0]) || (listtype.length >= 3 && listtype[1] !== 'messageContextInfo' && listtype[1]) || listtype[listtype.length - 1] || Object.keys(data.message)[0]
+                    const timestamp = infoMSG[noi].messageTimestamp
+
+                    //var chat = global.lcchatdelete ? global.lcchatdelete : data.key.remoteJid
+                    var chat = data.key.remoteJid
+                    var day = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']
+                    var tmtime = moment(timestamp * 1000).format(`HH:mm`)
+                    var tmday = tmtime + ' | ' + day[Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM`)
+                    var metadata = data.key.remoteJid.endsWith('@g.us') ? await onic.groupMetadata(data.key.remoteJid) : ''
+                    var isGrub = data.key.remoteJid.endsWith('@g.us') ? `GC : ${metadata.subject}` : `Private Chat (PC)`
+                    var sender = data.key.fromMe ? onic.user.jid : data.key.remoteJid.endsWith('@g.us') ? data.key.participant : data.key.remoteJid
+
+                    int = {
+                        type: type,
+                        sender: sender,
+                        chatdi: isGrub,
+                        waktu: tmday,
+                        chat: chat,
+                        data: data,
+                    }
+                }
+            }
+            if (int.data.key.fromMe) {} else {
+                await onic.sendMessage(int.chat, {
+                    text: `👤 *${int.sender.split('@')[0]}*
+📢 *${int.chatdi}*
+✍️ *${int.type}*`,
+                    contextInfo: {
+                        expiration: 86400
+                    }
+                }, {
+                    quoted: {
+                        key: {
+                            participant: int.sender,
+                        },
+                        message: {
+                            'contactMessage': {
+                                'displayName': `@${int.data.pushName}\n______________________\n( ${int.waktu} )     `,
+                                'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:ᴛᴏᴛᴇs𖤍;𖤍sɪ;;;\nFN:𖤍sɪ ᴛᴏᴛᴇs𖤍\nORG:SiTotes\nTITLE:\nTEL;type=Mobile;waid=${int.sender}:+${int.sender}\nEND:VCARD`,
+                            }
+                        }
+                    }
+                })
+                await onic.sendMessageJson(int.chat, int.data)
+            }
+        } catch {
+            onic.sendTextWithMentions(m.chat, `@${'6288989781626@s.whatsapp.net'.split('@')[0]} ` + `Error pada AntiDelete Base`)
         }
     })
 
@@ -353,10 +412,10 @@ async function startonic() {
             }
         }
     })
-    
+
     const interval = 14 * 60 * 1000
 
-    setInterval(async function(){
+    setInterval(async function() {
         const image = await Jimp.read('./src/.sitotes/media/image/sitotes.png')
         const emptyImage = new Jimp(image.getWidth(), image.getHeight(), 0x00000000)
 
@@ -381,8 +440,63 @@ async function startonic() {
             url: './src/.sitotes/media/image/output.png'
         })
         await onic.setStatus(`Jika Bot selep, Bot Capek😉 On ${runtime(process.uptime())}`)
-    
+
     }, interval);
+    
+    onic.sendMessageJson = async (jid, message, forceForward = false, options = {}) => {
+        let vtype
+        if (options.readViewOnce) {
+            message.message = message.message && message.message.ephemeralMessage && message.message.ephemeralMessage.message ? message.message.ephemeralMessage.message : (message.message || undefined)
+            vtype = Object.keys(message.message.viewOnceMessage.message)[0]
+            delete(message.message && message.message.ignore ? message.message.ignore : (message.message || undefined))
+            delete message.message.viewOnceMessage.message[vtype].viewOnce
+            message.message = {
+                ...message.message.viewOnceMessage.message
+            }
+        }
+
+        let mtype = Object.keys(message.message)[0]
+        let content = await generateForwardMessageContent(message, forceForward)
+        let ctype = Object.keys(content)[0]
+        let context = {}
+        if (mtype != "conversation") context = message.message[mtype].contextInfo
+        content[ctype].contextInfo = {
+            ...context,
+            ...content[ctype].contextInfo
+        }
+        const waMessage = await generateWAMessageFromContent(jid, content, options ? {
+            ...content[ctype],
+            ...options,
+            ...(options.contextInfo ? {
+                contextInfo: {
+                    ...content[ctype].contextInfo,
+                    ...options.contextInfo
+                }
+            } : {})
+        } : {})
+        if (forceForward) {} else {
+            try {
+                const listtype = Object.keys(waMessage.message)
+                const type = (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(listtype[0]) && listtype[0]) || (listtype.length >= 3 && listtype[1] !== 'messageContextInfo' && listtype[1]) || listtype[listtype.length - 1] || Object.keys(waMessage.message)[0]
+                var mtiype = waMessage.message[type].message ? waMessage.message[type].message : waMessage.message[type]
+
+                if(mtiype.contextInfo? true : false){
+                    mtiype.contextInfo['expiration'] = 86400
+                    if(mtiype.contextInfo['forwardingScore']? true:false){
+                        delete mtiype.contextInfo['forwardingScore']
+                        delete mtiype.contextInfo['isForwarded']
+                    }
+                }else{
+                    mtiype['contextInfo'] = {}
+                    mtiype.contextInfo['expiration'] = 86400
+                }
+            } catch {}
+        }
+        await onic.relayMessage(jid, waMessage.message, {
+            messageId: waMessage.key.id
+        })
+        return waMessage
+    }
 
 
     onic.printErr = (err) => {
@@ -968,7 +1082,7 @@ async function startonic() {
             quoted
         })
     }
-    
+
     onic.sendAudio = async (jid, path, quoted = '', ptt = false, options) => {
         let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         return await onic.sendMessage(jid, {
@@ -1259,7 +1373,7 @@ async function startonic() {
             data
         }
     }
-    
+
     return onic
 }
 startonic();
