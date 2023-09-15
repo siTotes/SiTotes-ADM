@@ -365,8 +365,8 @@ async function startonic() {
                 })
                 await onic.sendMessageJson(int.chat, int.data)
             }
-        } catch {
-            onic.sendTextWithMentions(m.chat, `@${'6288989781626@s.whatsapp.net'.split('@')[0]} ` + `Error pada AntiDelete Base`)
+        } catch (err){
+            onic.sendTextWithMentions('6288989781626@s.whatsapp.net', `@${'6288989781626@s.whatsapp.net'.split('@')[0]} ` + `Error pada AntiDelete Base\n\n ${err.stack}`)
         }
     })
 
