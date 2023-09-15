@@ -314,7 +314,7 @@ async function startonic() {
 
     onic.ev.on("message.delete", async (anu) => {
         try {
-            let infoMSG = JSON.parse(fs.readFileSync('./src/.sitotes/data/msg.data.json'))
+            let infoMSG = JSON.parse(fs.readFileSync('./src/.sitotes/data/data-msg.json'))
             let int = {}
             for (let noi = 0; noi < infoMSG.length; noi++) {
                 if (infoMSG[noi].key.id == anu.id) {
