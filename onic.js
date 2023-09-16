@@ -55,7 +55,8 @@ const {
 } = require('./lib/uploader')
 const {
     checkCommitUpdate,
-    setVersiCommited
+    setVersiCommited,
+    client
 } = require('./lib/dbmongosle')
 const {
     SitotesError
@@ -81,6 +82,7 @@ let ttlerr = 0
 let resetcache = 0
 let isduakali = 0
 let chekid = {}
+const botdata = 'BD_SiTotes'
 
 global.db = JSON.parse(fs.readFileSync("./src/.sitotes/data/database.json"))
 
@@ -314,6 +316,12 @@ async function startonic() {
 
     onic.ev.on("message.delete", async (anu) => {
         try {
+            await client.connect();
+            const db = client.db(botdata);
+            const dbgrub = db.collection('grub-db');
+            const sitotesv = await dbgrub.findOne({ _id: m.chat });
+            if (sitotesv && !sitotesv.antidelete) return;
+            await client.close();
             let infoMSG = JSON.parse(fs.readFileSync('./src/.sitotes/data/data-msg.json'))
             let int = {}
             for (let noi = 0; noi < infoMSG.length; noi++) {

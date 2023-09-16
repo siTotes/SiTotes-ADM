@@ -1,7 +1,8 @@
 require('./src/options/settings')
 const {
     default: makeWASocket,
-    MessageType, Mimetype,
+    MessageType,
+    Mimetype,
     BufferJSON,
     WAMessageStubType,
     WA_DEFAULT_EPHEMERAL,
@@ -48,6 +49,9 @@ const {
     getRandom
 } = require('./lib/myfunc')
 const {
+    client
+} = require('./lib/dbmongosle')
+const {
     bytesToSize,
     fileIO,
     UploadFileUgu,
@@ -60,6 +64,8 @@ const cv = require('./lib/con2vert')
 const lang = require('./src/options/lang_id')
 
 
+
+const botdata = 'BD_SiTotes'
 pp_bot = fs.readFileSync(logo)
 moment.tz.setDefault("Asia/Jakarta").locale("id");
 
@@ -124,8 +130,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 for (let i = 0; i < db.data.proses.reaload.messages.length; i++) {
                     if (db.data.proses.reaload.messages[i] == null) {
                         db.data.proses.reaload.messages.splice(i, 1);
-                    } else if (db.data.proses.reaload.messages[i].count) {
-                    } else if (db.data.proses.reaload.messages[i].key.id == m.id) {
+                    } else if (db.data.proses.reaload.messages[i].count) {} else if (db.data.proses.reaload.messages[i].key.id == m.id) {
 
                     } else {
                         db.data.proses.reaload.messages.push(mek)
@@ -195,14 +200,15 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             try {
                 await onic.ev.emit("viewOnceMessage", m);
             } catch (err) {
-                /**/await console.log(err)
+                /**/
+                await console.log(err)
                 await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
             }
         }
 
         const casee = (lib) => './src/commands/' + lib
-        const chekcase = (casenya, runto , perfic = true) => {
-            if(perfic){
+        const chekcase = (casenya, runto, perfic = true) => {
+            if (perfic) {
                 let lgbm = {}
                 lgbm.casse = casenya
                 for (let i = 0; i < lgbm.casse.length; i++) {
@@ -210,7 +216,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                         require(casee(runto))(onic, m, command, mek)
                     }
                 }
-            }else{
+            } else {
                 let lgbm = {}
                 lgbm.casse = casenya
                 for (let i = 0; i < lgbm.casse.length; i++) {
@@ -234,7 +240,8 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 }
             }
         }
-        /**/console.log(mime)
+        /**/
+        console.log(mime)
 
         switch (command) {
             case 'info':
@@ -252,8 +259,8 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                     caption: lang.allmenu(prefix),
                     contextInfo: {
                         externalAdReply: {
-                            title: 'Selamat '+salam+' '+pushname,
-                            body: '© '+ownername,
+                            title: 'Selamat ' + salam + ' ' + pushname,
+                            body: '© ' + ownername,
                             thumbnail: pp_bot,
                             sourceUrl: myweb,
                             mediaUrl: '',
@@ -267,34 +274,71 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 })
             }
             break
-            case 'u':{
+            case 'u': {
                 await reply(`Runtime : ${runtime(process.uptime())}`)
             }
+            break
+            case 'antidelete':
+            case 'antihapus': {
+                const alur = 'Anti Hapus pesan ';
+                await client.connect();
+                const db = client.db(botdata);
+                const dbgrub = db.collection('grub-db');
+                const sitotesv = await dbgrub.findOne({ _id: m.chat });
+                
+                if (sitotesv) {
+                  const updateValue = !sitotesv.antidelete;
+                
+                  await dbgrub.updateOne(
+                    { _id: m.chat },
+                    { $set: { antidelete: updateValue } }
+                  );
+                
+                  await reply(alur + (updateValue ? '*Aktif*' : '*Mati*'));
+                } else {
+                  const dataToInsert = { antidelete: false };
+                  
+                  try {
+                    await dbgrub.insertOne({
+                      _id: m.chat,
+                      ...dataToInsert
+                    });
+                
+                    await reply(alur+'*Aktif*');
+                  } catch (error) {
+                    await reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + error + '```');
+                  }
+                }
+                
+                await client.close();
+
+            }
+            break
             // default:{
-                // let users = m.mentionedJid[0] ? m.mentionedJid : (m.quoted?.contacts)? await onic.vcardGetJid(m) : m.quoted ? m.quoted.sender : text.includes('+')? await onic.textGetJid(text) : text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
-                // reply(JSON.stringify(users, null, 2))
+            // let users = m.mentionedJid[0] ? m.mentionedJid : (m.quoted?.contacts)? await onic.vcardGetJid(m) : m.quoted ? m.quoted.sender : text.includes('+')? await onic.textGetJid(text) : text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
+            // reply(JSON.stringify(users, null, 2))
             // }
         }
-        
-        
-        
-        
-        
-        if(!isCmd){
+
+
+
+
+
+        if (!isCmd) {
             chekcase([
                 'gambarkan',
                 'bot',
                 'ai',
-    
+
                 'm.saiful.anam.r.creator'
             ], 'openai-gpt', false)
-            
-            
+
+
             return
         }
 
 
-//━━━[ game-rpg ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+        //━━━[ game-rpg ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
         checkcid(
             db.data.game,
             [
@@ -346,13 +390,13 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         ], 'game-rpg')
 
 
-//━━━[ download-media ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+        //━━━[ download-media ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
         chekcase([
             'tt',
             'downloadtiktok',
             'tiktokunduh',
             'tiktok',
-            
+
             'ig',
             'igdl',
             'igdownload',
@@ -376,17 +420,17 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             'youtubemp3',
             'ytmp4',
             'ytmp3',
-            
+
             'play',
             'mainkan',
             'music',
             'lagu',
-            
+
             'play:',
             'mainkan:',
             'music:',
             'lagu:',
-            
+
             'play>',
             'mainkan>',
             'music>',
@@ -396,17 +440,17 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         ], 'download-media')
 
 
-//━━━[ convert-sticker ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+        //━━━[ convert-sticker ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
         chekcase([
             's',
             'sticker',
             'stiker',
-            
+
             'smeme',
             'smemegen',
             'stickermeme',
             'smeme2',
-            
+
             'ttp',
             'attp',
 
@@ -415,21 +459,21 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
 
 
 
-//━━━[ group-only ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+        //━━━[ group-only ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
         chekcase([
             'kick',
             'keluarkan',
             'hapus',
             'remove',
-            
+
             'add',
             'tambah',
             'new',
-            
+
             'promote',
             'naikan',
             'jabatkan',
-            
+
             'demote',
             'turunkan',
             'kucilkan',
@@ -439,10 +483,12 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
 
 
     } catch (err) {
-        /**/console.log(onic.printErr(err))
+        /**/
+        console.log(onic.printErr(err))
         await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
     } finally {
-        /**/console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
+        /**/
+        console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
         svdata()
     }
 }
