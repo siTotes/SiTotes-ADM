@@ -319,7 +319,7 @@ async function startonic() {
             await client.connect();
             const db = client.db(botdata);
             const dbgrub = db.collection('grub-db');
-            const sitotesv = await dbgrub.findOne({ _id: m.chat });
+            const sitotesv = await dbgrub.findOne({ _id: data.key.remoteJid });
             if (sitotesv && !sitotesv.antidelete) return;
             await client.close();
             let infoMSG = JSON.parse(fs.readFileSync('./src/.sitotes/data/data-msg.json'))
