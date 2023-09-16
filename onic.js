@@ -326,7 +326,7 @@ async function startonic() {
                     const db = client.db(botdata);
                     const dbgrub = db.collection('grub-db');
                     const sitotesv = await dbgrub.findOne({ _id: data.key.remoteJid });
-                    if (sitotesv && !sitotesv.antidelete) return;
+                    if (sitotesv && !sitotesv.antidelete || JSON.stringify(sitotesv).length<5) return;
                     await client.close();
                     
                     
