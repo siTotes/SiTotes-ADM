@@ -316,17 +316,20 @@ async function startonic() {
 
     onic.ev.on("message.delete", async (anu) => {
         try {
-            await client.connect();
-            const db = client.db(botdata);
-            const dbgrub = db.collection('grub-db');
-            const sitotesv = await dbgrub.findOne({ _id: data.key.remoteJid });
-            if (sitotesv && !sitotesv.antidelete) return;
-            await client.close();
             let infoMSG = JSON.parse(fs.readFileSync('./src/.sitotes/data/data-msg.json'))
             let int = {}
             for (let noi = 0; noi < infoMSG.length; noi++) {
                 if (infoMSG[noi].key.id == anu.id) {
                     const data = infoMSG[noi]
+                    
+                    await client.connect();
+                    const db = client.db(botdata);
+                    const dbgrub = db.collection('grub-db');
+                    const sitotesv = await dbgrub.findOne({ _id: data.key.remoteJid });
+                    if (sitotesv && !sitotesv.antidelete) return;
+                    await client.close();
+                    
+                    
                     const listtype = Object.keys(data.message)
                     const type = (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(listtype[0]) && listtype[0]) || (listtype.length >= 3 && listtype[1] !== 'messageContextInfo' && listtype[1]) || listtype[listtype.length - 1] || Object.keys(data.message)[0]
                     const timestamp = infoMSG[noi].messageTimestamp
