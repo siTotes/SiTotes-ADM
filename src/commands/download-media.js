@@ -354,6 +354,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 for (let i = 0; i<result.length; i++){
                     result[i] =  `⊡ ${result[i]}`
                 }
+                await reply(JSON.stringify(result))
                 await onic.sendReaction(m.chat, m.key, '✈️')
                 await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Saran pencarian di YouTube Music.\nPilih salah satu Untuk mencari:', result)
 
