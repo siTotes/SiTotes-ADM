@@ -350,7 +350,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await ytcapi.initalize()
 
                 let result = await ytcapi.getSearchSuggestions(text)
-                if (result[0] ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
+                if (await result[0] ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
                 result = await result.map((item) => `⊡ ${item}`)
                 await onic.sendReaction(m.chat, m.key, '✈️')
                 await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Saran pencarian di YouTube Music.\nPilih salah satu Untuk mencari:', result)
