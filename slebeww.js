@@ -314,12 +314,8 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
 
             }
             break
-            case 'mosek':{
-                await onic.sendPoll(m.chat, 'Pilih salah satu:', [
-                    "ꈍ Cundamani\n⊡ DennyCaknan\n\n◕ IPgPgqP7zySNHw4D",
-                    "test231",
-                    ".s"
-                ])
+            case 'asu':{
+            
             }
             break
             // default:{

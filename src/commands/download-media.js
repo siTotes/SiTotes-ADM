@@ -265,15 +265,19 @@ module.exports = onic = async (onic, m, command, mek) => {
                             mimetype: 'audio/mpeg',
                             ptt: false,
                             contextInfo: {
+                                forwardingScore: 999,
+                                isForwarded: true,
                                 externalAdReply: {
+                                    containsAutoReply: true,
+                                    showAdAttribution: true,
+                                    renderLargerThumbnail: true,
                                     title: title,
                                     body: '© ' + ownername,
                                     thumbnail: await onic.axiosUrlToBuffer2(thumbnail),
-                                    sourceUrl: myweb,
-                                    renderLargerThumbnail: true,
-                                    showAdAttribution: true,
-                                    mediaType: 1
+                                    mediaType: 1,
+                                    mediaUrl: await _audio[Object.keys(_audio)[0]].download(),
                                 }
+        
                             }
                         }, {
                             quoted: m
