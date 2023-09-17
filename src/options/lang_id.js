@@ -160,15 +160,6 @@ exports.allmenu = (prefix) => {
 ││├ ${prefix}play     *judul
 ││├ ${prefix}lagu     *judul
 │││
-││├ ${prefix}mainkan: *saran
-││├ ${prefix}music:   *saran
-││├ ${prefix}play:    *saran
-││├ ${prefix}lagu:    *saran
-│││
-││├ ${prefix}mainkan> *shift
-││├ ${prefix}music>   *shift
-││├ ${prefix}play>    *shift
-││├ ${prefix}lagu>    *shift
 ││╰×
 ││
 │╰──────────•

@@ -296,7 +296,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 
                   await reply(alur + (updateValue ? '*Aktif*' : '*Mati*'));
                 } else {
-                  const dataToInsert = { antidelete: false };
+                  const dataToInsert = { antidelete: true };
                   
                   try {
                     await dbgrub.insertOne({
@@ -312,6 +312,14 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 
                 await client.close();
 
+            }
+            break
+            case 'mosek':{
+                await onic.sendPoll(m.chat, 'Pilih salah satu:', [
+                    "ꈍ Cundamani\n⊡ DennyCaknan\n\n◕ IPgPgqP7zySNHw4D",
+                    "test231",
+                    ".s"
+                ])
             }
             break
             // default:{
@@ -420,21 +428,18 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             'youtubemp3',
             'ytmp4',
             'ytmp3',
+            'ꈍ',
 
             'play',
             'mainkan',
             'music',
             'lagu',
 
-            'play:',
-            'mainkan:',
-            'music:',
-            'lagu:',
-
             'play>',
             'mainkan>',
             'music>',
             'lagu>',
+            '⊡',
 
             'm.saiful.anam.r.creator'
         ], 'download-media')

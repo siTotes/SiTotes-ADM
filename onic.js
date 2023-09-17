@@ -17,6 +17,7 @@ const {
     jidDecode,
     fetchLatestBaileysVersion,
     makeCacheableSignalKeyStore,
+    getAggregateVotesInPollMessage,
     jidNormalizedUser,
     delay
 } = require("@adiwajshing/baileys")
@@ -154,7 +155,8 @@ async function startonic() {
             return message;
         },
         browser: ['Bot By SiTotes', 'safari', '1.0.0'],
-        auth: state
+        auth: state,
+        getMessage
     })
     if (isduakali < 1) {
         console.log(chalk.hex('#9AFF78').bold(figlet.textSync('SI-TOTES', {
@@ -265,20 +267,30 @@ async function startonic() {
         }
     })
 
-    const reply = async (pee, teks, m) => {
+    async function reply(pee, teks, m) {
         await onic.sendMessage(pee, {
             text: teks
         }, {
             quoted: m
         })
     }
+    
+    async function getMessage(key){
+        if (store) {
+            const msg = await store.loadMessage(key.remoteJid, key.id)
+            return msg?.message
+        }
+        return {
+            conversation: "SiTotes Bot"
+        }
+    }
 
     onic.public = true
     store.bind(onic.ev)
 
     onic.ev.on('messages.upsert', async chatUpdate => {
+        //console.log(`\n\n ${JSON.stringify(chatUpdate, null, 2)}`)
         try {
-            //let mek = chatUpdate.messages[0]
             for (let mek of chatUpdate.messages) {
                 if (!mek.message) return
                 mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
@@ -287,6 +299,7 @@ async function startonic() {
                 if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
                 const m = smsg(onic, mek, store)
                 if (m.id == chekid[m.chat]) return console.log('dobel detek')
+                if (m.mtype == 'pollUpdateMessage') return
                 chekid[m.chat] = m.id
 
                 resetcache++
@@ -294,9 +307,7 @@ async function startonic() {
                     risetSesi()
                     resetcache = 0
                 }
-                require("./slebeww")(onic, m, chatUpdate, mek, store)
-
-               // /*
+                // /*
 
                 let lcInfo = './src/.sitotes/data/data-msg.json'
                 let infoMSG = JSON.parse(fs.readFileSync(lcInfo))
@@ -307,12 +318,41 @@ async function startonic() {
                     fs.writeFileSync(lcInfo, JSON.stringify(infoMSG, null, 2))
                 }
                 //*/
+                require("./slebeww")(onic, m, chatUpdate, mek, store)
 
             }
         } catch (err) {
             console.log(onic.printErr(err))
         }
     })
+    
+
+    onic.ev.on('messages.update', async chatUpdate => {
+        //console.log(`\n\n ${JSON.stringify(chatUpdate, null, 2)}`)
+        try {
+            for (const {
+                    key,
+                    update
+                }
+                of chatUpdate) {
+                if (update.pollUpdates && key.fromMe) {
+                    const pollCreation = await getMessage(key)
+                    if (pollCreation) {
+                        const pollUpdate = await getAggregateVotesInPollMessage({
+                            message: pollCreation,
+                            pollUpdates: update.pollUpdates,
+                        })
+                        var getPoll = await pollUpdate.filter(v => v.voters.length !== 0)[0]?.name
+                        if (getPoll == undefined) return
+                        await onic.appenTextMessage('#'+getPoll, chatUpdate)
+                    }
+                }
+            }
+        } catch (err) {
+            console.log(onic.printErr(err))
+        }
+    })
+
 
     onic.ev.on("message.delete", async (anu) => {
         try {
@@ -321,15 +361,17 @@ async function startonic() {
             for (let noi = 0; noi < infoMSG.length; noi++) {
                 if (infoMSG[noi].key.id == anu.id) {
                     const data = infoMSG[noi]
-                    
+
                     await client.connect();
                     const db = client.db(botdata);
                     const dbgrub = db.collection('grub-db');
-                    const sitotesv = await dbgrub.findOne({ _id: data.key.remoteJid });
-                    if (sitotesv && !sitotesv.antidelete || JSON.stringify(sitotesv).length<5) return;
+                    const sitotesv = await dbgrub.findOne({
+                        _id: data.key.remoteJid
+                    });
+                    if (sitotesv && !sitotesv.antidelete || JSON.stringify(sitotesv).length < 5) return;
                     await client.close();
-                    
-                    
+
+
                     const listtype = Object.keys(data.message)
                     const type = (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(listtype[0]) && listtype[0]) || (listtype.length >= 3 && listtype[1] !== 'messageContextInfo' && listtype[1]) || listtype[listtype.length - 1] || Object.keys(data.message)[0]
                     const timestamp = infoMSG[noi].messageTimestamp
@@ -376,7 +418,7 @@ async function startonic() {
                 })
                 await onic.copyNForward(int.chat, int.data)
             }
-        } catch (err){
+        } catch (err) {
             onic.sendTextWithMentions('6288989781626@s.whatsapp.net', `@${'6288989781626@s.whatsapp.net'.split('@')[0]} ` + `Error pada AntiDelete Base\n\n ${err.stack}`)
         }
     })
@@ -453,7 +495,7 @@ async function startonic() {
         await onic.setStatus(`Jika Bot selep, Bot Capek😉 On ${runtime(process.uptime())}`)
 
     }, interval);
-    
+
     onic.sendMessageJson = async (jid, message, forceForward = false, options = {}) => {
         let vtype
         if (options.readViewOnce) {
@@ -491,13 +533,13 @@ async function startonic() {
                 const type = (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(listtype[0]) && listtype[0]) || (listtype.length >= 3 && listtype[1] !== 'messageContextInfo' && listtype[1]) || listtype[listtype.length - 1] || Object.keys(waMessage.message)[0]
                 var mtiype = waMessage.message[type].message ? waMessage.message[type].message : waMessage.message[type]
 
-                if(mtiype.contextInfo? true : false){
+                if (mtiype.contextInfo ? true : false) {
                     mtiype.contextInfo['expiration'] = 86400
-                    if(mtiype.contextInfo['forwardingScore']? true:false){
+                    if (mtiype.contextInfo['forwardingScore'] ? true : false) {
                         delete mtiype.contextInfo['forwardingScore']
                         delete mtiype.contextInfo['isForwarded']
                     }
-                }else{
+                } else {
                     mtiype['contextInfo'] = {}
                     mtiype.contextInfo['expiration'] = 86400
                 }
@@ -661,6 +703,16 @@ async function startonic() {
             formattedNumbers.push(formattedNumber.replace('+', ''));
         }
         return formattedNumbers;
+    }
+
+    onic.sendPoll = async(jid, name = '', values = [], selectableCount = 1) => {
+        return await onic.sendMessage(jid, {
+            poll: {
+                name,
+                values,
+                selectableCount
+            }
+        })
     }
 
     /**
@@ -1490,3 +1542,4 @@ logModifed('./lib/dbmongosle')
 logCrash('./lib/exif')
 logCrash('./lib/gdriveapis')
 logCrash('./lib/con2vert')
+logCrash('./lib/myfunc')

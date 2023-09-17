@@ -61,7 +61,7 @@ module.exports = onic = async (onic, m, command, mek) => {
         const salam = moment(Date.now()).tz(timezone).locale('id').format('a')
         const pushname = m.pushName || "No Name"
         const args = body.trim().split(/ +/).slice(1)
-        const text = q = args.join(" ")
+        let text = q = args.join(" ")
         const nrgs = args[0]
 
         let nua = 0
@@ -224,19 +224,24 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'youtubemp4':
             case 'youtubemp3':
             case 'ytmp4':
-            case 'ytmp3': {
-                //return reply('Fitur sedang di perbaiki dan tidak bisa di gunakan terlebih dahulu')
-                if (!text) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
-                    return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
-                }
-                if (!isUrl(q)) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
-                    return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
-                }
-                if (!text.includes('youtu.be') && !text.includes('youtube.com')) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
-                    return reply(lang.contoh(prefix, command, 'https://youtu.be/7wfSvv4AHsQ'))
+            case 'ytmp3':
+            case 'ꈍ' : {
+                if(!command.includes('ꈍ')){
+                    //return reply('Fitur sedang di perbaiki dan tidak bisa di gunakan terlebih dahulu')
+                    if (!text) {
+                        await onic.sendReaction(m.chat, m.key, '❓')
+                        return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
+                    }
+                    if (!isUrl(q)) {
+                        await onic.sendReaction(m.chat, m.key, '❓')
+                        return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
+                    }
+                    if (!text.includes('youtu.be') && !text.includes('youtube.com')) {
+                        await onic.sendReaction(m.chat, m.key, '❓')
+                        return reply(lang.contoh(prefix, command, 'https://youtu.be/7wfSvv4AHsQ'))
+                    }
+                }else{
+                    text = 'https://music.youtube.com/watch?v=' + text.split('\n\n◕ ')[1]
                 }
 
                 // await onic.addProsMsg()
@@ -248,10 +253,10 @@ module.exports = onic = async (onic, m, command, mek) => {
                     video: _video,
                     audio: _audio,
                     title
-                } = await youtubedl(nrgs).catch(async _ => await youtubedlv2(nrgs)).catch(async _ => noerr = false)
+                } = await youtubedl(text).catch(async _ => await youtubedlv2(text)).catch(async _ => noerr = false)
 
                 if (noerr) {
-                    if (command.includes('mp3')) {
+                    if (command.includes('mp3') || command.includes('ꈍ') ) {
                         await onic.sendReaction(m.chat, m.key, '✈️')
                         await onic.sendMessage(m.chat, {
                             audio: {
@@ -337,7 +342,18 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'mainkan':
             case 'music':
             case 'lagu': {
+                await onic.sendReaction(m.chat, m.key, '⏳')
+                await ytcapi.initalize()
 
+                let result = await ytcapi.getSearchSuggestions(text)
+                if (result[0] ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
+                result = result.map((item) => `⊡ ${item}`)
+                await onic.sendReaction(m.chat, m.key, '✈️')
+                await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Saran pencarian di YouTube Music.\nPilih salah satu Untuk mencari:', result)
+
+                await onic.sendReaction(m.chat, m.key, '✅')
+                
+                /*
                 await onic.sendReaction(m.chat, m.key, '⏳')
                 await ytcapi.initalize()
                 let teks
@@ -384,50 +400,26 @@ module.exports = onic = async (onic, m, command, mek) => {
 
                     await onic.sendReaction(m.chat, m.key, '✅')
                 } catch (err) {
-                    /**/
                     console.log(onic.printErr(err))
                     await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '\n\n' + JSON.stringify(result, null, 2) + '\n\n' + JSON.stringify(resu, null, 2) + '```')
                 }
+                */
 
-            }
-            break
-            case 'play:':
-            case 'mainkan:':
-            case 'music:':
-            case 'lagu:': {
-                await onic.sendReaction(m.chat, m.key, '⏳')
-                await ytcapi.initalize()
-
-                let result = await ytcapi.getSearchSuggestions(text)
-                if (result[0] ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
-                let hasil = "Hasil pencarian di YouTube Music:\n\n";
-                for (let i = 0; i < result.length; i++) {
-                    hasil += `❒ ${result[i]}\n`;
-                }
-                await onic.sendReaction(m.chat, m.key, '✈️')
-                await reply(hasil)
-
-                await onic.sendReaction(m.chat, m.key, '✅')
             }
             break
             case 'play>':
             case 'mainkan>':
             case 'music>':
-            case 'lagu>': {
+            case 'lagu>':
+            case '⊡': {
                 await onic.sendReaction(m.chat, m.key, '⏳')
                 await ytcapi.initalize()
-
-                let result = await ytcapi.getSearchSuggestions(text)
-                if (result[0] ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
-                let data = await ytcapi.search(result[0])
+                if (text ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
+                let data = await ytcapi.search(text)
                 data.content = data.content.filter(item => item.type === "song")
-                await reply(JSON.stringify(data))
-                let hasil = "Hasil urutan lagu di YouTube Music:\n\n";
-                const contentNames = hasil + (data.content.map((item, index) => `${index + 1}. ${item.name}`)).join('\n');
-
+                data.content = data.content.map((item) => `ꈍ ${item.name}\n⊡ ${item.artist.name}\n\n◕ ${item.videoId}`)
                 await onic.sendReaction(m.chat, m.key, '✈️')
-                await reply(contentNames)
-
+                await onic.sendPoll(m.chat, 'Menemukan '+data.content.length+' Lagu di YouTube Music.\nPilih salah satu Untuk memainkan:', data.content)
                 await onic.sendReaction(m.chat, m.key, '✅')
             }
             break
