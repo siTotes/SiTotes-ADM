@@ -349,7 +349,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await onic.sendReaction(m.chat, m.key, '⏳')
                 await ytcapi.initalize()
 
-                let result = await ytcapi.getSearchSuggestions(text)
+                let result = JSON.parse(JSON.stringify(await ytcapi.getSearchSuggestions(text)))
                 if (await result[0] ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
                 for (let i = 0; i<result.length; i++){
                     result[i] =  `⊡ ${result[i]}`
