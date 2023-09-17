@@ -354,7 +354,12 @@ module.exports = onic = async (onic, m, command, mek) => {
                 for (let i = 0; i<result.length; i++){
                     result[i] =  `⊡ ${result[i]}`
                 }
-                if(!Array.isArray(result)) result = JSON.parse(JSON.stringify(`['⊡ ${result}', '⊡ ${result} terbaru', '⊡ ${result} slow']`))
+                if(!Array.isArray(result)) result = [
+                    '⊡ '+result,
+                    '⊡ '+result+' terbaru',
+                    '⊡ '+result+' slow'
+                ]
+                await reply(JSON.stringify(result))
                 await onic.sendReaction(m.chat, m.key, '✈️')
                 await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Saran pencarian di YouTube Music.\nPilih salah satu Untuk mencari:', result)
 
