@@ -705,13 +705,14 @@ async function startonic() {
         return formattedNumbers;
     }
 
-    onic.sendPoll = async(jid, name = '', values = [], selectableCount = 1) => {
+    onic.sendPoll = async(jid, name = '', values = [], selectableCount = 1, options = {}) => {
         return await onic.sendMessage(jid, {
             poll: {
                 name,
                 values,
                 selectableCount
-            }
+            },
+            ...options
         })
     }
 
