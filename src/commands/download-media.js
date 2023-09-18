@@ -98,7 +98,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     s: true,
                     l: ''
                 }
-                const tiktok = await TiktokDL(nrgs).catch(async _ => {
+                const tiktok = await TiktokDL(text).catch(async _ => {
                     noerr.s = false
                     noerr.l = _
                 })
