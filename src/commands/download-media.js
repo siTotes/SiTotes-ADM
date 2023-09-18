@@ -98,74 +98,76 @@ module.exports = onic = async (onic, m, command, mek) => {
                     s: true,
                     l: ''
                 }
-                const tiktok = await TiktokDL(text).catch(async _ => {
-                    noerr.s = false
-                    noerr.l = _
-                })
-                
-                let status = await tiktok? (tiktok.status? tiktok.status: 'failed'): 'failed'
-                
-                if (noerr.s) {
-                    const tt = await tiktok.result
-                    await onic.sendReaction(m.chat, m.key, '✈️')
-                    if(tt.type=='image'){
-                        for (let i = 0; i < tt.images.length; i++) {
-                            let url = tt.images[i]
-                            await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
-                                await onic.sendReaction(m.chat, m.key, '🤔')
+                const tiktok = await TiktokDL(nrgs).then(async(tiktok)=> {
+                    if (tiktok.status == 'success') {
+                        const tt = tiktok.result
+                        await onic.sendReaction(m.chat, m.key, '✈️')
+                        if(tt.type=='image'){
+                            for (let i = 0; i < tt.images.length; i++) {
+                                let url = tt.images[i]
                                 await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
-                                    await onic.sendReaction(m.chat, m.key, '❌')
-                                    await onic.sendMessage(m.chat, {
-                                        text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
-                                    }, {
-                                        quoted: m
+                                    await onic.sendReaction(m.chat, m.key, '🤔')
+                                    await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
+                                        await onic.sendReaction(m.chat, m.key, '❌')
+                                        await onic.sendMessage(m.chat, {
+                                            text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                                        }, {
+                                            quoted: m
+                                        })
+                                        return ''
                                     })
-                                    return ''
                                 })
-                            })
-                        }
-                    }else if(tt.type=='video'){
-                        for (let i = 0; i < tt.video.length; i++) {
-                            let url = tt.video[i]
-                            await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
-                                await onic.sendReaction(m.chat, m.key, '🤔')
+                            }
+                        }else if(tt.type=='video'){
+                            for (let i = 0; i < tt.video.length; i++) {
+                                let url = tt.video[i]
                                 await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
-                                    await onic.sendReaction(m.chat, m.key, '❌')
-                                    await onic.sendMessage(m.chat, {
-                                        text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
-                                    }, {
-                                        quoted: m
+                                    await onic.sendReaction(m.chat, m.key, '🤔')
+                                    await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
+                                        await onic.sendReaction(m.chat, m.key, '❌')
+                                        await onic.sendMessage(m.chat, {
+                                            text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                                        }, {
+                                            quoted: m
+                                        })
+                                        return ''
                                     })
-                                    return ''
                                 })
+                            }
+                        }else{
+                            await replyError('Saya belum bisa mendownload Format '+tt.type+' ini', '😔')
+                        }
+                        for (let i = 0; i < tt.music.length; i++) {
+                            let music = tt.music[i]
+                            await onic.sendMessage(m.chat, {
+                                audio: {
+                                    url: music
+                                },
+                                mimetype: 'audio/mpeg',
+                                ptt: false,
+                            }, {
+                                quoted: m
                             })
                         }
-                    }else{
-                        await replyError('Saya belum bisa mendownload Format '+tt.type+' ini', '😔')
+                        
+                        
+                        await onic.sendReaction(m.chat, m.key, '✅')
+                    } else {
+                        await reply('Gaktahu error nih bang, coba chat owner')
+                        
                     }
-                    for (let i = 0; i < tt.music.length; i++) {
-                        let music = tt.music[i]
-                        await onic.sendMessage(m.chat, {
-                            audio: {
-                                url: music
-                            },
-                            mimetype: 'audio/mpeg',
-                            ptt: false,
-                        }, {
-                            quoted: m
-                        })
-                    }
-                    
-                    
-                    await onic.sendReaction(m.chat, m.key, '✅')
-                } else {
+                
+                }).catch(async _ => {
                     await onic.sendReaction(m.chat, m.key, '❌')
                     await onic.sendMessage(m.chat, {
-                        text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa periksa link di web,*\n*tolong bagikan ke owner:*\n\n```' + noerr.l + '```'
+                        text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa periksa link di web,*\n*tolong bagikan ke owner:*\n\n```' + _ + '```'
                     }, {
                         quoted: m
                     })
-                }
+                })
+                
+                
+                
             }
             break
             case 'ig':
