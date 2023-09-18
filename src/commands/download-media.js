@@ -104,8 +104,6 @@ module.exports = onic = async (onic, m, command, mek) => {
                 })
                 
                 await tiktok
-                await reply(JSON.stringify(tiktok))
-                
                 
                 if (tiktok.status == 'success' || noerr.s) {
                     const tt = await tiktok.result
