@@ -103,8 +103,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     noerr.l = _
                 })
                 
-                await tiktok
-                let status = await tiktok.status? tiktok.status: 'failed'
+                let status = await tiktok? (tiktok.status? tiktok.status: 'failed'): 'failed'
                 
                 if (status == 'success' || noerr.s) {
                     const tt = await tiktok.result
