@@ -38,12 +38,7 @@ const {
 const lang = require(home('./src/options/lang_id'))
 
 //━━━[ DOWNLOADER ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-const {
-    tiktokdl,
-    youtubedl,
-    youtubedlv2,
-    youtubedlv3
-} = require('@bochilteam/scraper')
+const { TiktokDL } = require("@tobyg74/tiktok-api-dl")
 const YoutubeMusicApi = require('youtube-music-api')
 const ytcapi = new YoutubeMusicApi()
 
@@ -99,26 +94,68 @@ module.exports = onic = async (onic, m, command, mek) => {
 
                 await onic.addProsMsg()
                 await onic.sendReaction(m.chat, m.key, '⏳')
-                let noerr = true
-                const {
-                    video
-                } = await tiktokdl(nrgs).catch(async _ => noerr = false)
-
-                if (noerr) {
-                    const url = video.no_watermark_raw || video.no_watermark || video.no_watermark_hd || video.with_watermark
+                let noerr = {
+                    s: true,
+                    l: ''
+                }
+                const tiktok = await TiktokDL(nrgs).catch(async _ => {
+                    noerr.s = false
+                    noerr.l = _
+                })
+                
+                
+                if (tiktok.status == 'success' || noerr.s) {
+                    const tt = tiktok.result
                     await onic.sendReaction(m.chat, m.key, '✈️')
-                    await onic.sendVideoUrl(m.chat, url, false, '', m).catch(async _ => {
-                        await onic.sendReaction(m.chat, m.key, '🤔')
-                        await onic.sendVideoUrl(m.chat, url, false, '', m).catch(async _ => {
-                            await onic.sendReaction(m.chat, m.key, '❌')
-                            await onic.sendMessage(m.chat, {
-                                text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
-                            }, {
-                                quoted: m
+                    if(tt.type=='image'){
+                        for (let i = 0; i < tt.images.length; i++) {
+                            let url = tt.images[i]
+                            await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
+                                await onic.sendReaction(m.chat, m.key, '🤔')
+                                await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
+                                    await onic.sendReaction(m.chat, m.key, '❌')
+                                    await onic.sendMessage(m.chat, {
+                                        text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                                    }, {
+                                        quoted: m
+                                    })
+                                    return ''
+                                })
                             })
-                            return ''
+                        }
+                    }else if(tt.type=='video'){
+                        for (let i = 0; i < tt.video.length; i++) {
+                            let url = tt.video[i]
+                            await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
+                                await onic.sendReaction(m.chat, m.key, '🤔')
+                                await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
+                                    await onic.sendReaction(m.chat, m.key, '❌')
+                                    await onic.sendMessage(m.chat, {
+                                        text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                                    }, {
+                                        quoted: m
+                                    })
+                                    return ''
+                                })
+                            })
+                        }
+                    }else{
+                        await replyError('Saya belum bisa mendownload Format '+tt.type+' ini', '😔')
+                    }
+                    for (let i = 0; i < tt.music.length; i++) {
+                        let music = tt.music[i]
+                        await onic.sendMessage(m.chat, {
+                            audio: {
+                                url: music
+                            },
+                            mimetype: 'audio/mpeg',
+                            ptt: false,
+                        }, {
+                            quoted: m
                         })
-                    })
+                    }
+                    
+                    
                     await onic.sendReaction(m.chat, m.key, '✅')
                 } else {
                     await onic.sendReaction(m.chat, m.key, '❌')

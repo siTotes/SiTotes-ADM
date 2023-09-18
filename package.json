@@ -25,6 +25,7 @@
     "@bochilteam/scraper": "^4.2.3",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@hapi/boom": "^10.0.1",
+    "@tobyg74/tiktok-api-dl": "^1.0.5",
     "axios": "^1.4.0",
     "baileys-md": "^5.0.5",
     "chalk": "^4.1.2",
