@@ -104,8 +104,9 @@ module.exports = onic = async (onic, m, command, mek) => {
                 })
                 
                 await tiktok
+                let status = await tiktok.status? tiktok.status: 'failed'
                 
-                if (tiktok.status == 'success' || noerr.s) {
+                if (status == 'success' || noerr.s) {
                     const tt = await tiktok.result
                     await onic.sendReaction(m.chat, m.key, '✈️')
                     if(tt.type=='image'){
