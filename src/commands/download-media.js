@@ -38,12 +38,12 @@ const {
 const lang = require(home('./src/options/lang_id'))
 
 //━━━[ DOWNLOADER ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-const { TiktokDL } = require(home('./lib/tiktokdl'))
+const { TiktokDL } = require('@tobyg74/tiktok-api-dl')
 const {
-               youtubedl,
-               youtubedlv2,
-               youtubedlv3
-            } = require('@bochilteam/scraper')
+    youtubedl,
+    youtubedlv2,
+    youtubedlv3
+} = require('@bochilteam/scraper')
 const YoutubeMusicApi = require('youtube-music-api')
 const ytcapi = new YoutubeMusicApi()
 
