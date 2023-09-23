@@ -38,7 +38,7 @@ const {
 const lang = require(home('./src/options/lang_id'))
 
 //━━━[ DOWNLOADER ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-const { TiktokDL } = require('@tobyg74/tiktok-api-dl')
+const tiktokdl = require('node-tiklydown')
 const {
     youtubedl,
     youtubedlv2,
@@ -97,70 +97,59 @@ module.exports = onic = async (onic, m, command, mek) => {
                     return reply(lang.contoh(prefix, command, text + ' 👈Ini bukan Url / Link Video tiktok'))
                 }
 
-                await onic.addProsMsg()
                 await onic.sendReaction(m.chat, m.key, '⏳')
                 let noerr = {
                     s: true,
                     l: ''
                 }
-                const tiktok = await TiktokDL(nrgs).then(async(tiktok)=> {
-                    if (tiktok.status == 'success') {
-                        const tt = tiktok.result
-                        await onic.sendReaction(m.chat, m.key, '✈️')
-                        if(tt.type=='image'){
-                            for (let i = 0; i < tt.images.length; i++) {
-                                let url = tt.images[i]
+                await tiktokdl.v1(nrgs).then(async(tiktok)=> {
+                    await onic.sendReaction(m.chat, m.key, '✈️')
+                    if(tiktok.images){
+                        for (let i = 0; i < tiktok.images.length; i++) {
+                            let url = tiktok.images[i].url
+                            await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
+                                await onic.sendReaction(m.chat, m.key, '🤔')
                                 await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
-                                    await onic.sendReaction(m.chat, m.key, '🤔')
-                                    await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
-                                        await onic.sendReaction(m.chat, m.key, '❌')
-                                        await onic.sendMessage(m.chat, {
-                                            text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
-                                        }, {
-                                            quoted: m
-                                        })
-                                        return ''
+                                    await onic.sendReaction(m.chat, m.key, '❌')
+                                    await onic.sendMessage(m.chat, {
+                                        text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                                    }, {
+                                        quoted: m
                                     })
+                                    return ''
                                 })
-                            }
-                        }else if(tt.type=='video'){
-                            for (let i = 0; i < tt.video.length; i++) {
-                                let url = tt.video[i]
-                                await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
-                                    await onic.sendReaction(m.chat, m.key, '🤔')
-                                    await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
-                                        await onic.sendReaction(m.chat, m.key, '❌')
-                                        await onic.sendMessage(m.chat, {
-                                            text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
-                                        }, {
-                                            quoted: m
-                                        })
-                                        return ''
-                                    })
-                                })
-                            }
-                        }else{
-                            await replyError('Saya belum bisa mendownload Format '+tt.type+' ini', '😔')
-                        }
-                        for (let i = 0; i < tt.music.length; i++) {
-                            let music = tt.music[i]
-                            await onic.sendMessage(m.chat, {
-                                audio: {
-                                    url: music
-                                },
-                                mimetype: 'audio/mpeg',
-                                ptt: false,
-                            }, {
-                                quoted: m
                             })
                         }
-                        
-                        
-                        await onic.sendReaction(m.chat, m.key, '✅')
-                    } else {
-                        await reply('Gaktahu error nih bang, coba chat owner')
-                        
+                    }else if(tiktok.video){
+                        let url = tiktok.video.noWatermark
+                        await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
+                            await onic.sendReaction(m.chat, m.key, '🤔')
+                            await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
+                                await onic.sendReaction(m.chat, m.key, '❌')
+                                await onic.sendMessage(m.chat, {
+                                    text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                                }, {
+                                    quoted: m
+                                })
+                                return ''
+                            })
+                        })
+                    }else{
+                        await replyError('Saya belum bisa mendownload Format\n\n'+JSON.stringify(tiktok, null, 2)+'\n\n ini', '😔')
                     }
+                    
+                    await onic.sendMessage(m.chat, {
+                        audio: {
+                            url: tiktok.music.play_url
+                        },
+                        mimetype: 'audio/mpeg',
+                        ptt: false,
+                    }, {
+                        quoted: m
+                    })
+                    
+                    
+                    await onic.sendReaction(m.chat, m.key, '✅')
                 
                 }).catch(async _ => {
                     await onic.sendReaction(m.chat, m.key, '❌')
@@ -170,9 +159,6 @@ module.exports = onic = async (onic, m, command, mek) => {
                         quoted: m
                     })
                 })
-                
-                
-                
             }
             break
             case 'ig':
@@ -198,7 +184,6 @@ module.exports = onic = async (onic, m, command, mek) => {
                     return reply(lang.contoh(prefix, command, text + ' 👈Ini bukan Url / Link url instagram'))
                 }
 
-                await onic.addProsMsg()
                 await onic.sendReaction(m.chat, m.key, '⏳')
                 let noerr = {
                     s: true,
@@ -289,7 +274,6 @@ module.exports = onic = async (onic, m, command, mek) => {
                     text = 'https://music.youtube.com/watch?v=' + text.split('\n\n◕ ')[1]
                 }
 
-                // await onic.addProsMsg()
                 await onic.sendReaction(m.chat, m.key, '⏳')
                 let noerr = true
 
@@ -487,7 +471,6 @@ module.exports = onic = async (onic, m, command, mek) => {
         console.log(onic.printErr(err))
         await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```')
     } finally {
-        onic.endProsMsg()
         /**/
         console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
         svdata()
