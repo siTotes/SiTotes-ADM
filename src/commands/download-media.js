@@ -442,8 +442,12 @@ module.exports = onic = async (onic, m, command, mek) => {
                     }
                     if(!result.length) return await replyError('Coba yang lain kak','😔')
                     await onic.sendReaction(m.chat, m.key, '✈️')
-                    console.log(await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', result))
-    
+                    for(let i = 0; i<result.length; i = i+12){
+                        let json = result.slice(i, i+12)
+                        if(result.slice(i, i+12).length<2) json = result.slice(i-1, i+12)
+                        if(result.length<2) json = [json[0], json[0]]
+                        await onic.sendPoll(m.chat, 'Menemukan '+result.slice(i, i+12).length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', json)
+                    }
                     await onic.sendReaction(m.chat, m.key, '✅')
                 }
             }
