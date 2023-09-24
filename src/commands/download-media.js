@@ -441,6 +441,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                         result[i] = await `pinimg ${result[i].replaceAll('https://i.pinimg.com/', '').replaceAll('.jpg', '')}\n\nGambar ${i+1}`
                     }
                     await onic.sendReaction(m.chat, m.key, '✈️')
+                    await reply(JSON.stringify(await result))
                     for(let i = 0; i<result.length; i = i+12){
                         let json = result.slice(i, i+12)
                         if(result.slice(i, i+12).length<2) json = result.slice(i-1, i+12)
