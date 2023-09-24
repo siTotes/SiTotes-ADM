@@ -440,7 +440,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     for(let i = 0; i<result.length; i++){
                         result[i] = await `pinimg ${result[i].replaceAll('https://i.pinimg.com/', '').replaceAll('.jpg', '')}\n\nGambar ${i+1}`
                     }
-                    if(!result.length) return await replyError('Coba yang lain kak','😔')
+                    if(!await result.length) return await replyError('Coba yang lain kak','😔')
                     await onic.sendReaction(m.chat, m.key, '✈️')
                     for(let i = 0; i<result.length; i = i+12){
                         let json = result.slice(i, i+12)
