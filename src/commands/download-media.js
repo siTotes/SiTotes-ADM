@@ -441,14 +441,14 @@ module.exports = onic = async (onic, m, command, mek) => {
                         result[i] = await `pinimg ${result[i].replaceAll('https://i.pinimg.com/', '').replaceAll('.jpg', '')}\n\nGambar ${i+1}`
                     }
                     await onic.sendReaction(m.chat, m.key, '✈️')
-                    await reply(JSON.stringify(await result))
+                    await result
                     for(let i = 0; i<result.length; i = i+12){
                         let json = result.slice(i, i+12)
                         if(result.slice(i, i+12).length<2) json = result.slice(i-1, i+12)
                         if(result.length<2) json = [json[0], json[0]]
                         await onic.sendPoll(m.chat, 'Menemukan '+result.slice(i, i+12).length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', json)
                     }
-                    if(!result.length) return await replyError('Coba yang lain kak','😔')
+                    if(!result.length) return await replyError('Coba yang lain kak\n\n'+ JSON.stringify(await result),'😔')
                     await onic.sendReaction(m.chat, m.key, '✅')
                 }
             }
