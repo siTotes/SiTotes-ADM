@@ -155,10 +155,19 @@ exports.allmenu = (prefix) => {
 ││
 *│├╭→ #Youtube Music Apis*
 │││
-││├ ${prefix}mainkan  *judul >3
+││├ ${prefix}mainkan  *judul
 ││├ ${prefix}music    *judul
 ││├ ${prefix}play     *judul
 ││├ ${prefix}lagu     *judul
+│││
+││╰×
+││
+*│├╭→ #Pinterest*
+│││
+││├ ${prefix}pinters  *srch
+││├ ${prefix}pintrs    *srch
+││├ ${prefix}pint     *srch
+││├ ${prefix}pinterest  *srch
 │││
 ││╰×
 ││
