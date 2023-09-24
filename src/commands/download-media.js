@@ -44,6 +44,9 @@ const {
     youtubedlv2,
     youtubedlv3
 } = require('@bochilteam/scraper')
+const {
+   pinterest
+} = require(home('./lib/scraper'))
 const YoutubeMusicApi = require('youtube-music-api')
 const ytcapi = new YoutubeMusicApi()
 
@@ -392,59 +395,6 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Saran pencarian di YouTube Music.\nPilih salah satu Untuk mencari:', result)
 
                 await onic.sendReaction(m.chat, m.key, '✅')
-                
-                /*
-                await onic.sendReaction(m.chat, m.key, '⏳')
-                await ytcapi.initalize()
-                let teks
-                let pos
-                if (text.includes(' >')) {
-                    teks = text.split(' >')[0]
-                    pos = text.split(' >')[1]
-                } else {
-                    teks = text
-                    pos = 0
-                }
-                let result = await ytcapi.getSearchSuggestions(teks)
-                if (result[0] ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
-                if (result.length < pos) return await reply('Hanya menemukan ' + result.length + ' Lagu saja, permintaan anda terlalu jauh')
-                let resu = await ytcapi.search(result[0])
-                resu.content = await resu.content.filter(item => item.type === "song")
-                try {
-                    const {
-                        thumbnail,
-                        audio: _audio,
-                        title
-                    } = await youtubedl('https://music.youtube.com/watch?v=' + await resu.content[pos].videoId).catch(async _ => await youtubedlv2('https://music.youtube.com/watch?v=' + resu.content[pos].videoId)).catch(async _ => noerr = false)
-                    await onic.sendReaction(m.chat, m.key, '✈️')
-                    await onic.sendMessage(m.chat, {
-                        audio: {
-                            url: await _audio[Object.keys(_audio)[0]].download()
-                        },
-                        mimetype: 'audio/mpeg',
-                        ptt: false,
-                        contextInfo: {
-                            externalAdReply: {
-                                title: title,
-                                body: '© ' + ownername,
-                                thumbnail: await onic.axiosUrlToBuffer2(thumbnail),
-                                sourceUrl: myweb,
-                                renderLargerThumbnail: true,
-                                showAdAttribution: true,
-                                mediaType: 1
-                            }
-                        }
-                    }, {
-                        quoted: m
-                    }).catch(async _ => await replyError('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```', '❌'))
-
-                    await onic.sendReaction(m.chat, m.key, '✅')
-                } catch (err) {
-                    console.log(onic.printErr(err))
-                    await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '\n\n' + JSON.stringify(result, null, 2) + '\n\n' + JSON.stringify(resu, null, 2) + '```')
-                }
-                */
-
             }
             break
             case 'play>':
@@ -461,6 +411,41 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await onic.sendReaction(m.chat, m.key, '✈️')
                 await onic.sendPoll(m.chat, 'Menemukan '+data.content.length+' Lagu di YouTube Music.\nPilih salah satu Untuk memainkan:', data.content)
                 await onic.sendReaction(m.chat, m.key, '✅')
+            }
+            break
+            case 'pinters':
+            case 'pintrs':
+            case 'pint':
+            case 'pinimg':
+            case 'pinterest': {
+                if(command=='pinimg'){
+                    let url = `https://i.pinimg.com/${text.split('\n\n')[0]? text.split('\n\n')[0]: text}.jpg`
+                    let caption = `${text.split('\n\n')[1]? text.split('\n\n')[1]: text}`
+                    await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
+                        await onic.sendReaction(m.chat, m.key, '🤔')
+                        await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
+                            await onic.sendReaction(m.chat, m.key, '❌')
+                            await onic.sendMessage(m.chat, {
+                                text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                            }, {
+                                quoted: m
+                            })
+                            return ''
+                        })
+                    })
+                }else{
+                    await onic.sendReaction(m.chat, m.key, '⏳')
+    
+                    let result = await pinterest(text)
+                    for(let i = 0; i<result.length; i++){
+                        result[i] = await `pinimg ${result[i].replaceAll('https://i.pinimg.com/', '').replaceAll('.jpg', '')}\n\nGambar ${i+1}`
+                    }
+                    if(!result.length) return await replyError('Coba yang lain kak','😔')
+                    await onic.sendReaction(m.chat, m.key, '✈️')
+                    console.log(await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', result))
+    
+                    await onic.sendReaction(m.chat, m.key, '✅')
+                }
             }
             break
 

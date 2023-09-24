@@ -436,6 +436,12 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             'music>',
             'lagu>',
             '⊡',
+            
+            'pinters',
+            'pintrs',
+            'pint',
+            'pinimg',
+            'pinterest',
 
             'm.saiful.anam.r.creator'
         ], 'download-media')
