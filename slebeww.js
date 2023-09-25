@@ -133,61 +133,61 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             await onic.readMessages([readkey]);
         }
 
-        // onic.addProsMsg = () => {
-            // let pe = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0) : 0
-            // if (pe > 0) {
-                // for (let i = 0; i < db.data.proses.reaload.messages.length; i++) {
-                    // if (db.data.proses.reaload.messages[i] == null) {
-                        // db.data.proses.reaload.messages.splice(i, 1);
-                    // } else if (db.data.proses.reaload.messages[i].count) {} else if (db.data.proses.reaload.messages[i].key.id == m.id) {
+        onic.addProsMsg = () => {
+            let pe = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0) : 0
+            if (pe > 0) {
+                for (let i = 0; i < db.data.proses.reaload.messages.length; i++) {
+                    if (db.data.proses.reaload.messages[i] == null) {
+                        db.data.proses.reaload.messages.splice(i, 1);
+                    } else if (db.data.proses.reaload.messages[i].count) {} else if (db.data.proses.reaload.messages[i].key.id == m.id) {
 
-                    // } else {
-                        // db.data.proses.reaload.messages.push(mek)
-                    // }
-                // }
-            // } else {
-                // db.data.proses = {}
-                // db.data.proses.reaload = {}
-                // db.data.proses.reaload.messages = []
-                // db.data.proses.reaload.messages.push(mek)
-            // }
-        // }
-        // onic.endProsMsg = () => {
-            // let pe = db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0
-            // if (pe > 0) {
-                // for (let i = 0; i < db.data.proses.reaload.messages.length; i++) {
-                    // if (db.data.proses.reaload.messages[i] == null) {
-                        // db.data.proses.reaload.messages.splice(i, 1);
-                    // } else if (db.data.proses.reaload.messages[i].key.id == m.id) {
-                        // db.data.proses.reaload.messages.splice(i, 1);
-                    // }
-                // }
-            // }
-        // }
-        // onic.addProsessInv = (ivent, evid, ccmd) => {
-            // if (db.data.proses.event ? false : true) db.data.proses.event = {}
-            // if (db.data.proses.event[ivent] ? false : true) db.data.proses.event[ivent] = []
-            // db.data.proses.event[ivent].push({
-                // jid: m.chat,
-                // qid: evid,
-                // cmd: ccmd
-            // })
-        // }
-        // onic.rmvProsessInv = () => {}
+                    } else {
+                        db.data.proses.reaload.messages.push(mek)
+                    }
+                }
+            } else {
+                db.data.proses = {}
+                db.data.proses.reaload = {}
+                db.data.proses.reaload.messages = []
+                db.data.proses.reaload.messages.push(mek)
+            }
+        }
+        onic.endProsMsg = () => {
+            let pe = db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0
+            if (pe > 0) {
+                for (let i = 0; i < db.data.proses.reaload.messages.length; i++) {
+                    if (db.data.proses.reaload.messages[i] == null) {
+                        db.data.proses.reaload.messages.splice(i, 1);
+                    } else if (db.data.proses.reaload.messages[i].key.id == m.id) {
+                        db.data.proses.reaload.messages.splice(i, 1);
+                    }
+                }
+            }
+        }
+        onic.addProsessInv = (ivent, evid, ccmd) => {
+            if (db.data.proses.event ? false : true) db.data.proses.event = {}
+            if (db.data.proses.event[ivent] ? false : true) db.data.proses.event[ivent] = []
+            db.data.proses.event[ivent].push({
+                jid: m.chat,
+                qid: evid,
+                cmd: ccmd
+            })
+        }
+        onic.rmvProsessInv = () => {}
 
-        // let nua = 0
-        // const reply = async (teks) => {
-            // if (nua < 4) {
-                // await onic.sendFakeLink(m.chat, teks, salam, pushname, ownername, logo, myweb, m)
-                // nua = 999
-            // } else {
-                // await onic.sendMessage(m.chat, {
-                    // text: teks
-                // }, {
-                    // quoted: m
-                // })
-            // }
-        // }
+        let nua = 0
+        const reply = async (teks) => {
+            if (nua < 4) {
+                await onic.sendFakeLink(m.chat, teks, salam, pushname, ownername, logo, myweb, m)
+                nua = 999
+            } else {
+                await onic.sendMessage(m.chat, {
+                    text: teks
+                }, {
+                    quoted: m
+                })
+            }
+        }
         if (m.mtype == 'viewOnceMessage' && m.msg.viewOnce) {
             try {
                 await onic.ev.emit("viewOnceMessage", m);
@@ -205,7 +205,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 lgbm.casse = casenya
                 for (let i = 0; i < lgbm.casse.length; i++) {
                     if (isCmd && command == lgbm.casse[i]) {
-                        await require(casee(runto))(onic, m, command, mek)
+                        require(casee(runto))(onic, m, command, mek)
                     }
                 }
             } else {
@@ -213,7 +213,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 lgbm.casse = casenya
                 for (let i = 0; i < lgbm.casse.length; i++) {
                     if (cimmind == lgbm.casse[i]) {
-                        await require(casee(runto))(onic, m, cimmind, mek)
+                        require(casee(runto))(onic, m, cimmind, mek)
                     }
                 }
             }
@@ -316,11 +316,11 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
 
 
 
-        const runCase = (runto, perfic = true) => {
+        const runCase = async (runto, perfic = true) => {
             if (perfic) {
-                if (isCmd) await require(casee(runto))(onic, m, command, mek)
+                if (isCmd) require(casee(runto))(onic, m, command, mek)
             } else {
-                if (!isCmd) await require(casee(runto))(onic, m, cimmind, mek)
+                if (!isCmd) require(casee(runto))(onic, m, cimmind, mek)
             }
 
         }
