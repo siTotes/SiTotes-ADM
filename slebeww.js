@@ -76,7 +76,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         const content = JSON.stringify(mek.message)
         const type = Object.keys(mek.message)[0];
         if (m && type == "protocolMessage") onic.ev.emit("message.delete", m.message.protocolMessage.key);
-        const isCmd = mek.key.fromMe ? /^[$]/.test(body) : /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/%^&.+-,\\\©^]/.test(body)
+        const isCmd = /*mek.key.fromMe ? /^[$]/.test(body) : */ /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/%^&.+-,\\\©^]/.test(body)
         const prefix = isCmd ? budy[0] : ''
         const command = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : ''
         const cimmind = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : body.trim().split(' ').shift().toLowerCase()
@@ -189,38 +189,27 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             }
         }
         switch (command) {
-            case 'info':
-            case 'menu':
-            case 'fitur': {
-                let fakedoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf']
-                fakedoc = fakedoc[Math.floor(fakedoc.length * Math.random())]
-
-                onic.sendMessage(m.chat, {
-                    document: pp_bot,
-                    mimetype: fakedoc,
-                    fileName: 'Author : @m.saiful.anam.r',
-                    fileLength: '999999999999',
-                    pageCount: '999',
-                    caption: lang.allmenu(prefix),
-                    contextInfo: {
-                        externalAdReply: {
-                            title: 'Selamat ' + salam + ' ' + pushname,
-                            body: '© ' + ownername,
-                            thumbnail: pp_bot,
-                            sourceUrl: myweb,
-                            mediaUrl: '',
-                            renderLargerThumbnail: true,
-                            showAdAttribution: true,
-                            mediaType: 1
-                        }
-                    }
-                }, {
-                    m
-                })
-            }
-            break
             case 'u': {
                 await reply(`Runtime : ${runtime(process.uptime())}`)
+            }
+            break
+            case 'tovn': {
+                onic.sendMessage(m.chat, {
+                    audio: await quoted.download(),
+                    mimetype: 'audio/mpeg',
+                    ptt: true
+                }, {
+                    quoted: m
+                })
+            }
+            case 'tovn2': {
+                onic.sendMessage(m.chat, {
+                    audio: await quoted.download(),
+                    mimetype: 'audio/mpeg',
+                    ptt: true
+                }, {
+                    quoted: m.quoted
+                })
             }
             break
             // default:{
