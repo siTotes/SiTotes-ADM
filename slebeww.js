@@ -194,8 +194,9 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             }
             break
             case 'tovn': {
-                onic.sendMessage(m.chat, {
-                    audio: await quoted.download(),
+                const lagu = await quoted.download()
+                await onic.sendMessage(m.chat, {
+                    audio: lagu,
                     mimetype: 'audio/mpeg',
                     ptt: true
                 }, {
@@ -203,8 +204,9 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 })
             }
             case 'tovn2': {
-                onic.sendMessage(m.chat, {
-                    audio: await quoted.download(),
+                const lagu = await quoted.download()
+                await onic.sendMessage(m.chat, {
+                    audio: lagu,
                     mimetype: 'audio/mpeg',
                     ptt: true
                 }, {
