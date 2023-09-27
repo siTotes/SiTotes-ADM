@@ -226,44 +226,6 @@ async function startonic() {
         if (update.connection == "open" || update.receivedPendingNotifications == "true") {
             await store.chats.all()
             console.log(chalk.hex('#FFAD99').bold(`Terhubung dengan = ` + JSON.stringify(onic.user, null, 2)))
-
-            checkCommitUpdate().then(async bcsk => {
-                let vcp = bcsk.versi.split('.')
-                vcp = (((vcp[2]) + (vcp[1])) + (vcp[0])).trim()
-                let ccp = bcsk.commit.split('.')
-                ccp = (((ccp[2]) + (ccp[1])) + (ccp[0])).trim()
-
-                if (parseInt(ccp) > parseInt(vcp)) {
-                    await onic.sendMessage('6288989781626@s.whatsapp.net', {
-                        text: `Refresh Deploy SiTotes : v${bcsk.commit}Dev`
-                    }).then((result) => setVersiCommited(bcsk.commit))
-                }
-            })
-
-            let restorechat = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages : 0) : 0
-            let lop = 0
-            for (let i = 0; i < restorechat.length; i++) {
-                if (db.data.proses.reaload.messages[i] == null) {} else {
-                    let raobj = {}
-                    raobj.messages = []
-                    raobj.messages.push(restorechat[i])
-                    let lop = db.data.proses.reaload.messages[i].count ? db.data.proses.reaload.messages[i].count : 0
-                    lop++
-                    db.data.proses.reaload.messages[i].count = lop
-                    if (db.data.proses.reaload.messages[i].count == 3) {
-                        await onic.sendReaction(db.data.proses.reaload.messages[i].key.remoteJid, db.data.proses.reaload.messages[i].key, '❌')
-                        await onic.sendMessage(db.data.proses.reaload.messages[i].key.remoteJid, {
-                            text: 'Terjadi Kesalahan terus menerus Tolong hubungi pembuat jika menurut anda merasa tidak ada yang salah, atau coba lagi'
-                        })
-                        db.data.proses.reaload.messages.splice(i, 1);
-                        fs.writeFileSync(`./src/.sitotes/data/database.json`, JSON.stringify(global.db, null, 2))
-
-                    } else {
-                        await onic.ev.emit("messages.upsert", raobj)
-                    }
-                }
-            }
-            if (0 < restorechat.length) console.log(chalk.hex('#FFDF66')(`\nMemuat ${restorechat.length} Prosess yang belum selesai...`))
         }
     })
 
@@ -307,7 +269,7 @@ async function startonic() {
                     risetSesi()
                     resetcache = 0
                 }
-                // /*
+                /*
 
                 let lcInfo = './src/.sitotes/data/data-msg.json'
                 let infoMSG = JSON.parse(fs.readFileSync(lcInfo))
@@ -326,7 +288,7 @@ async function startonic() {
         }
     })
     
-
+/*
     onic.ev.on('messages.update', async chatUpdate => {
         //console.log(`\n\n ${JSON.stringify(chatUpdate, null, 2)}`)
         try {
@@ -422,6 +384,7 @@ async function startonic() {
             onic.sendTextWithMentions('6288989781626@s.whatsapp.net', `@${'6288989781626@s.whatsapp.net'.split('@')[0]} ` + `Error pada AntiDelete Base\n\n ${err.stack}`)
         }
     })
+*/
 
     onic.serializeM = (m) => smsg(onic, m, store)
     onic.ev.process(
@@ -456,6 +419,7 @@ async function startonic() {
         } else return jid
     }
 
+/*
     onic.ev.on('contacts.update', update => {
         for (let contact of update) {
             let id = onic.decodeJid(contact.id)
@@ -495,7 +459,7 @@ async function startonic() {
         await onic.setStatus(`Jika Bot selep, Bot Capek😉 On ${runtime(process.uptime())}`)
 
     }, interval);
-
+*/
     onic.sendMessageJson = async (jid, message, forceForward = false, options = {}) => {
         let vtype
         if (options.readViewOnce) {
