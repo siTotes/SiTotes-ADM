@@ -316,8 +316,8 @@ module.exports = onic = async (onic, m, command, mek) => {
                             quoted: m
                         }).catch(async _ => await replyError('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```', '❌'))
                         
-                        await YoutubeTranscript.fetchTranscript(text).then(async data =>{
-                            let transkeip
+                        await YoutubeTranscript.fetchTranscript(text.replaceAll('https://music.youtube.com/watch?v=','https://youtu.be/')).then(async data =>{
+                            let transkeip = ''
                             for (const item of data) {
                                 const totalSeconds = Math.floor(item.offset / 1000); // Convert offset to total seconds
                                 const minutes = Math.floor(totalSeconds / 60);
