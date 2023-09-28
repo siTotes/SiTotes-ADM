@@ -76,7 +76,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         const content = JSON.stringify(mek.message)
         const type = Object.keys(mek.message)[0];
         if (m && type == "protocolMessage") onic.ev.emit("message.delete", m.message.protocolMessage.key);
-        const isCmd = /*mek.key.fromMe ? /^[$]/.test(body) : */ /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/%^&.+-,\\\©^]/.test(body)
+        const isCmd = mek.key.fromMe ? /^[$]/.test(body) : /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/%^&.+-,\\\©^]/.test(body)
         const prefix = isCmd ? budy[0] : ''
         const command = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : ''
         const cimmind = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : body.trim().split(' ').shift().toLowerCase()
@@ -115,7 +115,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         const latensii = speed() - timestampi
         const pathbufc = `./src/session/Cache-Buffer/${m.chat}`
 
-        if (m.isGroup || !itsMe) return
+        //if (m.isGroup && !allowGrub) return
         console.log(
             chalk.black(chalk.bgWhite(' \n|=| MSG |-> ')),
             chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
@@ -124,7 +124,6 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
         )
         
-        /*
         if (m.message) {
             const readkey = {
                 remoteJid: m.chat,
@@ -133,7 +132,6 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             }
             await onic.readMessages([readkey]);
         }
-        */
 
         onic.addProsMsg = () => {
             let pe = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0) : 0
@@ -190,30 +188,124 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 })
             }
         }
+        if (m.mtype == 'viewOnceMessage' && m.msg.viewOnce) {
+            try {
+                await onic.ev.emit("viewOnceMessage", m);
+            } catch (err) {
+                /**/
+                await console.log(err)
+                await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
+            }
+        }
+
+        const casee = (lib) => './src/commands/' + lib
+        const chekcase = (casenya, runto, perfic = true) => {
+            if (perfic) {
+                let lgbm = {}
+                lgbm.casse = casenya
+                for (let i = 0; i < lgbm.casse.length; i++) {
+                    if (isCmd && command == lgbm.casse[i]) {
+                        require(casee(runto))(onic, m, command, mek)
+                    }
+                }
+            } else {
+                let lgbm = {}
+                lgbm.casse = casenya
+                for (let i = 0; i < lgbm.casse.length; i++) {
+                    if (cimmind == lgbm.casse[i]) {
+                        require(casee(runto))(onic, m, cimmind, mek)
+                    }
+                }
+            }
+
+        }
+        const checkcid = async(dataapa, chatny, jalok, runto) => {
+            for (let i = 0; i < chatny.length; i++) {
+                var ver = dataapa[chatny[i]] ? dataapa[chatny[i]] : false
+                ver = ver[m.chat] ? ver[m.chat] : 'emanf eak'
+                if (m.quoted) {
+                    if (!isCmd) {
+                        if (ver[jalok] == m.quoted.id) {
+                            require(casee(runto))(onic, m, command, mek)
+                        }
+                    }
+                }
+            }
+        }
+
         switch (command) {
+            case 'info':
+            case 'menu':
+            case 'fitur': {
+                let fakedoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf']
+                fakedoc = fakedoc[Math.floor(fakedoc.length * Math.random())]
+
+                onic.sendMessage(m.chat, {
+                    document: pp_bot,
+                    mimetype: fakedoc,
+                    fileName: 'Author : @m.saiful.anam.r',
+                    fileLength: '999999999999',
+                    pageCount: '999',
+                    caption: lang.allmenu(prefix),
+                    contextInfo: {
+                        externalAdReply: {
+                            title: 'Selamat ' + salam + ' ' + pushname,
+                            body: '© ' + ownername,
+                            thumbnail: pp_bot,
+                            sourceUrl: myweb,
+                            mediaUrl: '',
+                            renderLargerThumbnail: true,
+                            showAdAttribution: true,
+                            mediaType: 1
+                        }
+                    }
+                }, {
+                    m
+                })
+            }
+            break
             case 'u': {
                 await reply(`Runtime : ${runtime(process.uptime())}`)
             }
             break
-            case 'tovn': {
-                const lagu = await quoted.download()
-                await onic.sendMessage(m.chat, {
-                    audio: lagu,
-                    mimetype: 'audio/mpeg',
-                    ptt: true
-                }, {
-                    quoted: m
-                })
+            case 'antidelete':
+            case 'antihapus': {
+                const alur = 'Anti Hapus pesan ';
+                await client.connect();
+                const db = client.db(botdata);
+                const dbgrub = db.collection('grub-db');
+                const sitotesv = await dbgrub.findOne({ _id: m.chat });
+                
+                if (sitotesv) {
+                  const updateValue = !sitotesv.antidelete;
+                
+                  await dbgrub.updateOne(
+                    { _id: m.chat },
+                    { $set: { antidelete: updateValue } }
+                  );
+                
+                  await reply(alur + (updateValue ? '*Aktif*' : '*Mati*'));
+                } else {
+                  const dataToInsert = { antidelete: true };
+                  
+                  try {
+                    await dbgrub.insertOne({
+                      _id: m.chat,
+                      ...dataToInsert
+                    });
+                
+                    await reply(alur+'*Aktif*');
+                  } catch (error) {
+                    await reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + error + '```');
+                  }
+                }
+                
+                await client.close();
+
             }
-            case 'tovn2': {
-                const lagu = await quoted.download()
-                await onic.sendMessage(m.chat, {
-                    audio: lagu,
-                    mimetype: 'audio/mpeg',
-                    ptt: true
-                }, {
-                    quoted: m.quoted
-                })
+            break
+            case 'asu':{
+            
             }
             break
             // default:{
@@ -221,6 +313,283 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             // reply(JSON.stringify(users, null, 2))
             // }
         }
+
+
+
+        const runCase = async (runto, perfic = true) => {
+            if (perfic) {
+                if (isCmd) require(casee(runto))(onic, m, command, mek)
+            } else {
+                if (!isCmd) require(casee(runto))(onic, m, cimmind, mek)
+            }
+
+        }
+        
+        switch (cimmind){
+            case 'tt':
+            case 'downloadtiktok':
+            case 'tiktokunduh':
+            case 'tiktok':
+            case '---------------':
+            case 'ig':
+            case 'igdl':
+            case 'igdownload':
+            case 'igunduh':
+            case 'igsv':
+            case 'instagramdl':
+            case 'instagram':
+            case 'instagrams':
+            case 'instagramsdl':
+            case 'instagramunduh':
+            case 'igreel':
+            case 'igvideo':
+            case 'igimage':
+            case 'igpost':
+            case '---------------':
+            case 'youtube':
+            case 'youtubedownload':
+            case 'youtubedl':
+            case 'ytdl':
+            case 'youtubemp4':
+            case 'youtubemp3':
+            case 'ytmp4':
+            case 'ytmp3':
+            case 'ꈍ':
+            case '---------------':
+            case 'play':
+            case 'mainkan':
+            case 'music':
+            case 'lagu':
+            case '---------------':
+            case 'play>':
+            case 'mainkan>':
+            case 'music>':
+            case 'lagu>':
+            case '⊡':
+            case '---------------':
+            case 'pinters':
+            case 'pintrs':
+            case 'pint':
+            case 'pinimg':
+            case 'pinterest':{
+                await runCase('download-media', true)
+            }
+            break
+            case 'bantuan':
+            case 'hint':
+            case '---------------':
+            case 'nyerah':
+            case 'menyerah':
+            case 'quit':
+            case 'metu':
+            case 'kalah':
+            case 'out':
+            case '---------------':
+            case 'tg':
+            case 'tega':
+            case 'tbkg':
+            case 'tbkgam':
+            case 'tebakgam':
+            case 'tebakgambar':
+            case '---------------':
+            case 'cl':
+            case 'ckl':
+            case 'cakl':
+            case 'caklon':
+            case 'caklontong':{
+                await runCase('game-rpg', true)
+            }
+            break
+            case 's':
+            case 'sticker':
+            case 'stiker':
+            case '---------------':
+            case 'smeme':
+            case 'smemegen':
+            case 'stickermeme':
+            case 'smeme2':
+            case '---------------':
+            case 'ttp':
+            case 'attp':{
+                await runCase('convert-sticker', true)
+            }
+            break
+            case 'kick':
+            case 'keluarkan':
+            case 'hapus':
+            case 'remove':
+            case '---------------':
+            case 'add':
+            case 'tambah':
+            case 'new':
+            case '---------------':
+            case 'promote':
+            case 'naikan':
+            case 'jabatkan':
+            case '---------------':
+            case 'demote':
+            case 'turunkan':
+            case 'kucilkan':{
+                await runCase('group-only', true)
+            }
+            break
+            case 'gambarkan':
+            case 'bot':
+            case 'ai':{
+                await runCase('openai-gpt', false)
+            }
+            break
+        }
+
+
+        //━━━[ game-rpg ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+        await checkcid(
+            db.data.game,
+            [
+                'tebakgambar',
+                'caklontong',
+                'family100',
+                'asahotak',
+                'tebakkata',
+                'tekateki',
+                'tebakkimia',
+                'tebakkabupaten',
+                'siapakahaku',
+                'susunkata',
+                'tebakbendera',
+                'tebaklirik',
+                'tebaktebakan',
+
+                'm.saiful.anam.r.creator'
+            ],
+            'gameid',
+            'game-rpg'
+        )
+        
+        /*
+
+        await chekcase([
+            'bantuan',
+            'hint',
+
+            'nyerah',
+            'menyerah',
+            'quit',
+            'metu',
+            'kalah',
+            'out',
+
+            'tg',
+            'tega',
+            'tbkg',
+            'tbkgam',
+            'tebakgam',
+            'tebakgambar',
+
+            'cl',
+            'ckl',
+            'cakl',
+            'caklon',
+            'caklontong',
+
+            'm.saiful.anam.r.creator'
+        ], 'game-rpg')
+
+
+        //━━━[ download-media ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+        await chekcase([
+            'tt',
+            'downloadtiktok',
+            'tiktokunduh',
+            'tiktok',
+
+            'ig',
+            'igdl',
+            'igdownload',
+            'igunduh',
+            'igsv',
+            'instagramdl',
+            'instagram',
+            'instagrams',
+            'instagramsdl',
+            'instagramunduh',
+            'igreel',
+            'igvideo',
+            'igimage',
+            'igpost',
+
+            'youtube',
+            'youtubedownload',
+            'youtubedl',
+            'ytdl',
+            'youtubemp4',
+            'youtubemp3',
+            'ytmp4',
+            'ytmp3',
+            'ꈍ',
+
+            'play',
+            'mainkan',
+            'music',
+            'lagu',
+
+            'play>',
+            'mainkan>',
+            'music>',
+            'lagu>',
+            '⊡',
+            
+            'pinters',
+            'pintrs',
+            'pint',
+            'pinimg',
+            'pinterest',
+
+            'm.saiful.anam.r.creator'
+        ], 'download-media')
+
+
+        //━━━[ convert-sticker ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+        await chekcase([
+            's',
+            'sticker',
+            'stiker',
+
+            'smeme',
+            'smemegen',
+            'stickermeme',
+            'smeme2',
+
+            'ttp',
+            'attp',
+
+            'm.saiful.anam.r.creator'
+        ], 'convert-sticker')
+
+
+
+        //━━━[ group-only ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+        await chekcase([
+            'kick',
+            'keluarkan',
+            'hapus',
+            'remove',
+
+            'add',
+            'tambah',
+            'new',
+
+            'promote',
+            'naikan',
+            'jabatkan',
+
+            'demote',
+            'turunkan',
+            'kucilkan',
+
+            'm.saiful.anam.r.creator'
+        ], 'group-only')*/
+
 
     } catch (err) {
         /**/
