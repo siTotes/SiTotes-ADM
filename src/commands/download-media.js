@@ -329,7 +329,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                                 transkeip += await `${formattedOffset} - *${item.text}*\n\n`
                             }
                             await reply(await transkeip)
-                        });
+                        }).catch(console.log)
 
                         await onic.sendReaction(m.chat, m.key, '✅')
                     } else {
