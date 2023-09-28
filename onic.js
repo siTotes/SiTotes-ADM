@@ -429,7 +429,8 @@ async function startonic() {
             }
         }
     })
-
+*/
+// /*
     const interval = 14 * 60 * 1000
 
     setInterval(async function() {
@@ -459,7 +460,7 @@ async function startonic() {
         await onic.setStatus(`Jika Bot selep, Bot Capek😉 On ${runtime(process.uptime())}`)
 
     }, interval);
-*/
+// */
     onic.sendMessageJson = async (jid, message, forceForward = false, options = {}) => {
         let vtype
         if (options.readViewOnce) {
