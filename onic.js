@@ -77,7 +77,7 @@ const {
     createServer
 } = require('http')
 let server = createServer(app)
-let PORT = 3000 || 8000 || 8080
+let PORT = 1945 || 3000 || 8000 || 8080
 const path = require('path')
 let ttlerr = 0
 let resetcache = 0
@@ -181,13 +181,14 @@ async function startonic() {
             qr
         } = update
         if (qr) {
+            console.log(qr)
             app.use(async (req, res) => {
                 res.setHeader('content-type', 'image/png')
                 res.end(await toBuffer(qr))
             })
             app.use(express.static(path.join(__dirname, 'views')))
             server.listen(PORT, () => {
-                console.log('SENDER → App listened on port', PORT)
+                console.log('Buka di browser:  http://localhost:'+ PORT+'/')
             })
         }
         if (connection === 'close') {
@@ -226,44 +227,6 @@ async function startonic() {
         if (update.connection == "open" || update.receivedPendingNotifications == "true") {
             await store.chats.all()
             console.log(chalk.hex('#FFAD99').bold(`Terhubung dengan = ` + JSON.stringify(onic.user, null, 2)))
-
-            checkCommitUpdate().then(async bcsk => {
-                let vcp = bcsk.versi.split('.')
-                vcp = (((vcp[2]) + (vcp[1])) + (vcp[0])).trim()
-                let ccp = bcsk.commit.split('.')
-                ccp = (((ccp[2]) + (ccp[1])) + (ccp[0])).trim()
-
-                if (parseInt(ccp) > parseInt(vcp)) {
-                    await onic.sendMessage('6288989781626@s.whatsapp.net', {
-                        text: `Refresh Deploy SiTotes : v${bcsk.commit}Dev`
-                    }).then((result) => setVersiCommited(bcsk.commit))
-                }
-            })
-
-            let restorechat = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages : 0) : 0
-            let lop = 0
-            for (let i = 0; i < restorechat.length; i++) {
-                if (db.data.proses.reaload.messages[i] == null) {} else {
-                    let raobj = {}
-                    raobj.messages = []
-                    raobj.messages.push(restorechat[i])
-                    let lop = db.data.proses.reaload.messages[i].count ? db.data.proses.reaload.messages[i].count : 0
-                    lop++
-                    db.data.proses.reaload.messages[i].count = lop
-                    if (db.data.proses.reaload.messages[i].count == 3) {
-                        await onic.sendReaction(db.data.proses.reaload.messages[i].key.remoteJid, db.data.proses.reaload.messages[i].key, '❌')
-                        await onic.sendMessage(db.data.proses.reaload.messages[i].key.remoteJid, {
-                            text: 'Terjadi Kesalahan terus menerus Tolong hubungi pembuat jika menurut anda merasa tidak ada yang salah, atau coba lagi'
-                        })
-                        db.data.proses.reaload.messages.splice(i, 1);
-                        fs.writeFileSync(`./src/.sitotes/data/database.json`, JSON.stringify(global.db, null, 2))
-
-                    } else {
-                        await onic.ev.emit("messages.upsert", raobj)
-                    }
-                }
-            }
-            if (0 < restorechat.length) console.log(chalk.hex('#FFDF66')(`\nMemuat ${restorechat.length} Prosess yang belum selesai...`))
         }
     })
 
@@ -307,7 +270,7 @@ async function startonic() {
                     risetSesi()
                     resetcache = 0
                 }
-                // /*
+                /*
 
                 let lcInfo = './src/.sitotes/data/data-msg.json'
                 let infoMSG = JSON.parse(fs.readFileSync(lcInfo))
@@ -326,7 +289,7 @@ async function startonic() {
         }
     })
     
-
+/*
     onic.ev.on('messages.update', async chatUpdate => {
         //console.log(`\n\n ${JSON.stringify(chatUpdate, null, 2)}`)
         try {
@@ -422,6 +385,7 @@ async function startonic() {
             onic.sendTextWithMentions('6288989781626@s.whatsapp.net', `@${'6288989781626@s.whatsapp.net'.split('@')[0]} ` + `Error pada AntiDelete Base\n\n ${err.stack}`)
         }
     })
+*/
 
     onic.serializeM = (m) => smsg(onic, m, store)
     onic.ev.process(
@@ -456,6 +420,7 @@ async function startonic() {
         } else return jid
     }
 
+/*
     onic.ev.on('contacts.update', update => {
         for (let contact of update) {
             let id = onic.decodeJid(contact.id)
@@ -465,7 +430,8 @@ async function startonic() {
             }
         }
     })
-
+*/
+// /*
     const interval = 14 * 60 * 1000
 
     setInterval(async function() {
@@ -495,7 +461,7 @@ async function startonic() {
         await onic.setStatus(`Jika Bot selep, Bot Capek😉 On ${runtime(process.uptime())}`)
 
     }, interval);
-
+// */
     onic.sendMessageJson = async (jid, message, forceForward = false, options = {}) => {
         let vtype
         if (options.readViewOnce) {
@@ -540,6 +506,61 @@ async function startonic() {
                         delete mtiype.contextInfo['isForwarded']
                     }
                 } else {
+                    mtiype['contextInfo'] = {}
+                    mtiype.contextInfo['expiration'] = 86400
+                }
+            } catch {}
+        }
+        await onic.relayMessage(jid, waMessage.message, {
+            messageId: waMessage.key.id
+        })
+        return waMessage
+    }
+    
+    onic.sendMessageJson = async (jid, message, forceForward = false, options = {}) => {
+        let vtype
+        if (options.readViewOnce) {
+            message.message = message.message && message.message.ephemeralMessage && message.message.ephemeralMessage.message ? message.message.ephemeralMessage.message : (message.message || undefined)
+            vtype = Object.keys(message.message.viewOnceMessage.message)[0]
+            delete(message.message && message.message.ignore ? message.message.ignore : (message.message || undefined))
+            delete message.message.viewOnceMessage.message[vtype].viewOnce
+            message.message = {
+                ...message.message.viewOnceMessage.message
+            }
+        }
+
+        let mtype = Object.keys(message.message)[0]
+        let content = await generateForwardMessageContent(message, forceForward)
+        let ctype = Object.keys(content)[0]
+        let context = {}
+        if (mtype != "conversation") context = message.message[mtype].contextInfo
+        content[ctype].contextInfo = {
+            ...context,
+            ...content[ctype].contextInfo
+        }
+        const waMessage = await generateWAMessageFromContent(jid, content, options ? {
+            ...content[ctype],
+            ...options,
+            ...(options.contextInfo ? {
+                contextInfo: {
+                    ...content[ctype].contextInfo,
+                    ...options.contextInfo
+                }
+            } : {})
+        } : {})
+        if (forceForward) {} else {
+            try {
+                const listtype = Object.keys(waMessage.message)
+                const type = (!['senderKeyDistributionMessage', 'messageContextInfo'].includes(listtype[0]) && listtype[0]) || (listtype.length >= 3 && listtype[1] !== 'messageContextInfo' && listtype[1]) || listtype[listtype.length - 1] || Object.keys(waMessage.message)[0]
+                var mtiype = waMessage.message[type].message ? waMessage.message[type].message : waMessage.message[type]
+
+                if(mtiype.contextInfo? true : false){
+                    mtiype.contextInfo['expiration'] = 86400
+                    if(mtiype.contextInfo['forwardingScore']? true:false){
+                        delete mtiype.contextInfo['forwardingScore']
+                        delete mtiype.contextInfo['isForwarded']
+                    }
+                }else{
                     mtiype['contextInfo'] = {}
                     mtiype.contextInfo['expiration'] = 86400
                 }
@@ -1527,14 +1548,6 @@ function logOpened(module = '.') {
         console.log((chalk.greenBright('(' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() + ' → Modifed)==> ') + chalk.cyanBright(module)).replaceAll(__dirname, '.'))
     })
 }
-
-logModifed('./src/options/settings')
-
-logModifed('./src/commands/game-rpg')
-logModifed('./src/commands/download-media')
-logModifed('./src/commands/convert-sticker')
-logModifed('./src/commands/group-only')
-logModifed('./src/commands/openai-gpt')
 
 logModifed('./slebeww')
 
