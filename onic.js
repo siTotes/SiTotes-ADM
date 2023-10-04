@@ -458,7 +458,7 @@ async function startonic() {
         await onic.updateProfilePicture(onic.user.id, {
             url: './src/.sitotes/media/image/output.png'
         })
-        await onic.setStatus(`Jika Bot selep, Bot Capek😉 On ${runtime(process.uptime())}`)
+        await onic.setStatus(`Anjay Alok : ${runtime(process.uptime())}`)
 
     }, interval);
 // */

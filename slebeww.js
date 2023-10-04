@@ -212,6 +212,13 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                     ptt: true
                 })
             }
+            case 'tovn2': {
+                if (!quoted) return await reply('Tidak mereply apapun, reply media')
+                await onic.sendReaction(m.chat, m.key, '🦶')
+                let vnot = (quoted.msg || quoted).fakeObj
+                vnot.message.audioMessage.ptt = true
+                await onic.sendMessageJson(m.chat, vnot)
+            }
             break
             case 'lgc': {
                 let anu = await store.chats.all().filter(v => v.id.endsWith('@g.us')).map(v => v.id)
