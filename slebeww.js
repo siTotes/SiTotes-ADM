@@ -202,7 +202,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             case 'tovn': {
                 if (!/video/.test(mime) && !/audio/.test(mime)) return await reply('Reply media brow')
                 if (!quoted) return await reply('Tidak mereply apapun, reply media')
-                if ((quoted.msg || quoted).seconds > 60) return await reply('Maximum 60 seconds!')
+                if ((quoted.msg || quoted).seconds > 900) return await reply('Maximum 60 seconds!')
                 await onic.sendReaction(m.chat, m.key, '🦶')
                 let media = await quoted.download()
                 let audio = await toPTT(media, 'mp4')
