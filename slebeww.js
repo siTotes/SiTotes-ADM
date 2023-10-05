@@ -240,7 +240,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             case 'send': {
                 if(!quoted) return
                 if(!text) return
-                await onic.sendMessageJson(text, (quoted.msg || quoted).fakeObj)
+                await onic.sendMessageJson(text.replaceAll('https://', ''), (quoted.msg || quoted).fakeObj)
             }
             break
             // default:{
