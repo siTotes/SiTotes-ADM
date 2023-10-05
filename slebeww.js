@@ -199,20 +199,20 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 await reply(`Runtime : ${runtime(process.uptime())}`)
             }
             break
-            case 'tovn': {
+            case 'mc': {
                 if (!/video/.test(mime) && !/audio/.test(mime)) return await reply('Reply media brow')
                 if (!quoted) return await reply('Tidak mereply apapun, reply media')
                 if ((quoted.msg || quoted).seconds > 900) return await reply('Maximum 60 seconds!')
                 await onic.sendReaction(m.chat, m.key, '🦶')
                 let media = await quoted.download()
-                let audio = await toPTT(media, 'mp4')
+                let audio = await toAudio(media, 'mp4')
                 await onic.sendMessage(m.chat, {
                     audio: audio,
                     mimetype: 'audio/mpeg',
-                    ptt: true
+                    ptt: false
                 })
             }
-            case 'tovn2': {
+            case 'vn': {
                 if (!quoted) return await reply('Tidak mereply apapun, reply media')
                 await onic.sendReaction(m.chat, m.key, '🦶')
                 let vnot = (quoted.msg || quoted).fakeObj
@@ -225,7 +225,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
                 let teks = `⬣ *LIST GROUP CHAT*\n\nTotal Group : ${anu.length} Group\n\n`
                 for (let i of anu) {
                     let metadata = await onic.groupMetadata(i)
-                    teks += `⬡ *Nama :* ${metadata.subject}\n⬡ *Owner :* ${metadata.owner !== undefined ? '@' + metadata.owner.split`@`[0] : '-'}\n⬡ *ID :* ${metadata.id}\n⬡ *Dibuat :* ${moment(metadata.creation * 1000).tz('Asia/Jakarta').format('DD/MM/YYYY HH:mm:ss')}\n⬡ *Member :* ${metadata.participants.length}\n\n────────────────────────\n\n`
+                    teks += `⬡ *Nama :* ${metadata.subject}\n⬡ *Owner :* ${metadata.owner !== undefined ? '@' + metadata.owner.split`@`[0] : '-'}\n⬡ *ID :* https://${metadata.id}\n⬡ *Dibuat :* ${moment(metadata.creation * 1000).tz('Asia/Jakarta').format('DD/MM/YYYY HH:mm:ss')}\n⬡ *Member :* ${metadata.participants.length}\n\n────────────────────────\n\n`
                 }
                 onic.sendTextWithMentions(m.chat, teks, m)
             }
