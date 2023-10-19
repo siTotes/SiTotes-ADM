@@ -51,6 +51,7 @@
     "qrcode": "^1.5.3",
     "similarity": "^1.2.1",
     "streamifier": "^0.1.1",
-    "youtube-music-api": "^1.0.6"
+    "youtube-music-api": "^1.0.6",
+    "youtube-transcript": "^1.0.6"
   }
 }
