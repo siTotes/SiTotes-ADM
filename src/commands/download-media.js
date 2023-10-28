@@ -9,29 +9,20 @@ const chalk = require('chalk')
 
 
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
+// const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
 const {
-    smsg,
-    getGroupAdmins,
-    formatp,
-    tanggal,
-    tanggal_,
-    tanggal__,
-    formatDate,
-    getTime,
-    isUrl,
-    sleep,
-    clockString,
+    getBuffer,
+    hitungmundur,
+    bytesToSize,
+    checkBandwidth,
     runtime,
     fetchJson,
-    getBuffer,
-    jsonformat,
-    format,
-    logic,
-    generateProfilePicture,
-    parseMention,
-    getRandom
-} = require(home('./lib/myfunc'))
+    getGroupAdmins,
+    msToDate,
+    isUrl,
+    tanggal,
+    delay
+} = require(home('./lib/simple'))
 const {
     igGetUrlDownload
 } = require(home('./lib/igdownapis'))
@@ -67,25 +58,10 @@ module.exports = onic = async (onic, m, command, mek) => {
         const args = body.trim().split(/ +/).slice(1)
         let text = q = args.join(" ")
         const nrgs = args[0]
+        const reply = onic.reply
+        const replyEmo = onic.replyEmo
+        const react = onic.react
 
-        let nua = 0
-        const reply = async (teks) => {
-            if (nua < 4) {
-                nua = 999
-                return await onic.sendFakeLink(m.chat, teks, salam, pushname, ownername, logo, myweb, m)
-            } else {
-                return await onic.sendMessage(m.chat, {
-                    text: teks
-                }, {
-                    quoted: m
-                })
-            }
-        }
-
-        const replyError = async (text, emoji) => {
-            await onic.sendReaction(m.chat, m.key, emoji)
-            await reply(text)
-        }
 
         switch (command) {
             case 'tt':
@@ -93,29 +69,29 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'tiktokunduh':
             case 'tiktok': {
                 if (!text) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await react('❓')
                     return reply(lang.contoh(prefix, command, 'Url / link Video Tiktok'))
                 }
                 if (!isUrl(nrgs) && !nrgs.includes('tiktok.com')) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await react('❓')
                     return reply(lang.contoh(prefix, command, text + ' 👈Ini bukan Url / Link Video tiktok'))
                 }
 
-                await onic.sendReaction(m.chat, m.key, '⏳')
+                await react('⏳')
                 let noerr = {
                     s: true,
                     l: ''
                 }
                 await tiktokdl.v1(nrgs).then(async(tiktok)=> {
-                    await onic.sendReaction(m.chat, m.key, '✈️')
+                    await react('✈️')
                     if(tiktok.images){
                         for (let i = 0; i < tiktok.images.length; i++) {
                             let url = tiktok.images[i].url
                             await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
-                                await onic.sendReaction(m.chat, m.key, '🤔')
+                                await react('🤔')
                                 await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
-                                    await onic.sendReaction(m.chat, m.key, '❌')
-                                    await onic.sendMessage(m.chat, {
+                                    await react('❌')
+                                    await onic.sendPesan(m.chat, {
                                         text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
                                     }, {
                                         quoted: m
@@ -127,10 +103,10 @@ module.exports = onic = async (onic, m, command, mek) => {
                     }else if(tiktok.video){
                         let url = tiktok.video.noWatermark
                         await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
-                            await onic.sendReaction(m.chat, m.key, '🤔')
+                            await react('🤔')
                             await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
-                                await onic.sendReaction(m.chat, m.key, '❌')
-                                await onic.sendMessage(m.chat, {
+                                await react('❌')
+                                await onic.sendPesan(m.chat, {
                                     text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
                                 }, {
                                     quoted: m
@@ -139,10 +115,10 @@ module.exports = onic = async (onic, m, command, mek) => {
                             })
                         })
                     }else{
-                        await replyError('Saya belum bisa mendownload Format\n\n'+JSON.stringify(tiktok, null, 2)+'\n\n ini', '😔')
+                        await replyEmo('Saya belum bisa mendownload Format\n\n'+JSON.stringify(tiktok, null, 2)+'\n\n ini', '😔')
                     }
                     
-                    await onic.sendMessage(m.chat, {
+                    await onic.sendPesan(m.chat, {
                         audio: {
                             url: tiktok.music.play_url
                         },
@@ -153,11 +129,11 @@ module.exports = onic = async (onic, m, command, mek) => {
                     })
                     
                     
-                    await onic.sendReaction(m.chat, m.key, '✅')
+                    await react('✅')
                 
                 }).catch(async _ => {
-                    await onic.sendReaction(m.chat, m.key, '❌')
-                    await onic.sendMessage(m.chat, {
+                    await react('❌')
+                    await onic.sendPesan(m.chat, {
                         text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa periksa link di web,*\n*tolong bagikan ke owner:*\n\n```' + _ + '```'
                     }, {
                         quoted: m
@@ -180,15 +156,15 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'igimage':
             case 'igpost': {
                 if (!text) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await react('❓')
                     return reply(lang.contoh(prefix, command, 'Url / link Video, gambar, story atau reels orang yang bisa di copy atau di bagikan di instagram'))
                 }
                 if (!isUrl(nrgs) && !nrgs.includes('instagram.com')) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await react('❓')
                     return reply(lang.contoh(prefix, command, text + ' 👈Ini bukan Url / Link url instagram'))
                 }
 
-                await onic.sendReaction(m.chat, m.key, '⏳')
+                await react('⏳')
                 let noerr = {
                     s: true,
                     l: ''
@@ -200,7 +176,7 @@ module.exports = onic = async (onic, m, command, mek) => {
 
                 if (noerr.s) {
                     if (output.data ? false : true) {
-                        await onic.sendReaction(m.chat, m.key, '❌')
+                        await react('❌')
                         return reply('*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + (onic.isJson(output) ? JSON.stringify(output, null, 2) : output) + '```')
                     }
                     for (let i = 0; i < output.data.length; i++) {
@@ -209,12 +185,12 @@ module.exports = onic = async (onic, m, command, mek) => {
                         }
                         let url = output.data[i].url
                         if (output.data[i].type == 'video') {
-                            await onic.sendReaction(m.chat, m.key, '✈️')
+                            await react('✈️')
                             await onic.sendVideoUrl(m.chat, url, false, '', m).catch(async _ => {
-                                await onic.sendReaction(m.chat, m.key, '🤔')
+                                await react('🤔')
                                 await onic.sendVideoUrl(m.chat, url, false, '', m).catch(async _ => {
-                                    await onic.sendReaction(m.chat, m.key, '❌')
-                                    await onic.sendMessage(m.chat, {
+                                    await react('❌')
+                                    await onic.sendPesan(m.chat, {
                                         text: '*Terjadi kesalahan mengirimkan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
                                     }, {
                                         quoted: m
@@ -223,12 +199,12 @@ module.exports = onic = async (onic, m, command, mek) => {
                                 })
                             })
                         } else if (output.data[i].type == 'image') {
-                            await onic.sendReaction(m.chat, m.key, '✈️')
+                            await react('✈️')
                             await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
-                                await onic.sendReaction(m.chat, m.key, '🤔')
+                                await react('🤔')
                                 await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
-                                    await onic.sendReaction(m.chat, m.key, '❌')
-                                    await onic.sendMessage(m.chat, {
+                                    await react('❌')
+                                    await onic.sendPesan(m.chat, {
                                         text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
                                     }, {
                                         quoted: m
@@ -239,11 +215,11 @@ module.exports = onic = async (onic, m, command, mek) => {
                         } else {
                             reply('*Bot belum bisa mendownload dan mengirim format ini*\n\n```' + output[i].type + '```')
                         }
-                        await onic.sendReaction(m.chat, m.key, '✅')
+                        await react('✅')
                     }
                 } else {
-                    await onic.sendReaction(m.chat, m.key, '❌')
-                    await onic.sendMessage(m.chat, {
+                    await react('❌')
+                    await onic.sendPesan(m.chat, {
                         text: '*Terjadi kesalahan Coba ulang kak*,\n*jika masih tidak bisa periksa link di web,\ntolong bagikan ke owner:*\n\n```' + noerr.l + '```'
                     }, {
                         quoted: m
@@ -263,22 +239,22 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if(!command.includes('ꈍ')){
                     //return reply('Fitur sedang di perbaiki dan tidak bisa di gunakan terlebih dahulu')
                     if (!text) {
-                        await onic.sendReaction(m.chat, m.key, '❓')
+                        await react('❓')
                         return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
                     }
                     if (!isUrl(q)) {
-                        await onic.sendReaction(m.chat, m.key, '❓')
+                        await react('❓')
                         return reply(lang.contoh(prefix, command, 'https://youtu.be/b-LInciXTmE'))
                     }
                     if (!text.includes('youtu.be') && !text.includes('youtube.com')) {
-                        await onic.sendReaction(m.chat, m.key, '❓')
+                        await react('❓')
                         return reply(lang.contoh(prefix, command, 'https://youtu.be/7wfSvv4AHsQ'))
                     }
                 }else{
                     text = 'https://music.youtube.com/watch?v=' + text.split('\n\n◕ ')[1]
                 }
 
-                await onic.sendReaction(m.chat, m.key, '⏳')
+                await react('⏳')
                 let noerr = true
 
                 const {
@@ -290,8 +266,8 @@ module.exports = onic = async (onic, m, command, mek) => {
 
                 if (noerr) {
                     if (command.includes('mp3') || command.includes('ꈍ') ) {
-                        await onic.sendReaction(m.chat, m.key, '✈️')
-                        await onic.sendMessage(m.chat, {
+                        await react('✈️')
+                        await onic.sendPesan(m.chat, {
                             audio: {
                                 url: await _audio[Object.keys(_audio)[0]].download()
                             },
@@ -314,7 +290,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                             }
                         }, {
                             quoted: m
-                        }).catch(async _ => await replyError('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```', '❌'))
+                        }).catch(async _ => await replyEmo('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```', '❌'))
                         
                         await YoutubeTranscript.fetchTranscript(text.replaceAll('https://music.youtube.com/watch?v=','https://youtu.be/')).then(async data =>{
                             let transkeip = ''
@@ -331,7 +307,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                             await reply(await transkeip)
                         }).catch(console.log)
 
-                        await onic.sendReaction(m.chat, m.key, '✅')
+                        await react('✅')
                     } else {
                         let resoluse = Object.getOwnPropertyNames(_video)
                         let resohigh = []
@@ -355,7 +331,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                         }
                         let url = await _video[resohigh[0]].download()
                         //await reply(url)
-                        await onic.sendReaction(m.chat, m.key, '✈️')
+                        await react('✈️')
                         if (_video[resohigh[0]].fileSize * 1000 > 50000000) {
                             let nu = ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
 
@@ -371,7 +347,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                             }
 
 
-                            await onic.sendReaction(m.chat, m.key, nu[resohigh.length])
+                            await react(nu[resohigh.length])
                             if (v == 1) {
                                 await onic.sendVideoUrl(m.chat, await url, false, '', m)
                             } else {
@@ -380,10 +356,10 @@ module.exports = onic = async (onic, m, command, mek) => {
                         } else {
                             await onic.sendVideoUrl(m.chat, url, false, '', m)
                         }
-                        await onic.sendReaction(m.chat, m.key, '✅')
+                        await react('✅')
                     }
                 } else {
-                    await onic.sendReaction(m.chat, m.key, '❌')
+                    await react('❌')
                     await reply('Periksa Link anda apakah error jika tidak, coba ulang, Jika masih tidak bisa Hubungi Owner Jika perlu')
                 }
 
@@ -394,7 +370,7 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'mainkan':
             case 'music':
             case 'lagu': {
-                await onic.sendReaction(m.chat, m.key, '⏳')
+                await react('⏳')
                 await ytcapi.initalize()
 
                 let result = JSON.parse(JSON.stringify(await ytcapi.getSearchSuggestions(text)))
@@ -407,10 +383,10 @@ module.exports = onic = async (onic, m, command, mek) => {
                     '⊡ '+result+' terbaru',
                     '⊡ '+result+' slow'
                 ]
-                await onic.sendReaction(m.chat, m.key, '✈️')
+                await react('✈️')
                 await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Saran pencarian di YouTube Music.\nPilih salah satu Untuk mencari:', result)
 
-                await onic.sendReaction(m.chat, m.key, '✅')
+                await react('✅')
             }
             break
             case 'play>':
@@ -418,15 +394,15 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'music>':
             case 'lagu>':
             case '⊡': {
-                await onic.sendReaction(m.chat, m.key, '⏳')
+                await react('⏳')
                 await ytcapi.initalize()
                 if (text ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
                 let data = await ytcapi.search(text)
                 data.content = data.content.filter(item => item.type === "song")
                 data.content = data.content.map((item) => `ꈍ ${item.name}\n⊡ ${item.artist.name}\n\n◕ ${item.videoId}`)
-                await onic.sendReaction(m.chat, m.key, '✈️')
+                await react('✈️')
                 await onic.sendPoll(m.chat, 'Menemukan '+data.content.length+' Lagu di YouTube Music.\nPilih salah satu Untuk memainkan:', data.content)
-                await onic.sendReaction(m.chat, m.key, '✅')
+                await react('✅')
             }
             break
             case 'pinters':
@@ -438,10 +414,10 @@ module.exports = onic = async (onic, m, command, mek) => {
                     let url = `https://i.pinimg.com/${text.split('\n\n')[0]? text.split('\n\n')[0]: text}.jpg`
                     let caption = `${text.split('\n\n')[1]? text.split('\n\n')[1]: text}`
                     await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
-                        await onic.sendReaction(m.chat, m.key, '🤔')
+                        await react('🤔')
                         await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
-                            await onic.sendReaction(m.chat, m.key, '❌')
-                            await onic.sendMessage(m.chat, {
+                            await react('❌')
+                            await onic.sendPesan(m.chat, {
                                 text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
                             }, {
                                 quoted: m
@@ -450,13 +426,13 @@ module.exports = onic = async (onic, m, command, mek) => {
                         })
                     })
                 }else{
-                    await onic.sendReaction(m.chat, m.key, '⏳')
+                    await react('⏳')
     
                     let result = await pinterest(text)
                     for(let i = 0; i<result.length; i++){
                         result[i] = await `pinimg ${result[i].replaceAll('https://i.pinimg.com/', '').replaceAll('.jpg', '')}\n\nGambar ${i+1}`
                     }
-                    await onic.sendReaction(m.chat, m.key, '✈️')
+                    await react('✈️')
                     await result
                     for(let i = 0; i<result.length; i = i+12){
                         let json = result.slice(i, i+12)
@@ -464,8 +440,8 @@ module.exports = onic = async (onic, m, command, mek) => {
                         if(result.length<2) json = [json[0], json[0]]
                         await onic.sendPoll(m.chat, 'Menemukan '+result.slice(i, i+12).length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', json)
                     }
-                    if(!result.length) return await replyError('Coba yang lain kak\n\n'+ JSON.stringify(await result),'😔')
-                    await onic.sendReaction(m.chat, m.key, '✅')
+                    if(!result.length) return await replyEmo('Coba yang lain kak\n\n'+ JSON.stringify(await result),'😔')
+                    await react('✅')
                 }
             }
             break
@@ -474,11 +450,10 @@ module.exports = onic = async (onic, m, command, mek) => {
 
     } catch (err) {
         /**/
-        console.log(onic.printErr(err))
         await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```')
     } finally {
         /**/
         console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
-        svdata()
+        // svdata()
     }
 }

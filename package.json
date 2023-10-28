@@ -20,11 +20,12 @@
   "author": "anam",
   "license": "MIT",
   "dependencies": {
-    "@adiwajshing/baileys": "npm:baileys-md@^5.0.5",
+    "@adiwajshing/baileys": "npm:@whiskeysockets/baileys@^6.5.0",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@bochilteam/scraper": "^4.2.3",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@hapi/boom": "^10.0.1",
+    "awesome-phonenumber": "^6.1.0",
     "axios": "^1.4.0",
     "baileys-md": "^5.0.5",
     "chalk": "^4.1.2",
