@@ -140,7 +140,7 @@ async function Botstarted() {
 
     store.bind(onic.ev)
     onic.sendPesan = async (...args) => {
-        await delay(5)
+        await delay(2)
         await onic.sendMessage(...args)
     }
 
