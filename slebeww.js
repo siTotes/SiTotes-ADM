@@ -79,7 +79,7 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
         )
         if (m.message) {
-            await delay(3)
+            await delay(2)
             await onic.readMessages([m.key])
         }
         

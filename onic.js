@@ -141,7 +141,7 @@ async function startonic() {
     store.bind(onic.ev)
     onic.sendPesan = async (...args) => {
         await delay(2)
-        await onic.sendPesan(...args)
+        await onic.sendMessage(...args)
     }
 
     onic.ev.on('messages.upsert', async chatUpdate => {
