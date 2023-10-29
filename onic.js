@@ -79,7 +79,7 @@ let isduakali = 0
 
 console.log(chalk.hex('#FF9F84').bold('SiTotes Bot Wait Running...'))
 
-async function Botstarted() {
+async function startonic() {
     const {
         state,
         saveCreds
@@ -141,7 +141,7 @@ async function Botstarted() {
     store.bind(onic.ev)
     onic.sendPesan = async (...args) => {
         await delay(2)
-        await onic.sendMessage(...args)
+        await onic.sendPesan(...args)
     }
 
     onic.ev.on('messages.upsert', async chatUpdate => {
@@ -397,6 +397,31 @@ async function Botstarted() {
             ...options
         })
     }
+    
+    onic.sendImageUrl = async (jid, path, caption = '', quoted = '', options) => {
+        return await onic.sendPesan(jid, {
+            image: {
+                url: path
+            },
+            caption: caption,
+            ...options
+        }, {
+            quoted
+        })
+    }
+
+    onic.sendVideoUrl = async (jid, path, gif = false, caption = '', quoted = '', options) => {
+        return await onic.sendPesan(jid, {
+            video: {
+                url: path
+            },
+            caption: caption,
+            gifPlayback: gif,
+            ...options
+        }, {
+            quoted
+        })
+    }
 
     onic.sendFile = async (jid, path, filename = '', caption = '', quoted, ptt = false, options = {}) => {
         let type = await onic.getFile(path, true)
@@ -621,7 +646,7 @@ async function Botstarted() {
     return onic
 }
 
-Botstarted()
+startonic()
 
 
 
