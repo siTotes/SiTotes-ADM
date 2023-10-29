@@ -139,6 +139,10 @@ async function Botstarted() {
     nocache('./lib/simple', module => console.log(` "${module}" Telah diupdate!`))
 
     store.bind(onic.ev)
+    onic.sendPesan = async (...args) => {
+        await delay(5)
+        await onic.sendMessage(...args)
+    }
 
     onic.ev.on('messages.upsert', async chatUpdate => {
         try {
