@@ -133,15 +133,72 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
                 await runCase('download-media', true)
             }
             break
+            case 'bantuan':
+            case 'hint':
+            case '---------------':
+            case 'nyerah':
+            case 'menyerah':
+            case 'quit':
+            case 'metu':
+            case 'kalah':
+            case 'out':
+            case '---------------':
+            case 'tg':
+            case 'tega':
+            case 'tbkg':
+            case 'tbkgam':
+            case 'tebakgam':
+            case 'tebakgambar':
+            case '---------------':
+            case 'cl':
+            case 'ckl':
+            case 'cakl':
+            case 'caklon':
+            case 'caklontong':{
+                await runCase('game-rpg', true)
+            }
+            break
+            case 's':
+            case 'sticker':
+            case 'stiker':
+            case '---------------':
+            case 'smeme':
+            case 'smemegen':
+            case 'stickermeme':
+            case 'smeme2':
+            case '---------------':
+            case 'ttp':
+            case 'attp':{
+                await runCase('convert-sticker', true)
+            }
+            break
+            case 'kick':
+            case 'keluarkan':
+            case 'hapus':
+            case 'remove':
+            case '---------------':
+            case 'add':
+            case 'tambah':
+            case 'new':
+            case '---------------':
+            case 'promote':
+            case 'naikan':
+            case 'jabatkan':
+            case '---------------':
+            case 'demote':
+            case 'turunkan':
+            case 'kucilkan':{
+                await runCase('group-only', true)
+            }
+            break
+            case 'gambarkan':
+            case 'bot':
+            case 'ai':{
+                await runCase('openai-gpt', false)
+            }
+            break
             case 'asu':{
-                await onic.sendPesan(m.chat, {
-                    text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n``` + _ + ```'
-                }, {
-                    quoted: m
-                })
-                await reply('hjj')
-                await replyEmo('hjj', '👍')
-                await react('🤣')
+                await onic.sendPoll(m.chat, 'alok', ['1 polls', '2 polls'])
             }
             break
         }

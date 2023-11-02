@@ -75,7 +75,7 @@ const store = makeInMemoryStore({
 
 let ttlerr = 0
 let isduakali = 0
-
+let chekid = {}
 
 console.log(chalk.hex('#FF9F84').bold('SiTotes Bot Wait Running...'))
 
@@ -153,11 +153,42 @@ async function startonic() {
             if (!onic.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
             if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
             m = smsg(onic, mek, store)
+            if (m.id == chekid[m.chat]) return console.log('dobel detek')
+            if (m.mtype == 'pollUpdateMessage') return
+            chekid[m.chat] = m.id
+            
+            
             require("./slebeww")(onic, m, chatUpdate, mek, store)
         } catch (err) {
             console.log(err)
         }
     })
+    
+    onic.ev.process(
+		// events is a map for event name => event data
+		async(events) => {
+             if(events['messages.update']) {
+				console.log(
+					JSON.stringify(events['messages.update'], undefined, 2)
+				)
+
+				for(const { key, update } of events['messages.update']) {
+					if(update.pollUpdates) {
+						const pollCreation = await getMessage(key)
+						if(pollCreation) {
+							console.log(
+								'got poll update, aggregation: ',
+								getAggregateVotesInPollMessage({
+									message: pollCreation,
+									pollUpdates: update.pollUpdates,
+								})
+							)
+						}
+					}
+				}
+			}
+	})
+    
     if (pairingCode && !onic.authState.creds.registered) {
         if (useMobile) throw new Error('Cannot use pairing code with mobile api')
 
@@ -644,6 +675,16 @@ async function startonic() {
     })
 
     return onic
+    
+	async function getMessage(key) {
+        if (store) {
+            const msg = await store.loadMessage(key.remoteJid, key.id);
+            return msg ? msg.message : undefined;
+        }
+    
+        // only if store is present
+        return proto.Message.fromObject({});
+    }
 }
 
 startonic()
