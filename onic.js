@@ -164,31 +164,6 @@ async function startonic() {
         }
     })
     
-    onic.ev.process(
-		// events is a map for event name => event data
-		async(events) => {
-             if(events['messages.update']) {
-				console.log(
-					JSON.stringify(events['messages.update'], undefined, 2)
-				)
-
-				for(const { key, update } of events['messages.update']) {
-					if(update.pollUpdates) {
-						const pollCreation = await getMessage(key)
-						if(pollCreation) {
-							console.log(
-								'got poll update, aggregation: ',
-								getAggregateVotesInPollMessage({
-									message: pollCreation,
-									pollUpdates: update.pollUpdates,
-								})
-							)
-						}
-					}
-				}
-			}
-	})
-    
     if (pairingCode && !onic.authState.creds.registered) {
         if (useMobile) throw new Error('Cannot use pairing code with mobile api')
 

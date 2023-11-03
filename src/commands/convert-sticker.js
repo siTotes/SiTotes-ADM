@@ -58,20 +58,9 @@ module.exports = onic = async (onic, m, command, mek) => {
         const mime = (quoted.msg || quoted).mimetype || ''
         const pathbufc = home(`./src/session/Cache-Buffer/${m.chat}`)
         
-
-        let nua = 0
-        const reply = async (teks) => {
-            if (nua < 4) {
-                nua = 999
-                return await onic.sendFakeLink(m.chat, teks, salam, pushname, ownername, logo, myweb, m)
-            } else {
-                return await onic.sendMessage(m.chat, {
-                    text: teks
-                }, {
-                    quoted: m
-                })
-            }
-        }
+        const reply = onic.reply
+        const replyEmo = onic.replyEmo
+        const react = onic.react
 
         switch (command) {
             case 'smeme':
@@ -79,27 +68,27 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'stickermeme':
             case 'smeme2': {
                 if (!text) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await react('❓')
                     await reply(lang.SmemeErr(prefix, command))
                     return;
                 }
                 if (/image/.test(mime) || /video/.test(mime) || /webp/.test(mime)) {
-                    await onic.sendReaction(m.chat, m.key, '⬇️')
+                    await react('⬇️')
                     let dadl = await onic.downloadAndSaveMediaMessage(quoted, pathbufc)
 
                     if (/video/.test(mime)) {
                         await fs.writeFileSync(pathbufc + '.webp', await onic.videoToWebp(await cv.pathToBuffer(dadl)))
                         dadl = pathbufc + '.webp'
                     }
-                    await onic.sendReaction(m.chat, m.key, '⏳')
+                    await react('⏳')
                     let urlout = await gdapis.gdriveUpload(await cv.pathToBuffer(dadl), path.extname(dadl), '1jQk7lovSaz64K-W2mnCgzT0AXdDB5X-z').catch().finally(async () => {
                         fs.unlinkSync(dadl)
-                        await onic.sendReaction(m.chat, m.key, '🗃️')
+                        await react('🗃️')
                     })
                     let spelit = []
                     let texme = c.split("\n>")[0] ? c.split("\n>")[0] : text
                     if (urlout.pref ? false : true) {
-                        await onic.sendReaction(m.chat, m.key, '❌')
+                        await react('❌')
                         reply('Gagal membuat memegen, coba ulang')
                         return;
                     }
@@ -139,7 +128,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                         memetemp = `https://api.memegen.link/images/custom/${textnya}.webp${memetemp}`
                         memetemp = await onic.fetchUrlToBuffer(memetemp)
                         await onic.sendWebpAsSticker(m.chat, memetemp, m)
-                        .catch(async _ => await onic.sendMessage(m.chat, {
+                        .catch(async _ => await onic.sendPesan(m.chat, {
                             text: lang.doneErr('Sticker('+_+')')
                         }, {
                             quoted: m
@@ -149,14 +138,14 @@ module.exports = onic = async (onic, m, command, mek) => {
                         await onic.sendImageAsSticker(m.chat, memetemp, m, {
                             packname: global.packname,
                             author: global.author
-                        }).catch(async _ => await onic.sendMessage(m.chat, {
+                        }).catch(async _ => await onic.sendPesan(m.chat, {
                             text: lang.doneErr('Sticker('+_+')')
                         }, {
                             quoted: m
                         }))
                     }
                 } else {
-                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await react('❓')
                     await reply(lang.SmemeErr(prefix, command))
                 }
             }
@@ -165,19 +154,19 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'sticker':
             case 'stiker': {
                 if (!quoted) {
-                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await react('❓')
                     return reply(lang.NoToStik(prefix, command))
                 }
 
                 if (/image/.test(mime)) {
-                    await onic.sendReaction(m.chat, m.key, '⬇️')
+                    await react('⬇️')
                     let media = await quoted.download()
-                    await onic.sendReaction(m.chat, m.key, '⏳')
+                    await react('⏳')
                     let encmedia
 
                     if (/webp/.test(mime)) {
                         encmedia = await onic.sendWebpAsSticker(m.chat, media, m)
-                        /*.catch(async _ => await onic.sendMessage(m.chat, {
+                        /*.catch(async _ => await onic.sendPesan(m.chat, {
                             text: lang.doneErr('Sticker')
                         }, {
                             quoted: m
@@ -187,7 +176,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                         encmedia = await onic.sendImageAsSticker(m.chat, media, m, {
                             packname: global.packname,
                             author: global.author
-                        }).catch(async _ => await onic.sendMessage(m.chat, {
+                        }).catch(async _ => await onic.sendPesan(m.chat, {
                             text: lang.doneErr('Sticker('+_+')')
                         }, {
                             quoted: m
@@ -196,24 +185,24 @@ module.exports = onic = async (onic, m, command, mek) => {
 
                 } else if (/video/.test(mime)) {
                     if ((quoted.msg || quoted).seconds > 11) {
-                        await onic.sendReaction(m.chat, m.key, '📽️')
+                        await react('📽️')
                         return reply('Video terlalu panjang minimal kurang dari 11 detik')
                     }
 
-                    await onic.sendReaction(m.chat, m.key, '⬇️')
+                    await react('⬇️')
                     let media = await quoted.download()
-                    await onic.sendReaction(m.chat, m.key, '⏳')
+                    await react('⏳')
                     let encmedia = await onic.sendVideoAsSticker(m.chat, media, m, {
                         packname: global.packname,
                         author: global.author
-                    }).catch(async _ => await onic.sendMessage(m.chat, {
+                    }).catch(async _ => await onic.sendPesan(m.chat, {
                         text: lang.doneErr('Sticker('+_+')')
                     }, {
                         quoted: m
                     }))
 
                 } else {
-                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await react('❓')
                     reply(lang.NoToStik(prefix, command))
                 }
             }
@@ -221,16 +210,16 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'ttp':
             case 'attp':
                 if (!text){
-                    await onic.sendReaction(m.chat, m.key, '❓')
+                    await react('❓')
                     return reply(lang.contoh(prefix, command, 'SLEBEWW'))
                 }
-                await onic.sendReaction(m.chat, m.key, '⏳')
+                await react('⏳')
                 let encmedia = await onic.sendImageAsSticker(m.chat, `https://api-sitotes.indowarestudio.repl.co/api/${command}?text=${text}`, m, {
                         packname: global.packname,
                         author: global.author
                     })
                     .catch(async _ => {
-                        await onic.sendReaction(m.chat, m.key, '❌')
+                        await react('❌')
                         reply('Gagal Membuat sticker('+_+') coba ulang, jika masih tidak bisa chat owner')
                     })
                 await fs.unlinkSync(encmedia)
@@ -238,7 +227,7 @@ module.exports = onic = async (onic, m, command, mek) => {
         }
 
     } catch (err) {
-        /**/console.log(onic.printErr(err))
+        /**/console.log/*(onic.printErr*/(err)/*)*/
         await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
     } finally {
         /**/console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');

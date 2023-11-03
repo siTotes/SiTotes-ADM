@@ -8,7 +8,7 @@ const moment = require("moment-timezone")
 const chalk = require('chalk')
 
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
+// const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
 const {
     smsg,
     getGroupAdmins,
@@ -58,30 +58,16 @@ module.exports = onic = async (onic, m, command, mek) => {
         const text = q = args.join(" ")
         const nrgs = args[0]
         
-        let nua = 0
-        const reply = async (teks) => {
-            if (nua < 4) {
-                nua = 999
-                return await onic.sendFakeLink(m.chat, teks, salam, pushname, ownername, logo, myweb, m)
-            } else {
-                return await onic.sendMessage(m.chat, {
-                    text: teks
-                }, {
-                    quoted: m
-                })
-            }
-        }
-        const replyError = async (text, emoji) => {
-            await onic.sendReaction(m.chat, m.key, emoji)
-            await reply(text)
-        }
+        const reply = onic.reply
+        const replyEmo = onic.replyEmo
+        const react = onic.react
 
         switch (command) {
             case 'bot':
             case 'ai':{
-                await onic.sendReaction(m.chat, m.key, '⏳')
-                if(!text) return replyError(command + ' apa kak ?', '❌')
-                if(text.length < 10) return replyError('Coba yang lebih jelas lagi contoh:\nGambarkan kuda terbang di langit', '❌')
+                await react('⏳')
+                if(!text) return replyEmo(command + ' apa kak ?', '❌')
+                if(text.length < 10) return replyEmo('Coba yang lebih jelas lagi contoh:\nGambarkan kuda terbang di langit', '❌')
                 
                 await onic.sendPresenceUpdate('composing', m.chat)
                 let completion = await openai.chat.completions.create({
@@ -94,18 +80,18 @@ module.exports = onic = async (onic, m, command, mek) => {
             
                 await reply(completion)
                 await onic.sendPresenceUpdate('available', m.chat) 
-                await onic.sendReaction(m.chat, m.key, '✅')
+                await react('✅')
                 
             }
             break
         }
         
     } catch (err) {
-        /**/console.log(onic.printErr(err))
+        /**/console.log(err)
         await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
     } finally {
-        onic.endProsMsg()
+        // onic.endProsMsg()
         /**/console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
-        svdata()
+        // svdata()
     }
 }
