@@ -44,7 +44,7 @@ const {
     getBuffer,
     fetchJson,
     TelegraPh,
-    delay
+    delays
 } = require('./lib/simple')
 const {
     checkCommitUpdate,
@@ -140,7 +140,7 @@ async function startonic() {
 
     store.bind(onic.ev)
     onic.sendPesan = async (...args) => {
-        await delay(2)
+        await delays(2)
         await onic.sendMessage(...args)
     }
 
@@ -218,43 +218,6 @@ async function startonic() {
         }
     })
 
-    onic.getName = (jid, withoutContact = false) => {
-        id = onic.decodeJid(jid)
-        withoutContact = onic.withoutContact || withoutContact
-        let v
-        if (id.endsWith("@g.us")) return new Promise(async (resolve) => {
-            v = store.contacts[id] || {}
-            if (!(v.name || v.subject)) v = onic.groupMetadata(id) || {}
-            resolve(v.name || v.subject || PhoneNumber('+' + id.replace('@s.whatsapp.net', '')).getNumber('international'))
-        })
-        else v = id === '0@s.whatsapp.net' ? {
-                id,
-                name: 'WhatsApp'
-            } : id === onic.decodeJid(onic.user.id) ?
-            onic.user :
-            (store.contacts[id] || {})
-        return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
-    }
-
-    onic.sendContact = async (jid, kon, quoted = '', opts = {}) => {
-        let list = []
-        for (let i of kon) {
-            list.push({
-                displayName: await onic.getName(i + '@s.whatsapp.net'),
-                vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await onic.getName(i + '@s.whatsapp.net')}\nFN:${await onic.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`
-            })
-        }
-        onic.sendPesan(jid, {
-            contacts: {
-                displayName: `${list.length} Kontak`,
-                contacts: list
-            },
-            ...opts
-        }, {
-            quoted
-        })
-    }
-
     onic.public = true
 
     onic.serializeM = (m) => smsg(onic, m, store)
@@ -319,6 +282,59 @@ async function startonic() {
     })
 
     onic.ev.on('creds.update', saveCreds)
+    
+    
+    onic.videoToWebp = async (path) => {
+        const vv = await videoToWebp(path)
+        return vv
+    }
+    
+    onic.axiosUrlToBuffer = (url) => {
+        let retryCount = 0;
+        const maxRetries = 3;
+        const retryDelay = 3000;
+
+        function fetch() {
+            return axios.get(url, {
+                    responseType: 'arraybuffer'
+            })
+            .then(function(response) {
+                const buffer = Buffer.from(response.data, 'binary');
+                return buffer;
+            })
+            .catch(function(error) {
+                console.error(error);
+                if (retryCount < maxRetries) {
+                    retryCount++;
+                    console.log(`Mencoba lagi (${retryCount}/${maxRetries}) setelah ${retryDelay}ms...`);
+                    return new Promise(resolve => setTimeout(resolve, retryDelay)).then(fetch);
+                } else {
+                    throw error;
+                }
+            });
+        }
+        return fetch();
+    }
+    
+    onic.smemeTools = async (format) => {
+        if (!format) return
+        let outpot
+        outpot = await format.replaceAll('_', '__');
+        outpot = await outpot.replaceAll('-', '--');
+        outpot = await outpot.replaceAll('\n', '~n');
+        outpot = await outpot.replaceAll('?', '~q');
+        outpot = await outpot.replaceAll('&', '~a');
+        outpot = await outpot.replaceAll('%', '~p');
+        outpot = await outpot.replaceAll('#', '~h');
+        outpot = await outpot.replaceAll('/', '~s');
+        outpot = await outpot.replaceAll(String.fromCharCode(92), '~b');
+        outpot = await outpot.replaceAll('<', '~l');
+        outpot = await outpot.replaceAll('>', '~g');
+        outpot = await outpot.replaceAll('"', "''");
+        outpot = await outpot.replaceAll(' ', '_');
+
+        return outpot
+    }
 
     onic.sendText = (jid, text, quoted = '', options) => onic.sendPesan(jid, {
         text: text,
@@ -327,6 +343,43 @@ async function startonic() {
         quoted,
         ...options
     })
+    
+    onic.getName = (jid, withoutContact = false) => {
+        id = onic.decodeJid(jid)
+        withoutContact = onic.withoutContact || withoutContact
+        let v
+        if (id.endsWith("@g.us")) return new Promise(async (resolve) => {
+            v = store.contacts[id] || {}
+            if (!(v.name || v.subject)) v = onic.groupMetadata(id) || {}
+            resolve(v.name || v.subject || PhoneNumber('+' + id.replace('@s.whatsapp.net', '')).getNumber('international'))
+        })
+        else v = id === '0@s.whatsapp.net' ? {
+                id,
+                name: 'WhatsApp'
+            } : id === onic.decodeJid(onic.user.id) ?
+            onic.user :
+            (store.contacts[id] || {})
+        return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
+    }
+
+    onic.sendContact = async (jid, kon, quoted = '', opts = {}) => {
+        let list = []
+        for (let i of kon) {
+            list.push({
+                displayName: await onic.getName(i + '@s.whatsapp.net'),
+                vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await onic.getName(i + '@s.whatsapp.net')}\nFN:${await onic.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`
+            })
+        }
+        onic.sendPesan(jid, {
+            contacts: {
+                displayName: `${list.length} Kontak`,
+                contacts: list
+            },
+            ...opts
+        }, {
+            quoted
+        })
+    }
 
     onic.downloadMediaMessage = async (message) => {
         let mime = (message.msg || message).mimetype || ''
@@ -357,6 +410,7 @@ async function startonic() {
         await fs.writeFileSync(trueFileName, buffer)
         return trueFileName
     }
+    
     onic.sendTextWithMentions = async (jid, text, quoted, options = {}) => onic.sendPesan(jid, {
         text: text,
         mentions: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net'),
@@ -364,6 +418,7 @@ async function startonic() {
     }, {
         quoted
     })
+    
     onic.getFile = async (PATH, returnAsFilename) => {
         let res, filename
         const data = Buffer.isBuffer(PATH) ? PATH : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,` [1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await fetch(PATH)).buffer() : fs.existsSync(PATH) ? (filename = PATH, fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)
@@ -502,6 +557,7 @@ async function startonic() {
             return m
         }
     }
+    
     onic.sendMedia = async (jid, path, filename, quoted = '', options = {}) => {
         let {
             ext,
@@ -519,6 +575,7 @@ async function startonic() {
             quoted
         })
     }
+    
     onic.sendMediaAsSticker = async (jid, path, quoted, options = {}) => {
         let {
             ext,
@@ -544,15 +601,16 @@ async function startonic() {
         })
         return buffer
     }
+    
     onic.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
-        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await (await fetch(path)).buffer() : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         let buffer
         if (options && (options.packname || options.author)) {
             buffer = await writeExifImg(buff, options)
         } else {
             buffer = await imageToWebp(buff)
         }
-
+        await onic.sendReaction(quoted.chat, quoted.key, '✈️')
         await onic.sendPesan(jid, {
             sticker: {
                 url: buffer
@@ -561,18 +619,19 @@ async function startonic() {
         }, {
             quoted
         })
+        await onic.sendReaction(quoted.chat, quoted.key, '✅')
         return buffer
     }
 
     onic.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
-        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await getBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         let buffer
         if (options && (options.packname || options.author)) {
             buffer = await writeExifVid(buff, options)
         } else {
             buffer = await videoToWebp(buff)
         }
-
+        await onic.sendReaction(quoted.chat, quoted.key, '✈️')
         await onic.sendPesan(jid, {
             sticker: {
                 url: buffer
@@ -581,8 +640,47 @@ async function startonic() {
         }, {
             quoted
         })
+        await onic.sendReaction(quoted.chat, quoted.key, '✅')
         return buffer
     }
+
+    onic.sendWebpAsSticker = async (jid, path, quoted, options = {}) => {
+        let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,` [1], 'base64') : /^https?:\/\//.test(path) ? await onic.axiosUrlToBuffer(path) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
+
+        let buffer
+        if (options && (options.packname || options.author)) {
+            buffer = await writeExifWebp(buff, options)
+
+            await onic.sendReaction(quoted.chat, quoted.key, '✈️')
+            await onic.sendPesan(jid, {
+                sticker: {
+                    url: buffer
+                },
+                ...options
+            }, {
+                quoted
+            })
+            await onic.sendReaction(quoted.chat, quoted.key, '✅')
+            return buffer
+        } else {
+            await onic.sendReaction(quoted.chat, quoted.key, '✈️')
+            await onic.sendPesan(jid, {
+                sticker: buff,
+                ...options
+            }, {
+                quoted
+            })
+            await onic.sendReaction(quoted.chat, quoted.key, '✅')
+            return buff
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
     onic.sendButtonText = (jid, buttons = [], text, footer, quoted = '', options = {}) => {
         let buttonMessage = {
             text,
@@ -651,7 +749,7 @@ async function startonic() {
 
     return onic
     
-	async function getMessage(key) {
+    async function getMessage(key) {
         if (store) {
             const msg = await store.loadMessage(key.remoteJid, key.id);
             return msg ? msg.message : undefined;

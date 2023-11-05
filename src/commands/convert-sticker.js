@@ -126,7 +126,7 @@ module.exports = onic = async (onic, m, command, mek) => {
 
                     if (/video/.test(mime)) {
                         memetemp = `https://api.memegen.link/images/custom/${textnya}.webp${memetemp}`
-                        memetemp = await onic.fetchUrlToBuffer(memetemp)
+                        memetemp = await onic.axiosUrlToBuffer(memetemp)
                         await onic.sendWebpAsSticker(m.chat, memetemp, m)
                         .catch(async _ => await onic.sendPesan(m.chat, {
                             text: lang.doneErr('Sticker('+_+')')

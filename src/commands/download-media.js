@@ -21,7 +21,7 @@ const {
     msToDate,
     isUrl,
     tanggal,
-    delay
+    delays
 } = require(home('./lib/simple'))
 const {
     igGetUrlDownload

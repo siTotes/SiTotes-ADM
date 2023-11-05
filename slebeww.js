@@ -25,14 +25,15 @@ const {
     msToDate,
     isUrl,
     tanggal,
-    delay
+    delays
 } = require('./lib/simple')
 
 module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, antilink2, antiwame2, set_welcome_db, set_left_db, set_open, set_close, _welcome, _left) => {
     try {
         var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : '' //omzee
         var budy = (typeof m.text == 'string' ? m.text : '')
-        const isCmd = /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/$%^&.+-,\\\©^]/.test(body)
+        // const isCmd = /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/$%^&.+-,\\\©^]/.test(body)
+        const isCmd = /≈/.test(body)
         const prefix = isCmd ? budy[0] : ''
         const command = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : ''
         const cimmind = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : body.trim().split(' ').shift().toLowerCase()
@@ -79,7 +80,7 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
         )
         if (m.message) {
-            await delay(2)
+            await delays(2)
             await onic.readMessages([m.key])
         }
         
