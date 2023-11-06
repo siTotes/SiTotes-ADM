@@ -316,6 +316,18 @@ async function startonic() {
         return fetch();
     }
     
+    onic.getUrlTotalSize = async (url) => {
+        let vv
+        await fetch(url, {
+            method: 'HEAD'
+        }).then((result) => {
+            let v = result.headers.get("content-length")
+
+            vv = onic.caculedSize(v)
+        })
+        return await vv
+    }
+    
     onic.smemeTools = async (format) => {
         if (!format) return
         let outpot

@@ -282,7 +282,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                                     renderLargerThumbnail: true,
                                     title: title,
                                     body: '© ' + ownername,
-                                    thumbnail: await onic.axiosUrlToBuffer2(thumbnail),
+                                    thumbnail: await onic.axiosUrlToBuffer(thumbnail),
                                     mediaType: 1,
                                     mediaUrl: await _audio[Object.keys(_audio)[0]].download(),
                                 }
@@ -370,6 +370,7 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'mainkan':
             case 'music':
             case 'lagu': {
+                /*
                 await react('⏳')
                 await ytcapi.initalize()
 
@@ -387,6 +388,64 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Saran pencarian di YouTube Music.\nPilih salah satu Untuk mencari:', result)
 
                 await react('✅')
+                */
+                await react('⏳')
+                await ytcapi.initalize()
+
+                let result = JSON.parse(JSON.stringify(await ytcapi.getSearchSuggestions(text)))
+                if (await result[0] ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
+                for (let i = 0; i<result.length; i++){
+                    result[i] =  `${result[i]}`
+                }
+                if(!Array.isArray(result)) result = [
+                    result,
+                    result+' terbaru',
+                    result+' slow'
+                ]
+                let data = await ytcapi.search(result[0])
+                data.content = data.content.filter(item => item.type === "song")
+                data.content = data.content.map((item) => `https://music.youtube.com/watch?v=${item.videoId}`)
+                
+                let noerr = true
+
+                const {
+                    thumbnail,
+                    video: _video,
+                    audio: _audio,
+                    title
+                } = await youtubedl(text).catch(async _ => await youtubedlv2(data.content[0])).catch(async _ => noerr = false)
+
+                if (noerr) {
+                    await react('✈️')
+                    await onic.sendPesan(m.chat, {
+                        audio: {
+                            url: await _audio[Object.keys(_audio)[0]].download()
+                        },
+                        mimetype: 'audio/mpeg',
+                        ptt: false,
+                        contextInfo: {
+                            forwardingScore: 999,
+                            isForwarded: true,
+                            externalAdReply: {
+                                containsAutoReply: true,
+                                showAdAttribution: true,
+                                renderLargerThumbnail: true,
+                                title: title,
+                                body: '© ' + ownername,
+                                thumbnail: await onic.axiosUrlToBuffer(thumbnail),
+                                mediaType: 1,
+                                mediaUrl: await _audio[Object.keys(_audio)[0]].download(),
+                            }
+                        }
+                    }, {
+                        quoted: m
+                    }).catch(async _ => await replyEmo('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```', '❌'))
+                            
+    
+                    await react('✅')
+                } else {
+                    await replyEmo('Coba lagi, atau judul lain, mumet gak nemu lagu kyok ngunu 👌🥴', '🤷')
+                }
             }
             break
             case 'play>':
