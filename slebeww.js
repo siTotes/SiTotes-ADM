@@ -204,13 +204,6 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             break
         }
 
-        
-
-        
-
-
-        
-
     }
     catch (err) {
         m.reply(util.format(err))
