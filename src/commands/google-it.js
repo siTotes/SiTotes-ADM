@@ -7,42 +7,27 @@ const fs = require('fs')
 const moment = require("moment-timezone")
 const chalk = require('chalk')
 
+
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 // const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
 const {
-    smsg,
-    getGroupAdmins,
-    formatp,
-    tanggal,
-    tanggal_,
-    tanggal__,
-    formatDate,
-    getTime,
-    isUrl,
-    sleep,
-    clockString,
+    getBuffer,
+    hitungmundur,
+    bytesToSize,
+    checkBandwidth,
     runtime,
     fetchJson,
-    getBuffer,
-    jsonformat,
-    format,
-    logic,
-    generateProfilePicture,
-    parseMention,
-    getRandom
-} = require(home('./lib/myfunc'))
+    getGroupAdmins,
+    msToDate,
+    isUrl,
+    tanggal,
+    delays
+} = require(home('./lib/simple'))
+const google = require('google-it')
 const lang = require(home('./src/options/lang_id'))
 
-
-//━━━[ OpenAi Chat Gpt ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-const { OpenAI } = require('openai');
-
-const apia = JSON.parse(fs.readFileSync(home('./lib/.api/.openai-gpt.json')))
-const openai = new OpenAI({
-  apiKey: apia[0] + apia[1],
-});
-
 //━━━[ DATA BASE ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
+
 
 //━━━[ If user chat download-media ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 module.exports = onic = async (onic, m, command, mek) => {
@@ -55,49 +40,47 @@ module.exports = onic = async (onic, m, command, mek) => {
         const salam = moment(Date.now()).tz(timezone).locale('id').format('a')
         const pushname = m.pushName || "No Name"
         const args = body.trim().split(/ +/).slice(1)
-        const text = q = args.join(" ")
+        let text = q = args.join(" ")
         const nrgs = args[0]
-        
         const reply = onic.reply
         const replyEmo = onic.replyEmo
         const react = onic.react
 
+
         switch (command) {
-            case 'bot':
-            case 'ai':{
-                await react('⏳')
-                if(!text) return replyEmo(command + ' apa kak ?', '❌')
-                if(text.length < 10) return replyEmo('Coba yang lebih jelas lagi contoh:\nGambarkan kuda terbang di langit', '❌')
-                
-                await onic.sendPresenceUpdate('composing', m.chat)
-                let completion = await openai.chat.completions.create({
-                    messages: [{ role: 'user', content: text }],
-                    model: 'gpt-3.5-turbo',
-                });
-                completion = completion.choices[0].message.content
-                
-                
-            
-                await reply(completion)
-                await onic.sendPresenceUpdate('available', m.chat) 
-                await react('✅')
-                
-            }
-            break
-            case 'rate':{
+            case 'gsearch':
+            case 'googlesearch':
+            case 'google':{
                 await react('⌛')
-                await reply(`*Rate:* ${text} (${Math.floor(Math.random() * 101)}%)`);
-                await react('✅')
+                if (!text) {
+                    await react('❓')
+                    return reply(lang.contoh(prefix, command, 'wajah pocong'))
+                }
+                await google({
+                   'query': text
+                }).then(async res => {
+                   let teks = `*Google Search*\n_Query : ${text}_\n\n`
+                   for (let g of res) {
+                      teks += `*Title* : ${g.title}\n`
+                      teks += `*Description* : ${g.snippet}\n`
+                      teks += `*Link* : ${g.link}\n\n----------------------------------------\n\n`
+                   }
+                   await react('✈️')
+                   await reply(teks)
+                   await react('✅')
+                }).catch(async _=> {
+                    await replyEmo('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + _.stack + '```', '❌')
+                })
             }
             break
         }
-        
+
     } catch (err) {
-        /**/console.log(err)
-        await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
+        /**/
+        await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```')
     } finally {
-        // onic.endProsMsg()
-        /**/console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
+        /**/
+        console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
         // svdata()
     }
 }

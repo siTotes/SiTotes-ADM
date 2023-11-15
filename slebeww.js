@@ -85,7 +85,7 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
         )
         if (m.message) {
-            await delays(2)
+            // await delays(2)
             await onic.readMessages([m.key])
         }
         
@@ -160,12 +160,6 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
 
             }
             break
-            case 'rate':{
-                await react('⌛')
-                await reply(`*Rate:* ${text} (${Math.floor(Math.random() * 101)}%)`);
-                await react('✅')
-            }
-            break
         }
         
         switch (cimmind){
@@ -214,13 +208,7 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             case 'pintrs':
             case 'pint':
             case 'pinimg':
-            case 'pinterest':
-            case '---------------':
-            case 'katakataanime':
-            case 'quotesanime':
-            case 'quotanim':
-            case 'qanim':
-            case 'quotanim':{
+            case 'pinterest':{
                 await runCase('download-media', true)
             }
             break
@@ -259,7 +247,9 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             case 'smeme2':
             case '---------------':
             case 'ttp':
-            case 'attp':{
+            case 'attp':
+            case '---------------':
+            case 'emojimix':{
                 await runCase('convert-sticker', true)
             }
             break
@@ -284,10 +274,27 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             break
             case 'gambarkan':
             case 'bot':
-            case 'ai':{
+            case 'ai':
+            case '---------------':
+            case 'rate':{
                 await runCase('openai-gpt', false)
             }
             break
+            case 'katakataanime':
+            case 'quotesanime':
+            case 'quotanim':
+            case 'qanim':
+            case 'quotanim':{
+                await runCase('wibu-docpusat', true)
+            }
+            break
+            case 'gsearch':
+            case 'googlesearch':
+            case 'google':{
+                await runCase('google-it', true)
+            }
+            break
+             
             case 'asu':{
                 await onic.sendPoll(m.chat, 'alok', ['1 polls', '2 polls'])
             }

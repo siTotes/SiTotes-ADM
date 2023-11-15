@@ -171,16 +171,6 @@ exports.allmenu = (prefix) => {
 │││
 ││╰×
 ││
-*│├╭→ #Scraper QuotAnime*
-│││
-││├ ${prefix}katakataanime
-││├ ${prefix}quotesanime
-││├ ${prefix}quotanim
-││├ ${prefix}qanim
-││├ ${prefix}quotanim
-│││
-││╰×
-││
 │╰──────────•
 │
 │
@@ -195,6 +185,36 @@ exports.allmenu = (prefix) => {
 *│├╭→ #Funn / Random Macth*
 │││
 ││├ ${prefix}rate   *contoh seberapa alay gwe
+││╰×
+││
+│╰─────────────•
+│
+*├╭─( Anime Menu )────•*
+││
+*│├╭→ #QuotAnime*
+│││
+││├ ${prefix}katakataanime
+││├ ${prefix}quotesanime
+││├ ${prefix}quotanim
+││├ ${prefix}qanim
+││├ ${prefix}quotanim
+│││
+││╰×
+││
+│╰─────────────•
+│
+*├╭─( Google IT )────•*
+││
+*│├╭→ #Google Pencarian*
+│││
+││├ ${prefix}google *search
+│││
+││╰×
+││
+*│├╭→ #Google Emojimix*
+│││
+││├ ${prefix}emojimix 😁+🥴
+│││
 ││╰×
 ││
 │╰─────────────•

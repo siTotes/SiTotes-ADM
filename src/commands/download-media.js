@@ -525,23 +525,6 @@ module.exports = onic = async (onic, m, command, mek) => {
                 }
             }
             break
-            case 'katakataanime':
-            case 'quotesanime':
-            case 'quotanim':
-            case 'qanim':
-            case 'quotanim':{
-                await react('⌛')
-                await quotesAnime().then(async anu => {
-                    result = anu[Math.floor(Math.random(), anu.length)]
-                    await react('✈️')
-                    await reply(`_${result.quotes}_\n\nBy *'${result.karakter}'*, ${result.anime}\n\n*_- ${result.up_at}_*`)
-                    await react('✅')
-                }).catch(async _=> {
-                    await reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + _.stack + '```')
-                })
-            }
-            break
-
         }
 
     } catch (err) {
