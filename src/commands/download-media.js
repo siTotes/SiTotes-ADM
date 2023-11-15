@@ -405,6 +405,18 @@ module.exports = onic = async (onic, m, command, mek) => {
                     result+' terbaru',
                     result+' slow'
                 ]
+
+                if(!Array.isArray(result)) result = [
+                    result,
+                    result+' terbaru',
+                    result+' slow'
+                ]
+                const {key} = await onic.sendPesan(m.chat, {
+                    text: 'Mencari lagu: '+result[0]
+                },{
+                    quoted: m
+                });
+    
                 let data = await ytcapi.search(result[0])
                 data.content = data.content.filter(item => item.type === "song")
                 data.content = data.content.map((item) => `https://music.youtube.com/watch?v=${item.videoId}`)
@@ -416,10 +428,15 @@ module.exports = onic = async (onic, m, command, mek) => {
                     video: _video,
                     audio: _audio,
                     title
-                } = await youtubedl(text).catch(async _ => await youtubedlv2(data.content[0])).catch(async _ => noerr = false)
+                } = await youtubedl(data.content[0]).catch(async _ => await youtubedlv2(data.content[0])).catch(async _ => noerr = false)
 
                 if (noerr) {
                     await react('✈️')
+                    await onic.sendPesan(m.chat, {
+                        text: 'Mendengarkan: '+ title, edit: key
+                    },{
+                        quoted: m
+                    });
                     await onic.sendPesan(m.chat, {
                         audio: {
                             url: await _audio[Object.keys(_audio)[0]].download()
@@ -439,10 +456,11 @@ module.exports = onic = async (onic, m, command, mek) => {
                                 mediaType: 1,
                                 mediaUrl: await _audio[Object.keys(_audio)[0]].download(),
                             }
+    
                         }
                     }, {
                         quoted: m
-                    }).catch(async _ => await replyEmo('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + _.stack + '```', '❌'))
+                    }).catch(async _ => await replyEmo('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```', '❌'))
                             
     
                     await react('✅')

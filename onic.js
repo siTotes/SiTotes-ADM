@@ -138,10 +138,12 @@ async function startonic() {
     require('./lib/simple')
     nocache('./lib/simple', module => console.log(` "${module}" Telah diupdate!`))
 
+    nocache('./src/commands/download-media')
+
     store.bind(onic.ev)
     onic.sendPesan = async (...args) => {
         await delays(2)
-        await onic.sendMessage(...args)
+        return await onic.sendMessage(...args)
     }
 
     onic.ev.on('messages.upsert', async chatUpdate => {
