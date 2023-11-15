@@ -171,8 +171,33 @@ exports.allmenu = (prefix) => {
 │││
 ││╰×
 ││
+*│├╭→ #Scraper QuotAnime*
+│││
+││├ ${prefix}katakataanime
+││├ ${prefix}quotesanime
+││├ ${prefix}quotanim
+││├ ${prefix}qanim
+││├ ${prefix}quotanim
+│││
+││╰×
+││
 │╰──────────•
 │
+│
+*├╭─( Funn/ Bot AI )────•*
+││
+*│├╭→ #ChatGpt / Openai*
+│││
+││├ bot   *pertanyaan
+││├ ai   *pertanyaan
+││╰×
+││
+*│├╭→ #Funn / Random Macth*
+│││
+││├ ${prefix}rate   *contoh seberapa alay gwe
+││╰×
+││
+│╰─────────────•
 │
 *├╭─( Media Sticker )────•*
 ││

@@ -26,6 +26,9 @@ const {
 const {
     igGetUrlDownload
 } = require(home('./lib/igdownapis'))
+const {
+    quotesAnime
+} = require(home('./lib/scraper'))
 const lang = require(home('./src/options/lang_id'))
 
 //━━━[ DOWNLOADER ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
@@ -439,7 +442,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                         }
                     }, {
                         quoted: m
-                    }).catch(async _ => await replyEmo('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```', '❌'))
+                    }).catch(async _ => await replyEmo('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + _.stack + '```', '❌'))
                             
     
                     await react('✅')
@@ -502,6 +505,22 @@ module.exports = onic = async (onic, m, command, mek) => {
                     if(!result.length) return await replyEmo('Coba yang lain kak\n\n'+ JSON.stringify(await result),'😔')
                     await react('✅')
                 }
+            }
+            break
+            case 'katakataanime':
+            case 'quotesanime':
+            case 'quotanim':
+            case 'qanim':
+            case 'quotanim':{
+                await react('⌛')
+                await quotesAnime().then(async anu => {
+                    result = anu[Math.floor(Math.random(), anu.length)]
+                    await react('✈️')
+                    await reply(`_${result.quotes}_\n\nBy *'${result.karakter}'*, ${result.anime}\n\n*_- ${result.up_at}_*`)
+                    await react('✅')
+                }).catch(async _=> {
+                    await reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + _.stack + '```')
+                })
             }
             break
 

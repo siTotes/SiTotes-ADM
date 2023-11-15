@@ -27,6 +27,11 @@ const {
     tanggal,
     delays
 } = require('./lib/simple')
+const {
+    client
+} = require('./lib/dbmongosle')
+
+const lang = require('./src/options/lang_id')
 
 module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, antilink2, antiwame2, set_welcome_db, set_left_db, set_open, set_close, _welcome, _left) => {
     try {
@@ -84,6 +89,85 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             await onic.readMessages([m.key])
         }
         
+        switch (command) {
+            case 'info':
+            case 'menu':
+            case 'fitur': {
+                let fakedoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf']
+                fakedoc = fakedoc[Math.floor(fakedoc.length * Math.random())]
+
+                onic.sendPesan(m.chat, {
+                    document: logo,
+                    mimetype: fakedoc,
+                    fileName: 'Author : @m.saiful.anam.r',
+                    fileLength: '999999999999',
+                    pageCount: '999',
+                    caption: lang.allmenu(prefix),
+                    contextInfo: {
+                        externalAdReply: {
+                            title: 'Selamat ' + salam + ' ' + pushname,
+                            body: '© ' + ownername,
+                            thumbnail: logo,
+                            sourceUrl: myweb,
+                            mediaUrl: '',
+                            renderLargerThumbnail: true,
+                            showAdAttribution: true,
+                            mediaType: 1
+                        }
+                    }
+                }, {
+                    m
+                })
+            }
+            break
+            case 'u': {
+                await reply(`Runtime : ${runtime(process.uptime())}`)
+            }
+            break
+            case 'antidelete':
+            case 'antihapus': {
+                const alur = 'Anti Hapus pesan ';
+                await client.connect();
+                const db = client.db(botdata);
+                const dbgrub = db.collection('grub-db');
+                const sitotesv = await dbgrub.findOne({ _id: m.chat });
+                
+                if (sitotesv) {
+                  const updateValue = !sitotesv.antidelete;
+                
+                  await dbgrub.updateOne(
+                    { _id: m.chat },
+                    { $set: { antidelete: updateValue } }
+                  );
+                
+                  await reply(alur + (updateValue ? '*Aktif*' : '*Mati*'));
+                } else {
+                  const dataToInsert = { antidelete: true };
+                  
+                  try {
+                    await dbgrub.insertOne({
+                      _id: m.chat,
+                      ...dataToInsert
+                    });
+                
+                    await reply(alur+'*Aktif*');
+                  } catch (error) {
+                    await reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + error + '```');
+                  }
+                }
+                
+                await client.close();
+
+            }
+            break
+            case 'rate':{
+                await react('⌛')
+                await reply(`*Rate:* ${text} (${Math.floor(Math.random() * 101)}%)`);
+                await react('✅')
+            }
+            break
+        }
+        
         switch (cimmind){
             case 'tt':
             case 'downloadtiktok':
@@ -130,7 +214,13 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             case 'pintrs':
             case 'pint':
             case 'pinimg':
-            case 'pinterest':{
+            case 'pinterest':
+            case '---------------':
+            case 'katakataanime':
+            case 'quotesanime':
+            case 'quotanim':
+            case 'qanim':
+            case 'quotanim':{
                 await runCase('download-media', true)
             }
             break
