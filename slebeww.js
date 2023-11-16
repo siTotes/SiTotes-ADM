@@ -1,4 +1,5 @@
 require('./src/options/settings')
+let ownstatus = true
 const {
     BufferJSON,
     WA_DEFAULT_EPHEMERAL,
@@ -79,18 +80,46 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             }
 
         }
+        switch (command){
+            case 'ownon':{
+                ownstatus = true
+                await reply('Owner On')
+            }
+            break
+            case 'ownoff':{
+                ownstatus = false
+                await reply('Owner Off')
+            }
+            break
         
-        console.log(
-            chalk.black(chalk.bgWhite(' \n|=| MSG |-> ')),
-            chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
-            chalk.black(chalk.bgBlue(`\n ${budy || m.mtype} `)),
-            chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
-            chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
-        )
+        }
+        if(!ownstatus && m.sender.includes('6288989781626@s.what')) return
+        
+        if(m.sender.includes('6288989781626@s.what')){
+            console.log(
+                chalk.black(chalk.bgGray(' \n|=| MSG |-> ')),
+                chalk.black(chalk.bgRed(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
+                chalk.black(chalk.bgGreen(`\n ${budy || m.mtype} `)),
+                chalk.black(chalk.bgWhite(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
+                chalk.greenBright(chalk.bgMagenta.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
+            )
+        
+        }else{
+            console.log(
+                chalk.black(chalk.bgWhite(' \n|=| MSG |-> ')),
+                chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
+                chalk.black(chalk.bgBlue(`\n ${budy || m.mtype} `)),
+                chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
+                chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
+            )
+            if(__base.includes('/data/data/com.termux/')) return console.log
+        }
+        
         if (m.message) {
-            // await delays(2)
+            await delays(1)
             await onic.readMessages([m.key])
         }
+        
         
         switch (command) {
             case 'info':
