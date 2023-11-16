@@ -30,6 +30,9 @@ const {
 const {
     client
 } = require('./lib/dbmongosle')
+const {
+    TelegraPh
+} = require('./lib/uploader')
 
 const lang = require('./src/options/lang_id')
 
@@ -160,8 +163,10 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
 
             }
             break
+            
         }
         
+        // switch (false){
         switch (cimmind){
             case 'tt':
             case 'downloadtiktok':
