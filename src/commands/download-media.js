@@ -312,30 +312,30 @@ module.exports = onic = async (onic, m, command, mek) => {
 
                         await react('✅')
                     } else {
-                        // let resoluse = Object.getOwnPropertyNames(_video)
-                        // let resohigh = []
-                        // let listreso = 'Pilih salasatu resolusi yang sesuai contoh ketik 1 untuk yang paling hd\n'
-                        // for (let i = 0; i < resoluse.length; i++) {
-                            // if (resohigh[i] == 'auto') {} else {
-                                // resohigh.push(resoluse[i].split('p')[0])
-                            // }
-                        // }
-                        // resohigh = resohigh.sort(function(a, b) {
-                            // return b - a
-                        // })
-                        // for (let i = 0; i < resohigh.length; i++) {
-                            // if (resohigh[i] == 'auto') {} else {
-                                // resohigh[i] = resohigh[i] + 'p'
-                            // }
-                            // sizevid = _video[resohigh[i]].fileSize * 1000
-                            // if (!+sizevid) sizevid = await onic.getUrlTotalSize(await _video[resohigh[0]].download())
-                            // listreso = listreso + '\n' + (i + 1) + '. ' + resohigh[i] + ' → ' + await onic.caculedSize(await sizevid)
-                            // if (resohigh.length - 1 == i) listreso = listreso + '\n\nInfo Aja Jika ukuran nya lebih dari 48 mb video akan di kirim bentuk link, yang harus didownload manual'
-                        // }
-                        // let url = await _video[resohigh[0]].download()
+                        let resoluse = Object.getOwnPropertyNames(_video)
+                        let resohigh = []
+                        let listreso = 'Pilih salasatu resolusi yang sesuai contoh ketik 1 untuk yang paling hd\n'
+                        for (let i = 0; i < resoluse.length; i++) {
+                            if (resohigh[i] == 'auto') {} else {
+                                resohigh.push(resoluse[i].split('p')[0])
+                            }
+                        }
+                        resohigh = resohigh.sort(function(a, b) {
+                            return b - a
+                        })
+                        for (let i = 0; i < resohigh.length; i++) {
+                            if (resohigh[i] == 'auto') {} else {
+                                resohigh[i] = resohigh[i] + 'p'
+                            }
+                            sizevid = _video[resohigh[i]].fileSize * 1000
+                            if (!+sizevid) sizevid = await onic.getUrlTotalSize(await _video[resohigh[0]].download())
+                            listreso = listreso + '\n' + (i + 1) + '. ' + resohigh[i] + ' → ' + await onic.caculedSize(await sizevid)
+                            if (resohigh.length - 1 == i) listreso = listreso + '\n\nInfo Aja Jika ukuran nya lebih dari 48 mb video akan di kirim bentuk link, yang harus didownload manual'
+                        }
+                        let url = await _video[resohigh[0]].download()
                         
                         
-                        //await reply(url)
+                        await reply(url)
                         await react('✈️')
                         // if (_video[resohigh[0]].fileSize * 1000 > 50000000) {
                             // let nu = ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
