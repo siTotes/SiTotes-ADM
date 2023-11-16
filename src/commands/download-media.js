@@ -312,53 +312,55 @@ module.exports = onic = async (onic, m, command, mek) => {
 
                         await react('✅')
                     } else {
-                        let resoluse = Object.getOwnPropertyNames(_video)
-                        let resohigh = []
-                        let listreso = 'Pilih salasatu resolusi yang sesuai contoh ketik 1 untuk yang paling hd\n'
-                        for (let i = 0; i < resoluse.length; i++) {
-                            if (resohigh[i] == 'auto') {} else {
-                                resohigh.push(resoluse[i].split('p')[0])
-                            }
-                        }
-                        resohigh = resohigh.sort(function(a, b) {
-                            return b - a
-                        })
-                        for (let i = 0; i < resohigh.length; i++) {
-                            if (resohigh[i] == 'auto') {} else {
-                                resohigh[i] = resohigh[i] + 'p'
-                            }
-                            sizevid = _video[resohigh[i]].fileSize * 1000
-                            if (!+sizevid) sizevid = await onic.getUrlTotalSize(await _video[resohigh[0]].download())
-                            listreso = listreso + '\n' + (i + 1) + '. ' + resohigh[i] + ' → ' + await onic.caculedSize(await sizevid)
-                            if (resohigh.length - 1 == i) listreso = listreso + '\n\nInfo Aja Jika ukuran nya lebih dari 48 mb video akan di kirim bentuk link, yang harus didownload manual'
-                        }
-                        let url = await _video[resohigh[0]].download()
+                        // let resoluse = Object.getOwnPropertyNames(_video)
+                        // let resohigh = []
+                        // let listreso = 'Pilih salasatu resolusi yang sesuai contoh ketik 1 untuk yang paling hd\n'
+                        // for (let i = 0; i < resoluse.length; i++) {
+                            // if (resohigh[i] == 'auto') {} else {
+                                // resohigh.push(resoluse[i].split('p')[0])
+                            // }
+                        // }
+                        // resohigh = resohigh.sort(function(a, b) {
+                            // return b - a
+                        // })
+                        // for (let i = 0; i < resohigh.length; i++) {
+                            // if (resohigh[i] == 'auto') {} else {
+                                // resohigh[i] = resohigh[i] + 'p'
+                            // }
+                            // sizevid = _video[resohigh[i]].fileSize * 1000
+                            // if (!+sizevid) sizevid = await onic.getUrlTotalSize(await _video[resohigh[0]].download())
+                            // listreso = listreso + '\n' + (i + 1) + '. ' + resohigh[i] + ' → ' + await onic.caculedSize(await sizevid)
+                            // if (resohigh.length - 1 == i) listreso = listreso + '\n\nInfo Aja Jika ukuran nya lebih dari 48 mb video akan di kirim bentuk link, yang harus didownload manual'
+                        // }
+                        // let url = await _video[resohigh[0]].download()
+                        
+                        
                         //await reply(url)
                         await react('✈️')
-                        if (_video[resohigh[0]].fileSize * 1000 > 50000000) {
-                            let nu = ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+                        // if (_video[resohigh[0]].fileSize * 1000 > 50000000) {
+                            // let nu = ['0️⃣', '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
 
-                            let v = 0
-                            for (let i = 0; i < resohigh.length; i++) {
-                                if (v == 1) {} else {
-                                    if (_video[resohigh[i]].fileSize * 1000 < 50000000) {
-                                        url = await _video[resohigh[i]].download()
-                                        console.log(url)
-                                        v++
-                                    }
-                                }
-                            }
+                            // let v = 0
+                            // for (let i = 0; i < resohigh.length; i++) {
+                                // if (v == 1) {} else {
+                                    // if (_video[resohigh[i]].fileSize * 1000 < 50000000) {
+                                        // url = await _video[resohigh[i]].download()
+                                        // console.log(url)
+                                        // v++
+                                    // }
+                                // }
+                            // }
 
 
-                            await react(nu[resohigh.length])
-                            if (v == 1) {
-                                await onic.sendVideoUrl(m.chat, await url, false, '', m)
-                            } else {
-                                await reply(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}\n${url}\n\nUkuran Media terlalu besar, jadi kami kirim kan link alternatif aja 😉`)
-                            }
-                        } else {
+                            // await react(nu[resohigh.length])
+                            // if (v == 1) {
+                                // await onic.sendVideoUrl(m.chat, await url, false, '', m)
+                            // } else {
+                                // await reply(`🗃️ ${await onic.caculedSize(await _video[resohigh[0]].fileSize*1000)}\n${url}\n\nUkuran Media terlalu besar, jadi kami kirim kan link alternatif aja 😉`)
+                            // }
+                        // } else {
                             await onic.sendVideoUrl(m.chat, url, false, '', m)
-                        }
+                        // }
                         await react('✅')
                     }
                 } else {
@@ -490,39 +492,55 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'pint':
             case 'pinimg':
             case 'pinterest': {
-                if(command=='pinimg'){
-                    let url = `https://i.pinimg.com/${text.split('\n\n')[0]? text.split('\n\n')[0]: text}.jpg`
-                    let caption = `${text.split('\n\n')[1]? text.split('\n\n')[1]: text}`
-                    await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
-                        await react('🤔')
-                        await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
-                            await react('❌')
-                            await onic.sendPesan(m.chat, {
-                                text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
-                            }, {
-                                quoted: m
-                            })
-                            return ''
-                        })
-                    })
-                }else{
-                    await react('⏳')
+                // if(command=='pinimg'){
+                    // let url = `https://i.pinimg.com/${text.split('\n\n')[0]? text.split('\n\n')[0]: text}.jpg`
+                    // let caption = `${text.split('\n\n')[1]? text.split('\n\n')[1]: text}`
+                    // await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
+                        // await react('🤔')
+                        // await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
+                            // await react('❌')
+                            // await onic.sendPesan(m.chat, {
+                                // text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                            // }, {
+                                // quoted: m
+                            // })
+                            // return ''
+                        // })
+                    // })
+                // }else{
+                    // await react('⏳')
     
-                    let result = await pinterest(text)
-                    for(let i = 0; i<result.length; i++){
-                        result[i] = await `pinimg ${result[i].replaceAll('https://i.pinimg.com/', '').replaceAll('.jpg', '')}\n\nGambar ${i+1}`
-                    }
-                    await react('✈️')
-                    await result
-                    for(let i = 0; i<result.length; i = i+12){
-                        let json = result.slice(i, i+12)
-                        if(result.slice(i, i+12).length<2) json = result.slice(i-1, i+12)
-                        if(result.length<2) json = [json[0], json[0]]
-                        await onic.sendPoll(m.chat, 'Menemukan '+result.slice(i, i+12).length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', json)
-                    }
-                    if(!result.length) return await replyEmo('Coba yang lain kak\n\n'+ JSON.stringify(await result),'😔')
-                    await react('✅')
-                }
+                    // let result = await pinterest(text)
+                    // for(let i = 0; i<result.length; i++){
+                        // result[i] = await `pinimg ${result[i].replaceAll('https://i.pinimg.com/', '').replaceAll('.jpg', '')}\n\nGambar ${i+1}`
+                    // }
+                    // await react('✈️')
+                    // await result
+                    // for(let i = 0; i<result.length; i = i+12){
+                        // let json = result.slice(i, i+12)
+                        // if(result.slice(i, i+12).length<2) json = result.slice(i-1, i+12)
+                        // if(result.length<2) json = [json[0], json[0]]
+                        // await onic.sendPoll(m.chat, 'Menemukan '+result.slice(i, i+12).length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', json)
+                    // }
+                    // if(!result.length) return await replyEmo('Coba yang lain kak\n\n'+ JSON.stringify(await result),'😔')
+                    // await react('✅')
+                // }
+                
+                await react('⏳')
+                let result = await pinterest(text)
+                await react('✈️')
+                await result
+                let alok = Math.floor(Math.random() * result.length)
+                await onic.sendImageUrl(m.chat, result[alok], result[alok], m).catch(async _ => {
+                    await react('❌')
+                    await onic.sendPesan(m.chat, {
+                        text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                    }, {
+                        quoted: m
+                    })
+                    return ''
+                })
+                await react('✅')
             }
             break
         }
