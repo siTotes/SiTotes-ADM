@@ -12,6 +12,8 @@ COPY package.json .
 
 RUN npm install
 
+RUN npm install cache-manager@5.2.2
+
 COPY . .
 
 EXPOSE 5000
