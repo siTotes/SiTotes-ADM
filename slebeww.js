@@ -36,6 +36,8 @@ const {
 } = require('./lib/uploader')
 
 const lang = require('./src/options/lang_id')
+const svdata = () => fs.writeFileSync(`./src/.sitotes/data/database.json`, JSON.stringify(global.db, null, 2))
+
 
 module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, antilink2, antiwame2, set_welcome_db, set_left_db, set_open, set_close, _welcome, _left) => {
     try {
@@ -79,6 +81,19 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
                 if (!isCmd) require(casee(runto))(onic, m, cimmind, mek)
             }
 
+        }
+        const checkcid = async(dataapa, chatny, jalok, runto) => {
+            for (let i = 0; i < chatny.length; i++) {
+                var ver = dataapa[chatny[i]] ? dataapa[chatny[i]] : false
+                ver = ver[m.chat] ? ver[m.chat] : 'emanf eak'
+                if (m.quoted) {
+                    if (!isCmd) {
+                        if (ver[jalok] == m.quoted.id) {
+                            require(casee(runto))(onic, m, command, mek)
+                        }
+                    }
+                }
+            }
         }
         switch (command){
             case 'ownon':{
@@ -267,7 +282,11 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             case 'ckl':
             case 'cakl':
             case 'caklon':
-            case 'caklontong':{
+            case 'caklontong':
+            case '---------------':
+            case 'f100':
+            case 'familyseratus':
+            case 'family100':{
                 await runCase('game-rpg', true)
             }
             break
@@ -308,10 +327,12 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             break
             case 'gambarkan':
             case 'bot':
-            case 'ai':
-            case '---------------':
-            case 'rate':{
+            case 'ai':{
                 await runCase('openai-gpt', false)
+            }
+            break
+            case 'rate':{
+                await runCase('openai-gpt', true)
             }
             break
             case 'katakataanime':
@@ -334,9 +355,36 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             }
             break
         }
+        
+        await checkcid(
+            db.data.game,
+            [
+                'tebakgambar',
+                'caklontong',
+                'family100',
+                'asahotak',
+                'tebakkata',
+                'tekateki',
+                'tebakkimia',
+                'tebakkabupaten',
+                'siapakahaku',
+                'susunkata',
+                'tebakbendera',
+                'tebaklirik',
+                'tebaktebakan',
+
+                'm.saiful.anam.r.creator'
+            ],
+            'gameid',
+            'game-rpg'
+        )
 
     }
     catch (err) {
         m.reply(util.format(err))
+    } finally {
+        /**/
+        console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
+        svdata()
     }
 }

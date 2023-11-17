@@ -9,7 +9,7 @@ const chalk = require('chalk')
 
 
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-// const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
+const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
 const {
     getBuffer,
     hitungmundur,
@@ -76,6 +76,6 @@ module.exports = onic = async (onic, m, command, mek) => {
     } finally {
         /**/
         console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
-        // svdata()
+        svdata()
     }
 }

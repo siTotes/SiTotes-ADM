@@ -72,6 +72,13 @@ const store = makeInMemoryStore({
     })
 })
 
+global.db = JSON.parse(fs.readFileSync("./src/.sitotes/data/database.json"))
+
+if (global.db) global.db.data = {
+    game: {},
+    proses: {},
+    ...(global.db.data || {})
+}
 
 let ttlerr = 0
 let isduakali = 0
@@ -147,6 +154,7 @@ async function startonic() {
     }
 
     onic.ev.on('messages.upsert', async chatUpdate => {
+        // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
         try {
             mek = chatUpdate.messages[0]
             if (!mek.message) return
