@@ -86,19 +86,19 @@ const totalScore = (soal) => {
         //3092
         dibagi = 2000 * (iswin.lvl / 100) * 1
         iswin['coin'] = dibagi / 2
-        iswin['xp'] = (iswin.lvl / 100) * 100.0 / 4
+        iswin['xp'] = parseFloat(((iswin.lvl / 100) * 100.0 / 4).toFixed(2))
     } else if (soal.index < 1000) {
         //309
         iswin['coin'] = 2000 * (iswin.lvl / 100) * 1
-        iswin['xp'] = (iswin.lvl / 100) * 100.0 / 2
+        iswin['xp'] = parseFloat(((iswin.lvl / 100) * 100.0 / 2).toFixed(2))
     } else if (soal.index < 100) {
         //30
         iswin['coin'] = 2000 * (iswin.lvl / 100) * 10
-        iswin['xp'] = iswin.lvl / 2 * 6
+        iswin['xp'] = parseFloat((iswin.lvl / 2 * 6).toFixed(2))
     } else {
         //3
         iswin['coin'] = 2000 * (iswin.lvl / 100) * 100
-        iswin['xp'] = iswin.lvl / 2 * 16
+        iswin['xp'] = parseFloat((iswin.lvl / 2 * 16).toFixed(2))
     }
     return iswin
 }

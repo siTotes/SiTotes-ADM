@@ -97,11 +97,13 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
         }
         switch (command){
             case 'ownon':{
+                if(__base.includes('/data/data/com.termux/')) return console.log
                 ownstatus = true
                 await reply('Owner On')
             }
             break
             case 'ownoff':{
+                if(__base.includes('/data/data/com.termux/')) return console.log
                 ownstatus = false
                 await reply('Owner Off')
             }
