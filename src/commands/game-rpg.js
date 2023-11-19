@@ -113,6 +113,8 @@ module.exports = onic = async (onic, m, command, mek) => {
         const prefix = isCmd ? budy[0] : ''
         const salam = moment(Date.now()).tz(timezone).locale('id').format('a')
         const pushname = m.pushName || "No Name"
+        const args = body.trim().split(/ +/).slice(1)
+        const text = q = args.join(" ")
     
         const reply = onic.reply
         const replyEmo = onic.replyEmo
@@ -157,14 +159,57 @@ module.exports = onic = async (onic, m, command, mek) => {
         if (_family100[m.chat] && !isCmd && m.quoted) {
             if (m.quoted.id == _family100[m.chat]['gameid']) {
                 let json = JSON.parse(JSON.stringify(_family100[m.chat]))
-                jawaban = json.jawaban.toLowerCase().trim()
-                if (m.text.toLowerCase() == jawaban) {
-                    delete _family100[m.chat]
-                    await reply(lang.JwbTrue('Family 100', json.hadiah.coin.toLocaleString('en-US'), json.hadiah.xp, 'family100'))
-                } else if (similarity(m.text.toLowerCase(), jawaban) >= threshold) {
-                    await reply(lang.JwbHampir())
-                } else {
-                    await reply(lang.JwbErr())
+                let hampir = 0
+                let salah = 0
+                for(let i = 0; i < json.jawaban.length; i++){
+                    let jawaban = json.jawaban[i].toLowerCase().trim()
+                    console.log(jawaban + ' | ' + m.text.toLowerCase().trim())
+                    if (m.text.toLowerCase().trim() == jawaban) {
+                        let benar = 0;
+                        let tinggal = 0;
+                        let hasilJawaban = ''
+                        
+                        json.jawab[i] = m.text  
+                        
+                        json.jawab.forEach((jawab, index) => {
+                            if (jawab === json.jawaban[index]) {
+                                benar++;
+                                hasilJawaban += `${index + 1}. ${jawab} ✅\n`
+                            }else{
+                                tinggal++;
+                                hasilJawaban += `${index + 1}. ${'```'+ json.jawaban[index].replace(/[bcdfghjklmnpqrstvwxyz]/ig, '_')+'```'} 🤔\n`
+                            }
+                        });
+                        
+                        if(_family100[m.chat].jawab[i] == m.text){
+                            await reply(`Sudah di jawab 🗿\n\n${hasilJawaban}`)
+                            break
+                        }
+                        _family100[m.chat].jawab[i] = m.text
+                        _family100[m.chat].hadiah.xp = json.hadiah.xp *2
+                        _family100[m.chat].hadiah.coin = json.hadiah.coin *2
+                        if(tinggal == 0){
+                            await reply(lang.JwbTrue('Family 100', _family100[m.chat].hadiah.coin.toLocaleString('en-US'), _family100[m.chat].hadiah.xp, 'family100'))
+                            delete _family100[m.chat]
+                            break
+                        }else{
+                            await reply(`_*🎊Jawaban Anda benar 🎊*_ \n*✠━━━━━━━━━━━━✠*\nAnda berhasil menyebutkan ${benar} dengan benar, tinggal ${tinggal} lagi, ayo sebutkan lagi setiap anda menyebutkan jawaban yang benar hadiah dikali 2\n\n${hasilJawaban}\n\n*✠━━━🎁 Hadiah━━━━✠*\n💰 *Rp: ${_family100[m.chat].hadiah.coin.toLocaleString('en-US')}*\n🧩 + *${_family100[m.chat].hadiah.xp}* _XP_`)
+                            break
+                        }
+                    }
+                    if (similarity(m.text.toLowerCase(), jawaban) >= threshold){
+                        hampir++
+                    } else {
+                        salah++
+                    }
+                    
+                    if(i==json.jawaban.length-1){
+                        if(hampir>0){
+                            await reply(lang.JwbHampir())
+                        }else{
+                            await reply(lang.JwbErr())
+                        }
+                    }
                 }
             }
         }
@@ -187,7 +232,24 @@ module.exports = onic = async (onic, m, command, mek) => {
                     }
                 }
                 if (m.quoted.id == viu[m.chat]['gameid']) {
-                    await reply('*HINT :*\n```' + viu[m.chat].jawaban.replace(/[bcdfghjklmnpqrstvwxyz]/ig, '_') + '```')
+                    if(_family100[m.chat]){
+                        let benar = 0;
+                        let tinggal = 0;
+                        let hasilJawaban = ''
+                        _family100[m.chat].jawab.forEach((jawab, index) => {
+                            if (jawab === _family100[m.chat].jawaban[index]) {
+                                benar++;
+                                hasilJawaban += `${index + 1}. ${jawab} ✅\n`
+                            }else{
+                                tinggal++;
+                                hasilJawaban += `${index + 1}. ${'```' + _family100[m.chat].jawaban[index].replace(/[bcdfghjklmnpqrstvwxyz]/ig, '_')+'```'} 🤔\n`
+                            }
+                        });
+                        
+                        await reply('*HINT :*\n\n' + hasilJawaban)
+                    }else{
+                        await reply('*HINT :*\n```' + viu[m.chat].jawaban.replace(/[bcdfghjklmnpqrstvwxyz]/ig, '_') + '```')
+                    }
                 } else return await reply('Itu Bukan soal/Game kak😔')
             }
             break
@@ -239,8 +301,8 @@ module.exports = onic = async (onic, m, command, mek) => {
                 svdata()
                 await sleep(2 * 60000)
                 if (_tebakgambar[m.chat]) {
-                    await reply(`⏱️ *Waktu Habis* 😩\n _Jawaban:_  *${soal.jawaban}* \n\nIngin bermain lagi? ketik :\n*#tebakgambar*`)
                     delete _tebakgambar[m.chat]
+                    await reply(`⏱️ *Waktu Habis* 😩\n✠━━━━━━━━━━━━✠\n   *› Jawabanya:* ${soal.jawaban}\n✠━━━━━━━━━━━━✠\nIngin bermain lagi?  ketik :\n*#tebakgambar*`)
                 }
             }
             break
@@ -264,12 +326,13 @@ module.exports = onic = async (onic, m, command, mek) => {
                 _caklontong[m.chat]['hadiah']['xp'] = hadiahahah.xp
                 _caklontong[m.chat]['hadiah']['coin'] = hadiahahah.coin
     
+                svdata()
                 console.log("Jawaban: " + soal.jawaban)
     
                 await sleep(3 * 60000)
                 if (_caklontong[m.chat]) {
-                    await reply(`⏱️ *Waktu Habis* 😩\n—————→—————→\n🤔 ${soal.soal}\n━━━━━━━━━━━—–·→\n` + '```✅ Jawabanya:```' + ` *${soal.jawaban}*\n—————→\n _😜 ${soal.deskripsi}_ \n━━━━━━━━━━━—–·→\nIngin bermain lagi?  ketik :\n*#caklontong*`)
                     delete _caklontong[m.chat]
+                    await reply(`⏱️ *Waktu Habis* 😩\n✠━━━━━━━━━━━━✠\n   *› Soal:* ${soal.soal}\n   *› Jawabanya:* ${soal.jawaban}\n   *› Keterangan:* ${soal.deskripsi}\n✠━━━━━━━━━━━━✠\nIngin bermain lagi?  ketik :\n*#caklontong*`)
                 }
             }
             break
@@ -279,24 +342,46 @@ module.exports = onic = async (onic, m, command, mek) => {
                 if (isInGame) return reply("Masih Ada Soal Yang Belum Diselesaikan!\nketik: *#nyerah*\nuntuk menyerah/mengakhiri soal")
     
                 soal = await family100()
-                vlet = await await reply(`\n🤔 ${soal.soal}\n━━━━━━━━━━━—–·→\n *Silakan Jawab Soal Di Atas ini 😉*\n_*Waktu : 3 Menit*_`)
+                console.log(JSON.stringify(soal ,null , 2))
+                vlet = await reply(`\n🤔 ${soal.soal}\n━━━━━━━━━━━—–·→\n*Silakan Jawab Soal Di Atas ini 😉*\n\n_*Waktu : 2 Menit*_`)
     
-                hadiahahah = await totalScore(soal)
+                let hadia = {index: (Math.floor(Math.random() * (275 - 225 + 1) + 225)) / 2}
+                hadiahahah = await totalScore(hadia)
+                let jawablength = []
+                for(let i = 0; i < soal.jawaban.length; i++){
+                    jawablength.push('')
+                }
     
                 _family100[m.chat] = {}
                 _family100[m.chat]['gameid'] = vlet.key.id
                 _family100[m.chat]['soaltype'] = command
-                _family100[m.chat]['jawaban'] = soal.jawaban.toLowerCase()
+                _family100[m.chat]['jawaban'] = soal.jawaban
+                _family100[m.chat]['jawab'] = jawablength
                 _family100[m.chat]['hadiah'] = {}
                 _family100[m.chat]['hadiah']['xp'] = hadiahahah.xp
                 _family100[m.chat]['hadiah']['coin'] = hadiahahah.coin
     
+                svdata()
                 console.log("Jawaban: " + soal.jawaban)
     
-                await sleep(1 * 60000)
+                await sleep(2 * 60000)
                 if (_family100[m.chat]) {
-                    await reply(`⏱️ *Waktu Habis* 😩\n—————→—————→\n🤔 ${soal.soal}\n━━━━━━━━━━━—–·→\n`+'```✅ Jawabanya:```'+` *${soal.jawaban}*\n—————→\n _😜 ${soal.deskripsi}_ \n━━━━━━━━━━━—–·→\nIngin bermain lagi?  ketik :\n*#caklontong*`)
+                    let benar = 0;
+                    let tinggal = 0;
+                    let hasilJawaban = ''
+                    
+                    _family100[m.chat].jawab.forEach((jawab, index) => {
+                        if (jawab === _family100[m.chat].jawaban[index]) {
+                            benar++;
+                            hasilJawaban += `${index + 1}. ${jawab} ✅\n`
+                        }else{
+                            tinggal++;
+                            hasilJawaban += `${index + 1}. ${_family100[m.chat].jawaban[index]} 🤔\n`
+                        }
+                    });
+                    let json = JSON.parse(JSON.stringify(_family100[m.chat]))
                     delete _family100[m.chat]
+                    await reply(`⏱️ *Waktu Habis* 😩\n✠━━━━━━━━━━━━✠\n\n╭─❒ 「 *🎉 SELAMAT 🎉* 」 \n│\n├→ ╭─( *🎁 Total Hadiah* )\n│     │\n│     ├💰 *Rp: ${json.hadiah.coin}* \n│     ├ 🧩 + *${json.hadiah.xp}* _XP_ \n│     ╰→\n╰❒ *Family 100* \n\n${hasilJawaban}\n\nketik Perintah:\n*#family100*\n\nUntuk bermain lagi 👍`)
                 }
             }
             break

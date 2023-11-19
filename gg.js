@@ -1,61 +1,28 @@
-const axios = require('axios');
-
-async function axiosiUrlToBuffer(url) {
-  let retryCount = 0;
-  let response = null;
-
-  while (retryCount < 3) {
-      await axios.get(url, { responseType: 'arraybuffer' })
-          .then(function(response) {
-            const buffer = Buffer.from(response.data, 'binary');
-            return buffer;
-          })
-          .catch(error =>{
-            console.error(`Gagal pada percobaan ke-${retryCount + 1}: ${error.message}`);
-            retryCount++;
-          })
+const gameData = {
+  "gameid": "BAE5ADE459F2C48D",
+  "soaltype": "f100",
+  "jawaban": ["iklim panas", "alok", "iklim laut", "iklim muson"],
+  "jawab": ["iklim panas", "", "iklim laut", ""],
+  "hadiah": {
+    "xp": 0.75,
+    "coin": 30
   }
+};
 
-  return response ? response.data : null;
+// Menampilkan jawaban yang benar dan memberi tanda '-' untuk yang salah
+function tampilkanJawaban(gameData) {
+  let hasilJawaban = ''
+
+  gameData.jawab.forEach((jawab, index) => {
+    if (jawab === gameData.jawaban[index]) {
+      hasilJawaban += `${index + 1}. ${jawab} ✅\n`
+    } else {
+      hasilJawaban += `${index + 1}. ${gameData.jawaban[index].replace(/[bcdfghjklmnpqrstvwxyz]/ig, '_')} 🤔\n`
+    }
+  });
+
+  return hasilJawaban;
 }
 
-
-const axiosUrlToBuffer = (url) => {
-        let retryCount = 0;
-        const maxRetries = 3;
-        const retryDelay = 3000;
-
-        function fetch() {
-            return axios.get(url, {
-                    responseType: 'arraybuffer'
-                })
-                .then(function(response) {
-                    const buffer = Buffer.from(response.data, 'binary');
-                    return buffer;
-                })
-                .catch(function(error) {
-                    console.error(error);
-                    if (retryCount < maxRetries) {
-                        retryCount++;
-                        console.log(`Retrying (${retryCount}/${maxRetries}) after ${retryDelay}ms...`);
-                        return new Promise(resolve => setTimeout(resolve, retryDelay)).then(fetch);
-                    } else {
-                        throw error;
-                    }
-                });
-        }
-
-        return fetch();
-    }
-
-axiosUrlToBuffer('https://web.sitotes.7repul.co/')
-  .then(data => {
-    if (data) {
-      console.log('Data berhasil diambil:', data);
-    } else {
-      console.log('Gagal mengambil data setelah 3 percobaan.');
-    }
-  })
-  .catch(error => {
-    console.error('Terjadi kesalahan:', error);
-  });
+const jawabanList = tampilkanJawaban(gameData);
+console.log(jawabanList)

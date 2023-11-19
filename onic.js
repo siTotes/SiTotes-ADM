@@ -145,7 +145,13 @@ async function startonic() {
     require('./lib/simple')
     nocache('./lib/simple', module => console.log(` "${module}" Telah diupdate!`))
 
+    nocache('./src/commands/convert-sticker')
     nocache('./src/commands/download-media')
+    nocache('./src/commands/game-rpg')
+    nocache('./src/commands/google-it')
+    nocache('./src/commands/group-only')
+    nocache('./src/commands/openai-gpt')
+    nocache('./src/commands/wibu-docpusat')
 
     store.bind(onic.ev)
     onic.sendPesan = async (...args) => {
