@@ -95,6 +95,8 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
                 }
             }
         }
+        
+        
         switch (command){
             case 'ownon':{
                 if(__base.includes('/data/data/com.termux/')) return console.log
@@ -112,7 +114,7 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
         }
         if(!ownstatus && m.sender.includes('6288989781626@s.what')) return
         
-        if(m.sender.includes('6288989781626@s.what')){
+        if(m.sender.includes('6288989781626@s.what') || m.sender.includes('6285176916306@s.whats')){
             console.log(
                 chalk.black(chalk.bgGray(' \n|=| MSG |-> ')),
                 chalk.black(chalk.bgRed(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
@@ -135,6 +137,10 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
         if (m.message) {
             await delays(1)
             await onic.readMessages([m.key])
+        }
+        
+        if (ky_ttt.filter(ghg => ghg.id.includes(m.chat))[0]?.id == m.chat) {
+            require(casee('game-rpg'))(onic, m, command, mek)
         }
         
         
@@ -288,7 +294,10 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
             case '---------------':
             case 'f100':
             case 'familyseratus':
-            case 'family100':{
+            case 'family100':
+            case '---------------':
+            case 'ttt':
+            case 'tictactoe':{
                 await runCase('game-rpg', true)
             }
             break

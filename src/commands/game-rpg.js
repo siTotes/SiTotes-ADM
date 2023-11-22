@@ -213,6 +213,24 @@ module.exports = onic = async (onic, m, command, mek) => {
                 }
             }
         }
+        
+        let tttawal = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
+        let idttt = []
+        let players1 = []
+        let players2 = []
+        let gilir = []
+        
+
+        for (let t of ky_ttt) {
+            idttt.push(t.id)
+            players1.push(t.player1)
+            players2.push(t.player2)
+            gilir.push(t.gilir)
+        }
+        
+        const isTTT = m.isGroup ? idttt.includes(m.chat) : false
+        const isPlayer1 = m.isGroup ? players1.includes(m.sender) : false
+        const isPlayer2 = m.isGroup ? players2.includes(m.sender) : false
     
         let soal
         let gam
@@ -385,8 +403,170 @@ module.exports = onic = async (onic, m, command, mek) => {
                 }
             }
             break
+            case 'ttt':
+            case 'tictactoe':{
+                if (!m.isGroup) return await reply('Fitur ini hanya berfungsi di dalam grub 😉')
+                if (!text) return await reply('Tag Lawan Anda! ')
+                if (isTTT) return await reply('Sedang Ada Permainan Di Grub Ini, Harap Tunggu')
+                if (m.message.extendedTextMessage === undefined || m.message.extendedTextMessage === null) return await reply('Tag target Lawan!')
+                ment = m.message.extendedTextMessage.contextInfo.mentionedJid
+                player1 = m.sender
+                player2 = ment[0]
+                angka = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"]
+                id = m.chat
+                gilir = player2
+                ky_ttt.push({
+                    player1,
+                    player2,
+                    id,
+                    angka,
+                    gilir
+                })
+                await reply(`*🎳 Memulai Game Tictactoe 🎲*\n\n[@${player2.split('@')[0]}] Menantang anda untuk menjadi lawan Game🔥\nKetik Y/N untuk menerima atau menolak permainan\n\nKet : Ketik /resetgame , Untuk Mereset Permainan Yg Ada Di Grup!`, {
+                    mentionedJid: [player1, player2]
+                })
+            }
+            break
     
         }
+        
+        if (isTTT && isPlayer2) {
+            if (budy.toLowerCase().startsWith('y')) {
+                tto = ky_ttt.filter(ghg => ghg.id.includes(m.chat))
+                tty = tto[0]
+                angka = tto[0].angka
+                ucapan =`*🎳 Game Tictactoe 🎲*\nPlayer1 @${tty.player1.split('@')[0]}=❎\nPlayer2 @${tty.player2.split('@')[0]}=🅾️\n\nGiliran = @${tty.player1.split('@')[0]}\n\n   ${angka[1]}${angka[2]}${angka[3]}\n   ${angka[4]}${angka[5]}${angka[6]}\n   ${angka[7]}${angka[8]}${angka[9]}`
+                await reply(ucapan, {
+                    mentionedJid: [tty.player1, tty.player2]
+                })
+                await sleep(10 * 60000)
+                if (_caklontong[m.chat]) {
+                    naa = ky_ttt.filter(hhg => !hhg.id.includes(m.chat))
+                    await reply(`Data tictactoe Cleaning..`)
+                    return ky_ttt = naa
+                }
+            }
+            if (budy.toLowerCase().startsWith('n')) {
+                tto = ky_ttt.filter(ghg => ghg.id.includes(m.chat))
+                tty = tto[0]
+                naa = ky_ttt.filter(toek => !toek.id.includes(m.chat))
+                ky_ttt = naa
+                await reply(`Yahh @${tty.player2.split('@')[0]} Menolak:(`, {
+                    mentionedJid: [tty.player1, tty.player2]
+                })
+            }
+        }
+
+        if (isTTT && isPlayer1) {
+            nuber = parseInt(budy)
+            if (isNaN(nuber)) return
+            if (nuber < 1 || nuber > 9) return reply('Masukan Angka Dengan Benar')
+            main = ky_ttt.filter(hjh => hjh.id.includes(m.chat))
+            if (!tttawal.includes(main[0].angka[nuber])) return reply('Udah Di Isi, Isi Yang Lain Gan')
+            if (main[0].gilir.includes(m.sender)) return reply('Tunggu Giliran Gan')
+            s = '❎'
+            main[0].angka[nuber] = s
+            main[0].gilir = main[0].player1
+            naa = ky_ttt.filter(hhg => !hhg.id.includes(m.chat))
+            ky_ttt = naa
+            pop = main[0]
+            ky_ttt.push(pop)
+            tto = ky_ttt.filter(hgh => hgh.id.includes(m.chat))
+            tty = tto[0]
+            angka = tto[0].angka
+            ttt = `${angka[1]}${angka[2]}${angka[3]}\n${angka[4]}${angka[5]}${angka[6]}\n${angka[7]}${angka[8]}${angka[9]}`
+
+            ucapmenang = async () => {
+                ucapan1 = `*🎳Result Game Tictactoe 🎲*\n\n*Yeyyy Permainan Di Menangkan Oleh* @${tty.player1.split('@')[0]}\n\n*Ingin bermain lagi? ${prefix}tictactoe*`
+                ucapan2 = `*🎳Result Game Tictactoe 🎲*\n\n*Hasil Akhir:*\n\n${ttt}`
+                await reply(ucapan1, {
+                    mentionedJid: [tty.player1]
+                })
+                naa = ky_ttt.filter(hhg => !hhg.id.includes(m.chat))
+                return ky_ttt = naa
+            }
+
+            if (angka[1] == s && angka[2] == s && angka[3] == s) return ucapmenang()
+
+            if (angka[1] == s && angka[4] == s && angka[7] == s) return ucapmenang()
+
+            if (angka[1] == s && angka[5] == s && angka[9] == s) return ucapmenang()
+
+            if (angka[2] == s && angka[5] == s && angka[8] == s) return ucapmenang()
+
+            if (angka[4] == s && angka[5] == s && angka[6] == s) return ucapmenang()
+
+            if (angka[7] == s && angka[8] == s && angka[9] == s) return ucapmenang()
+
+            if (angka[3] == s && angka[5] == s && angka[7] == s) return ucapmenang()
+
+            if (angka[3] == s && angka[6] == s && angka[9] == s) return ucapmenang()
+
+            if (!ttt.includes('1️⃣') && !ttt.includes('2️⃣') && !ttt.includes('3️⃣') && !ttt.includes('4️⃣') && !
+                ttt.includes('5️⃣') && !
+                ttt.includes('6️⃣') && !ttt.includes('7️⃣') && !ttt.includes('8️⃣') && !ttt.includes('9️⃣')) {
+                ucapan1 = `*🎳 Result Game Tictactoe 🎲*\n\n*_Permainan Seri ??👌_*`
+                ucapan2 = `*🎳 Result Game Tictactoe ??*\n\n*Hasil Akhir:*\n\n${ttt}`
+                reply(ucapan1)
+                naa = ky_ttt.filter(hhg => !hhg.id.includes(m.chat))
+                return ky_ttt = naa
+            }
+            ucapan = `*🎳 Game Tictactoe 🎲*\n\nPlayer2 @${tty.player2.split('@')[0]}=🅾️\nPlayer1 @${tty.player1.split('@')[0]}=❎\n\nGiliran = @${tty.player2.split('@')[0]}\n\n${ttt}`
+            await reply(ucapan, {
+                mentionedJid: [tty.player1, tty.player2]
+            })
+        }
+        if (isTTT && isPlayer2) {
+            nuber = parseInt(budy)
+            if (isNaN(nuber)) return
+            if (nuber < 1 || nuber > 9) return reply('Masukan Angka Dengan Benar')
+            main = ky_ttt.filter(hjh => hjh.id.includes(m.chat))
+            if (!tttawal.includes(main[0].angka[nuber])) return reply('Udah Di Isi, Isi Yang Lain Gan')
+            if (main[0].gilir.includes(m.sender)) return reply('Tunggu Giliran Gan')
+            s = '🅾️'
+            main[0].angka[nuber] = s
+            main[0].gilir = main[0].player2
+            naa = ky_ttt.filter(hhg => !hhg.id.includes(m.chat))
+            ky_ttt = naa
+            pop = main[0]
+            ky_ttt.push(pop)
+            tto = ky_ttt.filter(hgh => hgh.id.includes(m.chat))
+            tty = tto[0]
+            angka = tto[0].angka
+            ttt = `${angka[1]}${angka[2]}${angka[3]}\n${angka[4]}${angka[5]}${angka[6]}\n${angka[7]}${angka[8]}${angka[9]}`
+
+            ucapmenang = async () => {
+                ucapan1 = `*🎳 Result Game Tictactoe 🎲*\n\n*Yeyyy Permainan Di Menangkan Oleh* @${tty.player2.split('@')[0]}\n\n*Ingin bermain lagi? ${prefix}tictactoe*`
+                ucapan2 = `*🎳 Game Tictactoe 🎲*\n\n*Hasil Akhir:*\n\n${ttt}`
+                await reply(ucapan1, {
+                    mentionedJid: [tty.player2]
+                })
+                naa = ky_ttt.filter(hhg => !hhg.id.includes(m.chat))
+                return ky_ttt = naa
+            }
+
+            if (angka[1] == s && angka[2] == s && angka[3] == s) return ucapmenang()
+            if (angka[1] == s && angka[4] == s && angka[7] == s) return ucapmenang()
+            if (angka[1] == s && angka[5] == s && angka[9] == s) return ucapmenang()
+            if (angka[2] == s && angka[5] == s && angka[8] == s) return ucapmenang()
+            if (angka[4] == s && angka[5] == s && angka[6] == s) return ucapmenang()
+            if (angka[7] == s && angka[8] == s && angka[9] == s) return ucapmenang()
+            if (angka[3] == s && angka[5] == s && angka[7] == s) return ucapmenang()
+            if (angka[3] == s && angka[6] == s && angka[9] == s) return ucapmenang()
+            if (!ttt.includes('1️⃣') && !ttt.includes('2️⃣') && !ttt.includes('3️⃣') && !ttt.includes('4️⃣') && !
+                ttt.includes('5️⃣') && !
+                ttt.includes('6️⃣') && !ttt.includes('7️⃣') && !ttt.includes('8️⃣') && !ttt.includes('9️⃣')) {
+                ucapan1 = `*??Result Game Tictactoe 🎲*\n\n*_Permainan Seri🗿👌*`
+                ucapan2 = `*🎳 Result Game Tictactoe 🎲*\n\n*Hasil Akhir:*\n\n${ttt}`
+                reply(ucapan1)
+                naa = ky_ttt.filter(hhg => !hhg.id.includes(m.chat))
+                return ky_ttt = naa
+            }
+            ucapan = `*🎳 Game Tictactoe 🎲*\n\nPlayer1 @${tty.player1.split('@')[0]}=🅾️\nPlayer2 @${tty.player2.split('@')[0]}=❎\n\nGiliran = @${tty.player1.split('@')[0]}\n${ttt}`
+            await reply(ucapan, {
+                mentionedJid: [tty.player1, tty.player2]
+            })
+        } else {}
 
     }catch(e){
         m.reply(util.format(e))

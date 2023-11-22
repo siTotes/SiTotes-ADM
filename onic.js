@@ -73,6 +73,7 @@ const store = makeInMemoryStore({
 })
 
 global.db = JSON.parse(fs.readFileSync("./src/.sitotes/data/database.json"))
+global.ky_ttt = []
 
 if (global.db) global.db.data = {
     game: {},
@@ -781,21 +782,24 @@ async function startonic() {
 
         onic.sendPesan(jid, buttonMessage, quoted)
     }
-    onic.sendFakeLink = (jid, text, salam, footer_text, pp_bot, myweb, pushname, quoted) => onic.sendPesan(jid, {
-        text: text,
-        contextInfo: {
-            "externalAdReply": {
-                "title": `Selamat ${salam} ${pushname}`,
-                "body": footer_text,
-                "previewType": "PHOTO",
-                "thumbnailUrl": ``,
-                "thumbnail": pp_bot,
-                "sourceUrl": myweb
-            }
-        }
-    }, {
-        quoted
-    })
+    onic.sendFakeLink = (jid, text, salam, footer_text, pp_bot, myweb, pushname, quoted, options) => {
+        onic.sendPesan(jid, {
+            text: text,
+            contextInfo: {
+                "externalAdReply": {
+                    "title": `Selamat ${salam} ${pushname}`,
+                    "body": footer_text,
+                    "previewType": "PHOTO",
+                    "thumbnailUrl": ``,
+                    "thumbnail": pp_bot,
+                    "sourceUrl": myweb
+                },
+                ...options
+            },
+        }, {
+            quoted
+        })
+    }
 
     return onic
     
