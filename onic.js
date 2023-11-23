@@ -116,14 +116,9 @@ async function startonic() {
             })),
         },
         generateHighQualityLinkPreview: true, // make high preview link
-        getMessage: async (key) => {
-            let jid = jidNormalizedUser(key.remoteJid)
-            let msg = await store.loadMessage(jid, key.id)
-
-            return msg?.message || ""
-        },
         msgRetryCounterCache, // Resolve waiting messages
         defaultQueryTimeoutMs: undefined,
+        getMessage
 
     })
     
@@ -805,11 +800,10 @@ async function startonic() {
     
     async function getMessage(key) {
         if (store) {
-            const msg = await store.loadMessage(key.remoteJid, key.id);
-            return msg ? msg.message : undefined;
+            const msg = await onic.loadMessage(key.remoteJid, key.id);
+            return msg?.message || undefined;
         }
-    
-        // only if store is present
+        
         return proto.Message.fromObject({});
     }
 }
