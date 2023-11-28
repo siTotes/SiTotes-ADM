@@ -323,6 +323,15 @@ async function startonic() {
         return vv
     }
     
+    onic.isJson = (str) => {
+        try {
+            JSON.parse(str);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+    
     onic.axiosUrlToBuffer = (url) => {
         let retryCount = 0;
         const maxRetries = 3;

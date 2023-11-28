@@ -34,6 +34,10 @@ const {
 const {
     TelegraPh
 } = require('./lib/uploader')
+const {
+    xnxxdl,
+    xnxxsearch
+} = require('./lib/scraper')
 
 const lang = require('./src/options/lang_id')
 const svdata = () => fs.writeFileSync(`./src/.sitotes/data/database.json`, JSON.stringify(global.db, null, 2))
@@ -363,6 +367,59 @@ module.exports = onic = async (onic, m, chatUpdate, store, antilink, antiwame, a
              
             case 'asu':{
                 await onic.sendPoll(m.chat, 'alok', ['1 polls', '2 polls'])
+            }
+            break
+            case 'xnxxs':
+            case 'xs':
+            case 'xnxxsearch': {
+                if (!text) return reply(lang.contoh(prefix, command, 'sakura'))
+
+                await xnxxsearch(`${q}`).then(async data => {
+                    let txt = `*•━━━━[ 😴 XNXX 🤤 ]━━━━•*\nFitur By: SiTotes 2022\nSaran Feature by: M. Fajar\n\n\n`
+                    let n = 0
+                    for (let i of data.result) {
+                        n++
+                        if (i.title.length > 35) {
+                            txt += `•━━( ${n} )━━━━━━━━━━━━━━━━━━•\n*🍂: ${i.title.substring(0, 35).replaceAll('https', 'ht-s').replaceAll('.',',')}...*\n📎: ${i.link}\n\n`
+                        }else{
+                            txt += `•━━( ${n} )━━━━━━━━━━━━━━━━━━•\n*🍂: ${i.title.replaceAll('https', 'ht-s').replaceAll('.',',')}*\n📎: ${i.link}\n\n`
+                        }
+                    }
+                    await reply(txt)
+                }).catch(async(err) => {
+                    await reply(util.format(err))
+                })
+            }
+            break
+            case 'xnxxdl':
+            case 'xdl':
+            case 'xnxxdownload': {
+                if (!text) return reply(lang.contoh(prefix, command, 'https://www.xnxx.com/video-136f9p3a/attrape_ma_demi-soeur_vierge_de_18_ans_en_train_de_se_masturber_avec_le_controle_de_ma_console_hentai'))
+                if (!text.includes('https://www.xnxx.com/')) return reply(lang.contoh(prefix, command, 'https://www.xnxx.com/video-136f9p3a/attrape_ma_demi-soeur_vierge_de_18_ans_en_train_de_se_masturber_avec_le_controle_de_ma_console_hentai'))
+
+
+                await xnxxdl(args[0]).then(async data => {
+                    let txt = `*----「 XNXX DOWNLOAD 」----*
+	
+📬 Title : ${data.result.title}
+⏰ Durasi : ${data.result.durasi}
+🎭 Width : ${data.result.videoWidth}
+🌐 Height : ${data.result.videoHeight}
+🔗 Url : ${data.result.URL}`
+                    await reply(txt)
+                    await react('✈️')
+                    await onic.sendVideoUrl(m.chat, data.result.files.high, false, '', m).catch(async _ => {
+                        await react('❌')
+                        await onic.sendPesan(m.chat, {
+                            text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                        }, {
+                            quoted: m
+                        })
+                        return ''
+                    })
+                }).catch(async (err) => {
+                    await reply(util.format(err))
+                })
             }
             break
         }
