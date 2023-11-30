@@ -174,7 +174,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                     args = body.trim().split(/ +/).slice(1)
                     text = q = args.join(" ")
 
-                    await swicherCommand(cimmind)
+                    // await swicherCommand(cimmind)
                     
                     break;
                 }
