@@ -32,7 +32,7 @@ const {
 const lang = require(home('./src/options/lang_id'))
 
 //━━━[ DOWNLOADER ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-const tiktokdl = require('node-tiklydown')
+const tiktokdl = require('tiktod')
 const {
     youtubedl,
     youtubedlv2,
@@ -85,9 +85,11 @@ module.exports = onic = async (onic, m, command, mek) => {
                     s: true,
                     l: ''
                 }
-                await tiktokdl.v1(nrgs).then(async(tiktok)=> {
+                await tiktokdl.download(nrgs).then(async(tiktok)=> {
+                    tiktok = tiktok.result
+                    console.log(JSON.stringify(tiktok ,null , 2))
                     await react('✈️')
-                    if(tiktok.images){
+                    /*if(tiktok.is_video == false){
                         for (let i = 0; i < tiktok.images.length; i++) {
                             let url = tiktok.images[i].url
                             await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
@@ -103,8 +105,8 @@ module.exports = onic = async (onic, m, command, mek) => {
                                 })
                             })
                         }
-                    }else if(tiktok.video){
-                        let url = tiktok.video.noWatermark
+                    }else */if(tiktok.is_video){
+                        let url = tiktok.media
                         await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
                             await react('🤔')
                             await onic.sendVideoUrl(m.chat, url, false, '', m).then(_=> i = 1000).catch(async _ => {
@@ -123,7 +125,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     
                     await onic.sendPesan(m.chat, {
                         audio: {
-                            url: tiktok.music.play_url
+                            url: tiktok.music.url
                         },
                         mimetype: 'audio/mpeg',
                         ptt: false,

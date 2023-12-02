@@ -82,7 +82,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
             if (perfic) {
                 if (isCmd) require(casee(runto))(onic, m, command, mek)
             } else {
-                if (!isCmd) require(casee(runto))(onic, m, cimmindd, mek)
+                if (!isCmd) require(casee(runto))(onic, m, cimmind, mek)
             }
 
         }
