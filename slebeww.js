@@ -11,6 +11,7 @@ const {
     areJidsSameUser,
     getContentType
 } = require('@adiwajshing/baileys')
+
 const fs = require('fs');
 const util = require('util');
 const chalk = require('chalk');
@@ -260,9 +261,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
 
             }
             break
-            
         }
-        
         
         async function swicherCommand(alokk){
             // switch (false){
@@ -380,7 +379,10 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 case '---------------':
                 case 'demote':
                 case 'turunkan':
-                case 'kucilkan':{
+                case 'kucilkan':
+                case '---------------':
+                case 'liston':
+                case 'listonline':{
                     await runCase('group-only', true)
                 }
                 break

@@ -121,6 +121,41 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await onic.groupParticipantsUpdate(m.chat, [users], 'demote').then(async(res) => await react('✅')).catch((_) => replyEmo('*Terjadi kesalahan Coba ulang, tolong bagikan ke owner:*\n\n```'+_+'```', '❌'))
             }
             break
+            case 'liston':
+            case 'listonline': {
+                if (!isBotAdmins) return replyEmo(lang.bukanadmin(), '❌')
+                if (!(isGroupAdmins || isGroupOwner)) return replyEmo(lang.adminOnly(), '❌')
+                let id = args && /\d+\-\d+@g.us/.test(args[0]) ? args[0] : m.chat
+                let online = [...Object.keys(store.presences[id]), botNumber]
+                await reply('List Online:\n\n' + online.map(v => '⭔ @' + v.replace(/@.+/, '')).join(`\n`), {
+                    mentionedJid: online
+                })
+            }
+            break
+            case 'tagall':
+            case 'infoall':
+            case 'tagsemua':{
+                if (!isBotAdmins) return replyEmo(lang.bukanadmin(), '❌')
+                if (!(isGroupAdmins || isGroupOwner)) return replyEmo(lang.adminOnly(), '❌')
+                let tekss = `══✪〘 *👥 Sebutkan Semua* 〙✪══\n\n➲ *Pesan : ${q ? q : 'Tidak ada'}*\n\n`
+                for (let mem of participants) {
+                    tekss += `🏅 @${mem.id.split('@')[0]}\n`
+                }
+                tekss += `\n⋙ *${botname}* ⋘`
+                await reply(tekss, {
+                    mentionedJid: participants.map(a => a.id)
+                })
+            }
+            break
+            case 'h':
+            case 'hidetag':{
+                if (!isBotAdmins) return replyEmo(lang.bukanadmin(), '❌')
+                if (!(isGroupAdmins || isGroupOwner)) return replyEmo(lang.adminOnly(), '❌')
+                await reply(q ? q : '', {
+                    mentionedJid: participants.map(a => a.id)
+                })
+            }
+            break
         }
 
     } catch (err) {

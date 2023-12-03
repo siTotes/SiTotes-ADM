@@ -276,6 +276,25 @@ exports.allmenu = (prefix) => {
 ││├ ${prefix}kucilkan
 ││╰×
 ││
+*│├╭→ #ListOnline / Yang on di grub*
+│││
+││├ ${prefix}liston
+││├ ${prefix}listonline
+││╰×
+││
+*│├╭→ #TagAll / Sebut semua orang*
+│││
+││├ ${prefix}tagall   *teks
+││├ ${prefix}infoall   *teks
+││├ ${prefix}tagsemua   *teks
+││╰×
+││
+*│├╭→ #HideTag / TagAll tanpa Tag*
+│││
+││├ ${prefix}h   *teks
+││├ ${prefix}hidetag   *teks
+││╰×
+││
 │╰──────────•
 │
 ╰❒`
