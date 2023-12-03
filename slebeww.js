@@ -47,7 +47,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
     try {
         var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : '' //omzee
         var budy = (typeof m.text == 'string' ? m.text : '')
-        const isCmd = /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/$%^&.+-,\\\©^]/.test(body)
+        var isCmd = /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/$%^&.+-,\\\©^]/.test(body)
         // const isCmd = /≈/.test(body)
         const prefix = isCmd ? budy[0] : ''
         var command = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : ''
@@ -155,30 +155,32 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 return await reply('List dimulai dari angka 1')
             }else if(!uus) return await reply('Hanya angka kak, contoh reply list lalu ketik 1')
             
+            const regex = /🍂:\s(.*?)\*\n/g;
             const regexx = /🍂:\s(.*?)\*\n📎:\s(.*?)\n/g;
+            const regexxx = /🍂:\s(.*?)\*\n\*🍀:\s(.*?)\*\n📎:\s(.*?)\n/g;
             const cmdss = m.quoted.text.match(/\(#\)(\w+)/)[1]
-            let matchh;
             let i = 1;
-        
-            while ((matchh = regexx.exec(sfg)) !== null) {
-                const judul = matchh[1];
-                const textr = matchh[2];
-        
-                if (i === uus) {
-                    command = cmdss
-                    cimmind = cmdss
-                    m.text = `#${cmdss} ${textr}`
-                    m.body = `#${cmdss} ${textr}`
-                    m.msg.text = `#${cmdss} ${textr}`
-                    body = `#${cmdss} ${textr}`
-                    args = body.trim().split(/ +/).slice(1)
-                    text = q = args.join(" ")
+            let matchh;
 
-                    // await swicherCommand(cimmind)
-                    
+            while ((matchh = regexxx.exec(sfg) || regexx.exec(sfg) || regex.exec(sfg)) !== null) {
+                const judul = matchh[1] || matchh[2] || matchh[3];
+                const textr = matchh[3] || matchh[2] || matchh[1];
+            
+                if (i === uus) {
+                    command = cmdss;
+                    cimmind = cmdss;
+                    m.text = `#${cmdss} ${textr}|•||•|${judul}`;
+                    m.body = `#${cmdss} ${textr}|•||•|${judul}`;
+                    m.msg.text = `#${cmdss} ${textr}|•||•|${judul}`;
+                    body = `#${cmdss} ${textr}|•||•|${judul}`;
+                    isCmd = /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/$%^&.+-,\\\©^]/.test(body);
+                    args = body.trim().split(/ +/).slice(1);
+                    text = q = args.join(" ");
+                    console.log(body)
+            
                     break;
                 }
-        
+            
                 i++;
             }
         
@@ -304,6 +306,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 case 'mainkan>':
                 case 'music>':
                 case 'lagu>':
+                case 'playx':
                 case '⊡':
                 case '---------------':
                 case 'pinters':
@@ -440,6 +443,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 case 'xnxxdl':
                 case 'xdl':
                 case 'xnxxdownload': {
+                    text = text.split('|•||•|')[0]
                     if (!text) return reply(lang.contoh(prefix, command, 'https://www.xnxx.com/video-136f9p3a/attrape_ma_demi-soeur_vierge_de_18_ans_en_train_de_se_masturber_avec_le_controle_de_ma_console_hentai'))
                     if (!text.includes('https://www.xnxx.com/')) return reply(lang.contoh(prefix, command, 'https://www.xnxx.com/video-136f9p3a/attrape_ma_demi-soeur_vierge_de_18_ans_en_train_de_se_masturber_avec_le_controle_de_ma_console_hentai'))
     

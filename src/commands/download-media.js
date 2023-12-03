@@ -59,7 +59,7 @@ module.exports = onic = async (onic, m, command, mek) => {
         const salam = moment(Date.now()).tz(timezone).locale('id').format('a')
         const pushname = m.pushName || "No Name"
         const args = body.trim().split(/ +/).slice(1)
-        let text = q = args.join(" ")
+        var text = q = args.join(" ")
         const nrgs = args[0]
         const reply = onic.reply
         const replyEmo = onic.replyEmo
@@ -241,7 +241,7 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'ytmp4':
             case 'ytmp3':
             case 'ꈍ' : {
-                if(!command.includes('ꈍ')){
+                if(!text.includes('|•||•|')){
                     //return reply('Fitur sedang di perbaiki dan tidak bisa di gunakan terlebih dahulu')
                     if (!text) {
                         await react('❓')
@@ -256,7 +256,9 @@ module.exports = onic = async (onic, m, command, mek) => {
                         return reply(lang.contoh(prefix, command, 'https://youtu.be/7wfSvv4AHsQ'))
                     }
                 }else{
-                    text = 'https://music.youtube.com/watch?v=' + text.split('\n\n◕ ')[1]
+                    text = text.split('|•||•|')[0]
+                    text = 'https://music.youtube.com/watch?v='+text
+                    console.log(text)
                 }
 
                 await react('⏳')
@@ -297,7 +299,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                             quoted: m
                         }).catch(async _ => await replyEmo('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```', '❌'))
                         
-                        await YoutubeTranscript.fetchTranscript(text.replaceAll('https://music.youtube.com/watch?v=','https://youtu.be/')).then(async data =>{
+                        if(!text.includes('|•||•|')) await YoutubeTranscript.fetchTranscript(text.replaceAll('https://music.youtube.com/watch?v=','https://youtu.be/')).then(async data =>{
                             let transkeip = ''
                             for (const item of data) {
                                 const totalSeconds = Math.floor(item.offset / 1000); // Convert offset to total seconds
@@ -378,6 +380,7 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'music':
             case 'lagu': {
                 /*
+                //with poll
                 await react('⏳')
                 await ytcapi.initalize()
 
@@ -396,6 +399,9 @@ module.exports = onic = async (onic, m, command, mek) => {
 
                 await react('✅')
                 */
+                
+                /*
+                //no poll || no list
                 await react('⏳')
                 await ytcapi.initalize()
 
@@ -471,13 +477,45 @@ module.exports = onic = async (onic, m, command, mek) => {
                 } else {
                     await replyEmo('Coba lagi, atau judul lain, mumet gak nemu lagu kyok ngunu 👌🥴', '🤷')
                 }
+                */
+                
+                await react('⏳')
+                await ytcapi.initalize()
+
+                let result = JSON.parse(JSON.stringify(await ytcapi.getSearchSuggestions(text)))
+                if (await result[0] ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
+                for (let i = 0; i<result.length; i++){
+                    result[i] =  `${result[i]}`
+                }
+                if(!Array.isArray(result)) result = [
+                    result,
+                    result+' terbaru',
+                    result+' slow'
+                ]
+                let txt = `*•━━━━[ 🎶 YouTube Music 🎵 ]━━━━•*\n\nMenemukan saran pencarian, pilih salah satu, dengan membalas pesan ini dan ketik angka yang ingin di pilih\n\n`
+                let n = 0
+                for (let i of result) {
+                    n++
+                    txt += `•━━( ${n} )━━━━━━━━━━━━━━━━━━•\n*🍂: ${i}*\n\n`
+                }
+                txt += `\n\n(#)playx\n(#€)`
+                
+                
+                await react('✈️')
+                await reply(txt)
+
+                await react('✅')
+                
             }
             break
             case 'play>':
             case 'mainkan>':
             case 'music>':
             case 'lagu>':
+            case 'playx':
             case '⊡': {
+                /*
+                //play with poll by sitotes
                 await react('⏳')
                 await ytcapi.initalize()
                 if (text ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
@@ -486,6 +524,28 @@ module.exports = onic = async (onic, m, command, mek) => {
                 data.content = data.content.map((item) => `ꈍ ${item.name}\n⊡ ${item.artist.name}\n\n◕ ${item.videoId}`)
                 await react('✈️')
                 await onic.sendPoll(m.chat, 'Menemukan '+data.content.length+' Lagu di YouTube Music.\nPilih salah satu Untuk memainkan:', data.content)
+                await react('✅')
+                
+                */
+                if(text.includes('|•||•|')) text = text.split('|•||•|')[1]
+                console.log(text)
+                await react('⏳')
+                await ytcapi.initalize()
+                if (text ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
+                let data = await ytcapi.search(text)
+                data.content = data.content.filter(item => item.type === "song")
+                // data.content = data.content.map((item) => `ꈍ ${item.name}\n⊡ ${item.artist.name}\n\n◕ ${item.videoId}`)
+                await react('✈️')
+                
+                let txt = `*•━━━━[ 🎶 YouTube Music 🎵]━━━━•*\n\nMenemukan Lagu, pilih salah satu untuk memainkan, dengan membalas pesan ini dan ketik angka yang ingin di pilih\n\n`
+                let n = 0
+                for (let i of data.content) {
+                    n++
+                    txt += `•━━( ${n} )━━━━━━━━━━━━━━━━━━•\n*🍂: ${i.name}*\n*🍀: ${i.artist.name}*\n📎: ${i.videoId}\n\n`
+                }
+                txt += `\n\n(#)ytmp3\n(#€)`
+                await reply(txt)
+                
                 await react('✅')
             }
             break
