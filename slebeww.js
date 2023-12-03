@@ -94,7 +94,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 if (m.quoted) {
                     if (!isCmd) {
                         if (ver[jalok] == m.quoted.id) {
-                            require(casee(runto))(onic, m, command, mek)
+                            require(casee(runto))(onic, m, command, mek, store)
                         }
                     }
                 }
@@ -382,7 +382,14 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 case 'kucilkan':
                 case '---------------':
                 case 'liston':
-                case 'listonline':{
+                case 'listonline':
+                case '---------------':
+                case 'tagall':
+                case 'infoall':
+                case 'tagsemua':
+                case '---------------':
+                case 'h':
+                case 'hidetag':{
                     await runCase('group-only', true)
                 }
                 break
