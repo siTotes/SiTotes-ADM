@@ -277,7 +277,7 @@ async function startonic() {
             await store.chats.all()
             console.log(chalk.hex('#FFAD99').bold(`Terhubung dengan = ` + JSON.stringify(onic.user, null, 2)))
 
-            checkCommitUpdate().then(async bcsk => {
+            await checkCommitUpdate().then(async bcsk => {
                 let vcp = bcsk.versi.split('.')
                 vcp = (((vcp[2]) + (vcp[1])) + (vcp[0])).trim()
                 let ccp = bcsk.commit.split('.')
