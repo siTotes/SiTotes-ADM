@@ -90,7 +90,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     console.log(JSON.stringify(tiktok ,null , 2))
                     await react('✈️')
                     if(tiktok.is_image){
-                        for (let i = 0; i < tiktok.images.length; i++) {
+                        for (let i = 0; i < tiktok.media.length; i++) {
                             let url = tiktok.media[i]
                             await onic.sendImageUrl(m.chat, url, '', m).catch(async _ => {
                                 await react('🤔')
