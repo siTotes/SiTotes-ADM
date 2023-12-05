@@ -174,6 +174,51 @@ exports.allmenu = (prefix) => {
 │╰──────────•
 │
 │
+*├╭─( Funn/ Bot AI )────•*
+││
+*│├╭→ #ChatGpt / Openai*
+│││
+││├ bot   *pertanyaan
+││├ ai   *pertanyaan
+││╰×
+││
+*│├╭→ #Funn / Random Macth*
+│││
+││├ ${prefix}rate   *contoh seberapa alay gwe
+││╰×
+││
+│╰─────────────•
+│
+*├╭─( Anime Menu )────•*
+││
+*│├╭→ #QuotAnime*
+│││
+││├ ${prefix}katakataanime
+││├ ${prefix}quotesanime
+││├ ${prefix}quotanim
+││├ ${prefix}qanim
+││├ ${prefix}quotanim
+│││
+││╰×
+││
+│╰─────────────•
+│
+*├╭─( Google IT )────•*
+││
+*│├╭→ #Google Pencarian*
+│││
+││├ ${prefix}google *search
+│││
+││╰×
+││
+*│├╭→ #Google Emojimix*
+│││
+││├ ${prefix}emojimix 😁+🥴
+│││
+││╰×
+││
+│╰─────────────•
+│
 *├╭─( Media Sticker )────•*
 ││
 *│├╭→ #Sticker*
@@ -229,6 +274,25 @@ exports.allmenu = (prefix) => {
 ││├ ${prefix}demote
 ││├ ${prefix}turunkan
 ││├ ${prefix}kucilkan
+││╰×
+││
+*│├╭→ #ListOnline / Yang on di grub*
+│││
+││├ ${prefix}liston
+││├ ${prefix}listonline
+││╰×
+││
+*│├╭→ #TagAll / Sebut semua orang*
+│││
+││├ ${prefix}tagall   *teks
+││├ ${prefix}infoall   *teks
+││├ ${prefix}tagsemua   *teks
+││╰×
+││
+*│├╭→ #HideTag / TagAll tanpa Tag*
+│││
+││├ ${prefix}h   *teks
+││├ ${prefix}hidetag   *teks
 ││╰×
 ││
 │╰──────────•
