@@ -1,275 +1,541 @@
 require('./src/options/settings')
+let ownstatus = true
 const {
-    default: makeWASocket,
-    MessageType,
-    Mimetype,
     BufferJSON,
-    WAMessageStubType,
     WA_DEFAULT_EPHEMERAL,
     generateWAMessageFromContent,
-    downloadContentFromMessage,
-    downloadHistory,
     proto,
-    getMessage,
     generateWAMessageContent,
-    getContentType,
-    prepareWAMessageMedia,
     generateWAMessage,
+    prepareWAMessageMedia,
     areJidsSameUser,
-    makeInMemoryStore,
-    delay
+    getContentType
 } = require('@adiwajshing/baileys')
-const fs = require('fs')
-const chalk = require('chalk')
-const speed = require('performance-now')
-const moment = require("moment-timezone")
-const path = require('path')
 
-//━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-const svdata = () => fs.writeFileSync(`./src/.sitotes/data/database.json`, JSON.stringify(global.db, null, 2))
+const fs = require('fs');
+const util = require('util');
+const chalk = require('chalk');
+const moment = require('moment-timezone');
 const {
-    smsg,
-    getGroupAdmins,
-    formatp,
-    tanggal,
-    tanggal_,
-    tanggal__,
-    formatDate,
-    getTime,
-    isUrl,
-    sleep,
-    clockString,
+    getBuffer,
+    hitungmundur,
+    bytesToSize,
+    checkBandwidth,
     runtime,
     fetchJson,
-    getBuffer,
-    jsonformat,
-    format,
-    logic,
-    generateProfilePicture,
-    parseMention,
-    getRandom
-} = require('./lib/myfunc')
+    getGroupAdmins,
+    msToDate,
+    isUrl,
+    tanggal,
+    delays
+} = require('./lib/simple')
 const {
     client
 } = require('./lib/dbmongosle')
 const {
-    bytesToSize,
-    fileIO,
-    UploadFileUgu,
-    telesticker,
-    webp2mp4File,
     TelegraPh
 } = require('./lib/uploader')
-const gdapis = require('./lib/gdriveapis')
-const cv = require('./lib/con2vert')
-const lang = require('./src/options/lang_id')
 const {
-    toAudio,
-    toPTT
-} = require('./lib/converter')
+    xnxxdl,
+    xnxxsearch
+} = require('./lib/scraper')
+
+const lang = require('./src/options/lang_id')
+const svdata = () => fs.writeFileSync(`./src/.sitotes/data/database.json`, JSON.stringify(global.db, null, 2))
 
 
-const botdata = 'BD_SiTotes'
-pp_bot = fs.readFileSync(logo)
-moment.tz.setDefault("Asia/Jakarta").locale("id");
-
-module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
+module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
     try {
-        var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') && m.message.buttonsResponseMessage.selectedButtonId ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') && m.message.listResponseMessage.singleSelectReply.selectedRowId ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') && m.message.templateButtonReplyMessage.selectedId ? m.message.templateButtonReplyMessage.selectedId : (m.mtype == 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ""
+        var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : '' //omzee
         var budy = (typeof m.text == 'string' ? m.text : '')
-        const content = JSON.stringify(mek.message)
-        const type = Object.keys(mek.message)[0];
-        if (m && type == "protocolMessage") onic.ev.emit("message.delete", m.message.protocolMessage.key);
-        const isCmd = /*mek.key.fromMe ? /^[$]/.test(body) : */ /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/%^&.+-,\\\©^]/.test(body)
+        var isCmd = /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/$%^&.+-,\\\©^]/.test(body)
+        // const isCmd = /≈/.test(body)
         const prefix = isCmd ? budy[0] : ''
-        const command = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : ''
-        const cimmind = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : body.trim().split(' ').shift().toLowerCase()
-        const from = mek.key.remoteJid
-        const time = moment(Date.now()).tz(timezone).locale('id').format('HH:mm:ss z')
-        const wita = moment(Date.now()).tz('Asia/Makassar').locale('id').format('HH:mm:ss z')
-        const wit = moment(Date.now()).tz('Asia/Jayapura').locale('id').format('HH:mm:ss z')
-        const salam = moment(Date.now()).tz(timezone).locale('id').format('a')
-        const args = body.trim().split(/ +/).slice(1)
+        var command = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : ''
+        var cimmind = isCmd ? body.slice(1).trim().split(' ').shift().toLowerCase() : body.trim().split(' ').shift().toLowerCase()
+        var args = body.trim().split(/ +/).slice(1)
         const pushname = m.pushName || "No Name"
-        const sender = m.isGroup ? (mek.key.participant ? mek.key.participant : mek.participant) : mek.key.remoteJid
-        const botNumber = onic.user.id ? onic.user.id.split(":")[0] + "@s.whatsapp.net" : onic.user.id
-        const isCreator = ["62821931157232@s.whatsapp.net", "62887435047326@s.whatsapp.net", botNumber, ...global.ownno].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
-        const itsMe = m.sender == onic.user.id ? true : false
-        const text = q = args.join(" ")
-        const c = args.join(' ')
+        const botNumber = await onic.decodeJid(onic.user.id)
+        const tanggal = moment().tz("Asia/Makassar").format("dddd, ll")
+        const jam = moment(Date.now()).tz('Asia/Makassar').locale('id').format('HH:mm:ss z')
+        const salam = moment(Date.now()).tz("Asia/Makassar").locale('id').format('a')
+        const isCreator = ["62887435047326@s.whatsapp.net", botNumber, ...global.ownno].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
+        var text = q = args.join(" ")
         const quoted = m.quoted ? m.quoted : m
+        const from = m.chat
         const mime = (quoted.msg || quoted).mimetype || ''
         const isMedia = /image|video|sticker|audio/.test(mime)
-
-        // Group
-        const groupMetadata = m.isGroup ? await onic.groupMetadata(m.chat) : ''
-        const groupId = m.isGroup ? groupMetadata.id : ''
+        const groupMetadata = m.isGroup ? await onic.groupMetadata(m.chat).catch(e => {}) : ''
         const groupName = m.isGroup ? groupMetadata.subject : ''
         const participants = m.isGroup ? await groupMetadata.participants : ''
         const groupAdmins = m.isGroup ? await getGroupAdmins(participants) : ''
         const isBotAdmins = m.isGroup ? groupAdmins.includes(botNumber) : false
-        const isGroupAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
-        const groupOwner = m.isGroup ? groupMetadata.owner : ''
-        const isGroupOwner = m.isGroup ? (groupOwner ? groupOwner : groupAdmins).includes(m.sender) : false
-        const groupMembers = m.isGroup ? await groupMetadata.participants : ''
-        const mentionUser = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])]
-        const ini_mark = `0@s.whatsapp.net`
+        const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
+        const time = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('HH:mm:ss z')
         const timestamp = m.messageTimestamp
-        const timestampi = speed();
-        const latensii = speed() - timestampi
-        const pathbufc = `./src/session/Cache-Buffer/${m.chat}`
 
-        if (!m.key.fromMe) return
-        console.log(
-            chalk.black(chalk.bgWhite(' \n|=| MSG |-> ')),
-            chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
-            chalk.black(chalk.bgBlue(`\n ${budy || m.mtype} `)),
-            chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
-            chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
-        )
+        const reply = onic.reply
+        const replyEmo = onic.replyEmo
+        const react = onic.react
         
-        /*
+        const msgFilter = require('./lib/antispam');
+        if (!isCreator && !m.key.fromMe && isCmd && msgFilter.isFiltered(m.sender)) {
+            console.log(chalk.black(chalk.bgWhite('[ SPAM ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> Dari'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> Di'), chalk.green(m.isGroup ? pushname : 'Private Chat', m.chat))
+            await reply('Jangan spam, Antri 3 detik!!!')
+            return
+        }
+        if (isCmd) {
+            msgFilter.addFilter(m.sender)
+        }
+        
+        const casee = (lib) => './src/commands/' + lib
+        const runCase = async (runto, perfic = true) => {
+            if (perfic) {
+                if (isCmd) require(casee(runto))(onic, m, command, mek)
+            } else {
+                if (!isCmd) require(casee(runto))(onic, m, cimmind, mek)
+            }
+
+        }
+        const checkcid = async(dataapa, chatny, jalok, runto) => {
+            for (let i = 0; i < chatny.length; i++) {
+                var ver = dataapa[chatny[i]] ? dataapa[chatny[i]] : false
+                ver = ver[m.chat] ? ver[m.chat] : 'emanf eak'
+                if (m.quoted) {
+                    if (!isCmd) {
+                        if (ver[jalok] == m.quoted.id) {
+                            require(casee(runto))(onic, m, command, mek, store)
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+        switch (command){
+            case 'ownon':{
+                if(__base.includes('/data/data/com.termux/')) return console.log
+                ownstatus = true
+                await reply('Owner On')
+            }
+            break
+            case 'ownoff':{
+                if(__base.includes('/data/data/com.termux/')) return console.log
+                ownstatus = false
+                await reply('Owner Off')
+            }
+            break
+        
+        }
+        if(!ownstatus && m.sender.includes('6288989781626@s.what')) return
+        
+        if(m.sender.includes('6288989781626@s.what') || m.sender.includes('6285176916306@s.whats')){
+            console.log(
+                chalk.black(chalk.bgGray(' \n|=| MSG |-> ')),
+                chalk.black(chalk.bgRed(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
+                chalk.black(chalk.bgGreen(`\n ${budy || m.mtype} `)),
+                chalk.black(chalk.bgWhite(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
+                chalk.greenBright(chalk.bgMagenta.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
+            )
+        
+        }else{
+            console.log(
+                chalk.black(chalk.bgWhite(' \n|=| MSG |-> ')),
+                chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
+                chalk.black(chalk.bgBlue(`\n ${budy || m.mtype} `)),
+                chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
+                chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
+            )
+            if(__base.includes('/data/data/com.termux/')) return console.log
+        }
+        
         if (m.message) {
-            const readkey = {
-                remoteJid: m.chat,
-                id: m.key.id,
-                participant: m.isGroup ? m.key.participant : undefined
-            }
-            await onic.readMessages([readkey]);
+            await delays(1)
+            await onic.readMessages([m.key])
         }
-        */
+        
+        if (ky_ttt.filter(ghg => ghg.id.includes(m.chat))[0]?.id == m.chat) {
+            require(casee('game-rpg'))(onic, m, command, mek)
+        }
+        if (m.quoted && m.quoted.text.includes('(#)')) {
+            const sfg = m.quoted.text
+            const uus = parseInt(budy)
+            
+            //(#€) tambahkan ini jika ingin reques nomer
+            if(sfg.includes('(#€)')) if(uus == 0){
+                return await reply('List dimulai dari angka 1')
+            }else if(!uus) return await reply('Hanya angka kak, contoh reply list lalu ketik 1')
+            
+            const regex = /🍂:\s(.*?)\*\n/g;
+            const regexx = /🍂:\s(.*?)\*\n📎:\s(.*?)\n/g;
+            const regexxx = /🍂:\s(.*?)\*\n\*🍀:\s(.*?)\*\n📎:\s(.*?)\n/g;
+            const cmdss = m.quoted.text.match(/\(#\)(\w+)/)[1]
+            let i = 1;
+            let matchh;
 
-        onic.addProsMsg = () => {
-            let pe = db.data.proses.reaload ? (db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0) : 0
-            if (pe > 0) {
-                for (let i = 0; i < db.data.proses.reaload.messages.length; i++) {
-                    if (db.data.proses.reaload.messages[i] == null) {
-                        db.data.proses.reaload.messages.splice(i, 1);
-                    } else if (db.data.proses.reaload.messages[i].count) {} else if (db.data.proses.reaload.messages[i].key.id == m.id) {
-
-                    } else {
-                        db.data.proses.reaload.messages.push(mek)
-                    }
+            while ((matchh = regexxx.exec(sfg) || regexx.exec(sfg) || regex.exec(sfg)) !== null) {
+                const judul = matchh[1] || matchh[2] || matchh[3];
+                const textr = matchh[3] || matchh[2] || matchh[1];
+            
+                if (i === uus) {
+                    command = cmdss;
+                    cimmind = cmdss;
+                    m.text = `#${cmdss} ${textr}|•||•|${judul}`;
+                    m.body = `#${cmdss} ${textr}|•||•|${judul}`;
+                    m.msg.text = `#${cmdss} ${textr}|•||•|${judul}`;
+                    body = `#${cmdss} ${textr}|•||•|${judul}`;
+                    isCmd = /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/$%^&.+-,\\\©^]/.test(body);
+                    args = body.trim().split(/ +/).slice(1);
+                    text = q = args.join(" ");
+                    console.log(body)
+            
+                    break;
                 }
-            } else {
-                db.data.proses = {}
-                db.data.proses.reaload = {}
-                db.data.proses.reaload.messages = []
-                db.data.proses.reaload.messages.push(mek)
+            
+                i++;
+            }
+        
+            if (i < uus) {
+                await reply("Nomor video tidak valid.");
             }
         }
-        onic.endProsMsg = () => {
-            let pe = db.data.proses.reaload.messages ? db.data.proses.reaload.messages.length : 0
-            if (pe > 0) {
-                for (let i = 0; i < db.data.proses.reaload.messages.length; i++) {
-                    if (db.data.proses.reaload.messages[i] == null) {
-                        db.data.proses.reaload.messages.splice(i, 1);
-                    } else if (db.data.proses.reaload.messages[i].key.id == m.id) {
-                        db.data.proses.reaload.messages.splice(i, 1);
-                    }
-                }
+        
+        if(!m.isGroup && !isCmd) {
+            await onic.sendPresenceUpdate('composing', m.chat)
+            const jawbn = await onic.axiosUrlToJson(`https://tiktod.eu.org/ai?system=Your+Name+is+Nakano&question=${m.text}`)
+            await react('🐣')
+            if(!jawbn.result){
+                await react('🤯')
+                await reply('SiTotes Error nihh, Tanya Owner Yu\n\n'+JSON.stringify(jawbn ,null , 2))
+                return await onic.sendPresenceUpdate('available', m.chat)
             }
+            // await react('✈️')
+            await reply(jawbn.result+'\n\n©m.saiful.anam.r → AI')
+            await react('')
+            await onic.sendPresenceUpdate('available', m.chat)
         }
-        onic.addProsessInv = (ivent, evid, ccmd) => {
-            if (db.data.proses.event ? false : true) db.data.proses.event = {}
-            if (db.data.proses.event[ivent] ? false : true) db.data.proses.event[ivent] = []
-            db.data.proses.event[ivent].push({
-                jid: m.chat,
-                qid: evid,
-                cmd: ccmd
-            })
-        }
-        onic.rmvProsessInv = () => {}
+        
+        switch (command) {
+            case 'info':
+            case 'menu':
+            case 'fitur': {
+                let fakedoc = ['application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/pdf']
+                fakedoc = fakedoc[Math.floor(fakedoc.length * Math.random())]
 
-        let nua = 0
-        const reply = async (teks) => {
-            if (nua < 4) {
-                await onic.sendFakeLink(m.chat, teks, salam, pushname, ownername, logo, myweb, m)
-                nua = 999
-            } else {
-                await onic.sendMessage(m.chat, {
-                    text: teks
+                onic.sendPesan(m.chat, {
+                    document: logo,
+                    mimetype: fakedoc,
+                    fileName: 'Author : @m.saiful.anam.r',
+                    fileLength: '999999999999',
+                    pageCount: '999',
+                    caption: lang.allmenu(prefix),
+                    contextInfo: {
+                        externalAdReply: {
+                            title: 'Selamat ' + salam + ' ' + pushname,
+                            body: '© ' + ownername,
+                            thumbnail: logo,
+                            sourceUrl: myweb,
+                            mediaUrl: '',
+                            renderLargerThumbnail: true,
+                            showAdAttribution: true,
+                            mediaType: 1
+                        }
+                    }
                 }, {
-                    quoted: m
+                    m
                 })
             }
-        }
-        // console.log(JSON.stringify(quoted ,null , 2))
-        switch (cimmind) {
+            break
             case 'u': {
                 await reply(`Runtime : ${runtime(process.uptime())}`)
             }
             break
-            case 'mc': {
-                if (!/video/.test(mime) && !/audio/.test(mime)) return await reply('Reply media brow')
-                if (!quoted) return await reply('Tidak mereply apapun, reply media')
-                if ((quoted.msg || quoted).seconds > 900) return await reply('Maximum 60 seconds!')
-                await onic.sendReaction(m.chat, m.key, '🦶')
-                let media = await quoted.download()
-                let audio = await toAudio(media, 'mp4')
-                await onic.sendMessage(m.chat, {
-                    audio: audio,
-                    mimetype: 'audio/mpeg',
-                    ptt: false
-                })
-            }
-            case 'vn': {
-                if (!quoted) return await reply('Tidak mereply apapun, reply media')
-                await onic.sendReaction(m.chat, m.key, '🦶')
-                let vnot = (quoted.msg || quoted).fakeObj
-                vnot.message.audioMessage.ptt = true
-                await onic.sendMessageJson(m.chat, vnot)
-            }
-            break
-            case 'lgc': {
-                let anu = await store.chats.all().filter(v => v.id.endsWith('@g.us')).map(v => v.id)
-                let teks = `⬣ *LIST GROUP CHAT*\n\nTotal Group : ${anu.length} Group\n\n`
-                for (let i of anu) {
-                    let metadata = await onic.groupMetadata(i)
-                    teks += `⬡ *Nama :* ${metadata.subject}\n⬡ *Owner :* ${metadata.owner !== undefined ? '@' + metadata.owner.split`@`[0] : '-'}\n⬡ *ID :* https://${metadata.id}\n⬡ *Dibuat :* ${moment(metadata.creation * 1000).tz('Asia/Jakarta').format('DD/MM/YYYY HH:mm:ss')}\n⬡ *Member :* ${metadata.participants.length}\n\n────────────────────────\n\n`
+            case 'antidelete':
+            case 'antihapus': {
+                const alur = 'Anti Hapus pesan ';
+                await client.connect();
+                const db = client.db(botdata);
+                const dbgrub = db.collection('grub-db');
+                const sitotesv = await dbgrub.findOne({ _id: m.chat });
+                
+                if (sitotesv) {
+                  const updateValue = !sitotesv.antidelete;
+                
+                  await dbgrub.updateOne(
+                    { _id: m.chat },
+                    { $set: { antidelete: updateValue } }
+                  );
+                
+                  await reply(alur + (updateValue ? '*Aktif*' : '*Mati*'));
+                } else {
+                  const dataToInsert = { antidelete: true };
+                  
+                  try {
+                    await dbgrub.insertOne({
+                      _id: m.chat,
+                      ...dataToInsert
+                    });
+                
+                    await reply(alur+'*Aktif*');
+                  } catch (error) {
+                    await reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + error + '```');
+                  }
                 }
-                onic.sendTextWithMentions(m.chat, teks, m)
-            }
-            break
-            case '*':
-            case '×':
-            case '🌟': {
-                if(!quoted) return
-                await onic.sendMessageJson(onic.user.id, (quoted.msg || quoted).fakeObj)
-            }
-            break
-            case 'send': {
-                if(!quoted) return
-                if(!text) return
-                await onic.sendMessageJson(text.replaceAll('https://', ''), (quoted.msg || quoted).fakeObj)
-            }
-            break
-            case 'onc': {
-                if (!quoted) return await reply('Tidak mereply apapun, reply media')
-                await onic.sendReaction(m.chat, m.key, '🦶')
-                let vnot = (quoted.msg || quoted).fakeObj
-                vnot.message[m.quoted.mtype].viewOnce = true
-                await onic.sendMessageJson(m.chat, vnot)
-            }
-            case '2x': {
-                if (!quoted) return await reply('Tidak mereply apapun, reply media')
-                await onic.sendReaction(m.chat, m.key, '🦶')
-                let vnot = (quoted.msg || quoted).fakeObj
-                let so = (m.quoted.mtype == 'viewOnceMessageV2Extension'||'viewOnceMessageV2'||'viewOnceMessage' ? vnot.message[m.quoted.mtype].message[getContentType(vnot.message[m.quoted.mtype].message)] : vnot.message[m.quoted.mtype])
-                so.viewOnce = false
-                console.log(JSON.stringify(vnot ,null , 2))
-                await onic.sendMessageJson(m.chat, vnot)
-            }
-            // default:{
-            // let users = m.mentionedJid[0] ? m.mentionedJid : (m.quoted?.contacts)? await onic.vcardGetJid(m) : m.quoted ? m.quoted.sender : text.includes('+')? await onic.textGetJid(text) : text.replace(/[^0-9]/g, '') + '@s.whatsapp.net'
-            // reply(JSON.stringify(users, null, 2))
-            // }
-        }
+                
+                await client.close();
 
-    } catch (err) {
-        /**/
-        console.log(onic.printErr(err))
-        await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
+            }
+            break
+        }
+        
+        async function swicherCommand(alokk){
+            // switch (false){
+            switch (alokk){
+                case 'tt':
+                case 'downloadtiktok':
+                case 'tiktokunduh':
+                case 'tiktok':
+                case '---------------':
+                case 'ig':
+                case 'igdl':
+                case 'igdownload':
+                case 'igunduh':
+                case 'igsv':
+                case 'instagramdl':
+                case 'instagram':
+                case 'instagrams':
+                case 'instagramsdl':
+                case 'instagramunduh':
+                case 'igreel':
+                case 'igvideo':
+                case 'igimage':
+                case 'igpost':
+                case '---------------':
+                case 'youtube':
+                case 'youtubedownload':
+                case 'youtubedl':
+                case 'ytdl':
+                case 'youtubemp4':
+                case 'youtubemp3':
+                case 'ytmp4':
+                case 'ytmp3':
+                case 'ꈍ':
+                case '---------------':
+                case 'play':
+                case 'mainkan':
+                case 'music':
+                case 'lagu':
+                case '---------------':
+                case 'play>':
+                case 'mainkan>':
+                case 'music>':
+                case 'lagu>':
+                case 'playx':
+                case '⊡':
+                case '---------------':
+                case 'pinters':
+                case 'pintrs':
+                case 'pint':
+                case 'pinimg':
+                case 'pinterest':{
+                    await runCase('download-media', true)
+                }
+                break
+                case 'bantuan':
+                case 'hint':
+                case '---------------':
+                case 'nyerah':
+                case 'menyerah':
+                case 'quit':
+                case 'metu':
+                case 'kalah':
+                case 'out':
+                case '---------------':
+                case 'tg':
+                case 'tega':
+                case 'tbkg':
+                case 'tbkgam':
+                case 'tebakgam':
+                case 'tebakgambar':
+                case '---------------':
+                case 'cl':
+                case 'ckl':
+                case 'cakl':
+                case 'caklon':
+                case 'caklontong':
+                case '---------------':
+                case 'f100':
+                case 'familyseratus':
+                case 'family100':
+                case '---------------':
+                case 'ttt':
+                case 'tictactoe':{
+                    await runCase('game-rpg', true)
+                }
+                break
+                case 's':
+                case 'sticker':
+                case 'stiker':
+                case '---------------':
+                case 'smeme':
+                case 'smemegen':
+                case 'stickermeme':
+                case 'smeme2':
+                case '---------------':
+                case 'ttp':
+                case 'attp':
+                case '---------------':
+                case 'emojimix':{
+                    await runCase('convert-sticker', true)
+                }
+                break
+                case 'kick':
+                case 'keluarkan':
+                case 'hapus':
+                case 'remove':
+                case '---------------':
+                case 'add':
+                case 'tambah':
+                case 'new':
+                case '---------------':
+                case 'promote':
+                case 'naikan':
+                case 'jabatkan':
+                case '---------------':
+                case 'demote':
+                case 'turunkan':
+                case 'kucilkan':
+                case '---------------':
+                case 'liston':
+                case 'listonline':
+                case '---------------':
+                case 'tagall':
+                case 'infoall':
+                case 'tagsemua':
+                case '---------------':
+                case 'h':
+                case 'hidetag':{
+                    await runCase('group-only', true)
+                }
+                break
+                case 'gambarkan':
+                case 'bot':
+                case 'ai':{
+                    await runCase('openai-gpt', false)
+                }
+                break
+                case 'rate':{
+                    await runCase('openai-gpt', true)
+                }
+                break
+                case 'katakataanime':
+                case 'quotesanime':
+                case 'quotanim':
+                case 'qanim':
+                case 'quotanim':{
+                    await runCase('wibu-docpusat', true)
+                }
+                break
+                case 'gsearch':
+                case 'googlesearch':
+                case 'google':{
+                    await runCase('google-it', true)
+                }
+                break
+                 
+                case 'asu':{
+                    // await onic.sendPoll(m.chat, 'alok', ['1 polls', '2 polls'])
+                }
+                break
+                case 'cok':{
+                    // await reply(`*•━━━━[ 😴  🤤 ]━━━━•*\nFitur By: SiTotes 2022\nSaran Feature by: M. Fajar\n\n\n•━━( 1 )━━━━━━━━━━━━━━━━━━•\n*🍂: Subil Arch & his Russian friend*\n📎: https://www.xnxx.com/video-6kc7q11/subil_arch_and_his_russian_friend\n\n•━━( 2 )━━━━━━━━━━━━━━━━━━•\n*🍂: Candid Photography - by Sapphic Ero...*\n📎: https://www.xnxx.com/video-ct4pxf2/candid_photography_-_by_sapphic_erotica_lesbian_sex_with_nikitta_sascha\n\n•━━( 3 )━━━━━━━━━━━━━━━━━━•\n*🍂: Vintage Transgender*\n📎: https://www.xnxx.com/video-18ui51ee/vintage_transgender\n\n•━━( 4 )━━━━━━━━━━━━━━━━━━•\n*🍂: Amazing Girl with Natural Hairy Pus...*\n📎: https://www.xnxx.com/video-hyo4982/amazing_girl_with_natural_hairy_pussy_21\n\n•━━( 5 )━━━━━━━━━━━━━━━━━━•\n*🍂: SLUT TRAINING girl dick sucking and...*\n📎: https://www.xnxx.com/video-19v0nn56/slut_training_girl_dick_sucking_and_ass_shaking\n\n•━━( 6 )━━━━━━━━━━━━━━━━━━•\n*🍂: Hot pussy fisted creamy*\n📎: https://www.xnxx.com/video-l2zud29/hot_pussy_fisted_creamy\n\n•━━( 7 )━━━━━━━━━━━━━━━━━━•\n*🍂: Wife rubs clit while fucked with Cu...*\n📎: https://www.xnxx.com/video-kxdzn21/wife_rubs_clit_while_fucked_with_cucumber\n\n•━━( 8 )━━━━━━━━━━━━━━━━━━•\n*🍂: StrapOn Amazing blonde babe fucks h...*\n📎: https://www.xnxx.com/video-3z1xi09/strapon_amazing_blonde_babe_fucks_her_gf_with_vibrating_strapon\n\n•━━( 9 )━━━━━━━━━━━━━━━━━━•\n*🍂: Surgiram com vendas de produtos per...*\n📎: https://www.xnxx.com/video-1as3g17e/surgiram_com_vendas_de_produtos_personalizados_tem_ate_dados_lgbt_e_o_objetivo_e_apimentar_relacoes_e_fazer_jogos_-_rai_dobler_diversao_ao_cubo_sheer_red_\n\n•━━( 10 )━━━━━━━━━━━━━━━━━━•\n*🍂: COROA TESUDO METENDO GOSTOSO (DELIC...*\n📎: https://www.xnxx.com/video-c1l8z55/coroa_tesudo_metendo_gostoso_delicia_........_\n\n•━━( 11 )━━━━━━━━━━━━━━━━━━•\n*🍂: CARLOS SIMOES*\n📎: https://www.xnxx.com/video-ljljt77/carlos_simoes\n\n•━━( 12 )━━━━━━━━━━━━━━━━━━•\n*🍂: i myself am not into other males, o...*\n📎: https://www.xnxx.com/video-vcg3t51/i_myself_am_not_into_other_males_or_men_i_would_much_rather_instead_prefer_born_and_raised_female_person_women_representing_the_opposite_sex_being_of_whatsoever_races_and_or_being_of_whatever_walks_of_life_factions_of_society_or_lifestyle_prefer\n\n•━━( 13 )━━━━━━━━━━━━━━━━━━•\n*🍂: Stepsister pussy is always so sweet...*\n📎: https://www.xnxx.com/video-1402jr31/stepsister_pussy_is_always_so_sweet_licked_and_fingered_until_loud_moaning_orgasm\n\n•━━( 14 )━━━━━━━━━━━━━━━━━━•\n*🍂: FFFM 3 french sluts give their ass ...*\n📎: https://www.xnxx.com/video-7mco381/fffm_3_french_sluts_give_their_ass_to_one_lucky_cock_outdoor\n\n•━━( 15 )━━━━━━━━━━━━━━━━━━•\n*🍂: Amateur babe can't live without to ...*\n📎: https://www.xnxx.com/video-teaiv89/amateur_babe_can_t_live_without_to_take_huge_one-eyed_monster_up_her_love_hole\n\n•━━( 16 )━━━━━━━━━━━━━━━━━━•\n*🍂: Parada Paraiso*\n📎: https://www.xnxx.com/video-2gfz841/parada_paraiso\n\n•━━( 17 )━━━━━━━━━━━━━━━━━━•\n*🍂: Teen lesbo fucking*\n📎: https://www.xnxx.com/video-66g1h0c/teen_lesbo_fucking\n\n•━━( 18 )━━━━━━━━━━━━━━━━━━•\n*🍂: She Worships her Friend's Feet afte...*\n📎: https://www.xnxx.com/video-8r81re7/she_worships_her_friend_s_feet_after_a_date\n\n•━━( 19 )━━━━━━━━━━━━━━━━━━•\n*🍂: Lesbea Stunning blondes ride each o...*\n📎: https://www.xnxx.com/video-24ug79f/lesbea_stunning_blondes_ride_each_other\n\n•━━( 20 )━━━━━━━━━━━━━━━━━━•\n*🍂: 18yo Hot Ebony College Hookup, Insa...*\n📎: https://www.xnxx.com/video-1ao3hz9b/18yo_hot_ebony_college_hookup._insanely_hot_teen_black_girl_dildo_riding_competition.\n\n•━━( 21 )━━━━━━━━━━━━━━━━━━•\n*🍂: Crazy dykes*\n📎: https://www.xnxx.com/video-999pnff/crazy_dykes\n\n•━━( 22 )━━━━━━━━━━━━━━━━━━•\n*🍂: Straight chicks eat pussy for the f...*\n📎: https://www.xnxx.com/video-tekctae/straight_chicks_eat_pussy_for_the_first_time\n\n•━━( 23 )━━━━━━━━━━━━━━━━━━•\n*🍂: IMG 0348,MOV*\n📎: https://www.xnxx.com/video-5trl85b/img_0348.mov\n\n•━━( 24 )━━━━━━━━━━━━━━━━━━•\n*🍂: true lesbian sex*\n📎: https://www.xnxx.com/video-163at5bb/true_lesbian_sex\n\n•━━( 25 )━━━━━━━━━━━━━━━━━━•\n*🍂: Arma's Quest [sex games] Ep,2 massi...*\n📎: https://www.xnxx.com/video-168x7b25/arma_s_quest_sex_games_ep.2_massive_furry_dick_cumshot\n\n•━━( 26 )━━━━━━━━━━━━━━━━━━•\n*🍂: Asian Kendra Spade is talking durin...*\n📎: https://www.xnxx.com/video-p085lb4/asian_kendra_spade_is_talking_during_her_nap_her_room_mate_sabina_rouge_recorded_what_shes_saying._after_that_sabina_lets_kendra_lick_her_tits_and_wet_pussy._in_return_kendra_does_the_same_to_sabina_before_they_switch_to_scissor_sex.\n\n•━━( 27 )━━━━━━━━━━━━━━━━━━•\n*🍂: Marica Hase Fucks Lily*\n📎: https://www.xnxx.com/video-dh5l553/marica_hase_fucks_lily\n\n•━━( 28 )━━━━━━━━━━━━━━━━━━•\n*🍂: That’s wild*\n📎: https://www.xnxx.com/video-15gz4j03/that_s_wild\n\n•━━( 29 )━━━━━━━━━━━━━━━━━━•\n*🍂: slim young lesbians eating tight pu...*\n📎: https://www.xnxx.com/video-y62b183/slim_young_lesbians_eating_tight_pussies\n\n•━━( 30 )━━━━━━━━━━━━━━━━━━•\n*🍂: X1X*\n📎: https://www.xnxx.com/video-vyj9n13/x1x\n\n•━━( 31 )━━━━━━━━━━━━━━━━━━•\n*🍂: Scissoring at Motel - Khalessi 69*\n📎: https://www.xnxx.com/video-15x4u935/scissoring_at_motel_-_khalessi_69\n\n•━━( 32 )━━━━━━━━━━━━━━━━━━•\n*🍂: Pride 5*\n📎: https://www.xnxx.com/video-32bz024/pride_5\n\n•━━( 33 )━━━━━━━━━━━━━━━━━━•\n*🍂: Cougar pussy*\n📎: https://www.xnxx.com/video-svsk104/cougar_pussy\n\n•━━( 34 )━━━━━━━━━━━━━━━━━━•\n*🍂: Hot blonde MILF with perfect tits r...*\n📎: https://www.xnxx.com/video-wq97721/hot_blonde_milf_with_perfect_tits_rides_hard_dick_by_her_wet_twat\n\n•━━( 35 )━━━━━━━━━━━━━━━━━━•\n*🍂: Adrianna Meehan*\n📎: https://www.xnxx.com/video-q9xp57/adrianna_meehan\n\n•━━( 36 )━━━━━━━━━━━━━━━━━━•\n*🍂: Blow JOb,MP4*\n📎: https://www.xnxx.com/video-fup2p8e/blow_job.mp4\n\n(#)xdl\n(#€)`)
+                }
+                break
+                case 'xnxxs':
+                case 'xs':
+                case 'xnxxsearch': {
+                    if (!text) return reply(lang.contoh(prefix, command, 'sakura'))
+    
+                    await xnxxsearch(`${q}`).then(async data => {
+                        let txt = `*•━━━━[ 😴 ~XNXX~ 🤤 ]━━━━•*\nFitur By: SiTotes 2022\nSaran Feature by: M. Fajar\n\n\n`
+                        let n = 0
+                        for (let i of data.result) {
+                            n++
+                            if (i.title.length > 35) {
+                                txt += `•━━( ${n} )━━━━━━━━━━━━━━━━━━•\n*🍂: ${i.title.substring(0, 35).replaceAll('https', 'ht-s').replaceAll('.',',')}...*\n📎: ${i.link}\n\n`
+                            }else{
+                                txt += `•━━( ${n} )━━━━━━━━━━━━━━━━━━•\n*🍂: ${i.title.replaceAll('https', 'ht-s').replaceAll('.',',')}*\n📎: ${i.link}\n\n`
+                            }
+                        }
+                        txt += `\n\n(#)xdl\n(#€)`
+                        await reply(txt)
+                    }).catch(async(err) => {
+                        await reply(util.format(err))
+                    })
+                }
+                break
+                case 'xnxxdl':
+                case 'xdl':
+                case 'xnxxdownload': {
+                    text = text.split('|•||•|')[0]
+                    if (!text) return reply(lang.contoh(prefix, command, 'https://www.xnxx.com/video-136f9p3a/attrape_ma_demi-soeur_vierge_de_18_ans_en_train_de_se_masturber_avec_le_controle_de_ma_console_hentai'))
+                    if (!text.includes('https://www.xnxx.com/')) return reply(lang.contoh(prefix, command, 'https://www.xnxx.com/video-136f9p3a/attrape_ma_demi-soeur_vierge_de_18_ans_en_train_de_se_masturber_avec_le_controle_de_ma_console_hentai'))
+    
+    
+                    await xnxxdl(args[0]).then(async data => {
+                        let txt = `*----「 DOWNLOAD 」----*
+    	
+    📬 Title : ${data.result.title}
+    ⏰ Durasi : ${data.result.durasi}
+    🎭 Width : ${data.result.videoWidth}
+    🌐 Height : ${data.result.videoHeight}
+    🔗 Url : ${data.result.URL}`
+                        await reply(txt)
+                        await react('✈️')
+                        await onic.sendVideoUrl(m.chat, data.result.files.high, false, '', m).catch(async _ => {
+                            await react('❌')
+                            await onic.sendPesan(m.chat, {
+                                text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                            }, {
+                                quoted: m
+                            })
+                            return ''
+                        })
+                    }).catch(async (err) => {
+                        await reply(util.format(err))
+                    })
+                }
+                break
+            }
+        }
+        
+        await swicherCommand(cimmind)
+        await checkcid(
+            db.data.game,
+            [
+                'tebakgambar',
+                'caklontong',
+                'family100',
+                'asahotak',
+                'tebakkata',
+                'tekateki',
+                'tebakkimia',
+                'tebakkabupaten',
+                'siapakahaku',
+                'susunkata',
+                'tebakbendera',
+                'tebaklirik',
+                'tebaktebakan',
+
+                'm.saiful.anam.r.creator'
+            ],
+            'gameid',
+            'game-rpg'
+        )
+
+    }
+    catch (err) {
+        m.reply(util.format(err))
     } finally {
         /**/
         console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
