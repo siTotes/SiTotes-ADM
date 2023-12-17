@@ -479,9 +479,8 @@ async function startonic() {
         const pp2 = await Jimp.read('./pp2.png');
         const pp3 = await Jimp.read('./pp3.png');
     
-    
-        background.composite(gede.clone().rotate(-(desiredMinute*6), false), 0, 0);
         background.composite(cilik.clone().rotate(-(desiredHour*30), false), 0, 0);
+        background.composite(gede.clone().rotate(-(desiredMinute*6), false), 0, 0);
         
         background.composite(pp1.clone().resize(50, 50).circle(), 99, 402);
         background.composite(pp2.clone().resize(50, 50).circle(), 349, 402);

@@ -269,6 +269,11 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
             // }
         }
         
+    } catch (err) {
+        /**/
+        console.log(onic.printErr(err))
+        await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
+    } finally {
         await client.connect();
         const dbb = client.db('BD_BotOl');
         const collection = dbb.collection('hitung-chat');
@@ -283,12 +288,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store, reSize) => {
         }
         
         await client.close();
-
-    } catch (err) {
-        /**/
-        console.log(onic.printErr(err))
-        await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err + '```')
-    } finally {
+        
         /**/
         console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
         svdata()
