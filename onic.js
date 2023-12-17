@@ -439,8 +439,6 @@ async function startonic() {
         const dbb = client.db('BD_BotOl');
         const collection = dbb.collection('hitung-chat');
         
-        const nomor = m.sender
-
         const topUsers = await collection.aggregate([
             { $sort: { value: -1 } }, // Urutkan secara descending berdasarkan nilai
             { $limit: 3 }, // Ambil tiga data pertama
