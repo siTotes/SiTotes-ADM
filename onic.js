@@ -118,7 +118,7 @@ async function startonic() {
     
     store?.bind(onic.ev)
     onic.sendPesan = async (...args) => {
-        await delays(2)
+        await delays(0.5)
         return await onic.sendMessage(...args)
     }
     

@@ -241,7 +241,7 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'ytmp4':
             case 'ytmp3':
             case 'ꈍ' : {
-                if(!text.includes('◕') || !text.includes('|•||•|')){
+                if(!text.includes('◕')){
                     //return reply('Fitur sedang di perbaiki dan tidak bisa di gunakan terlebih dahulu')
                     if (!text) {
                         await react('❓')
