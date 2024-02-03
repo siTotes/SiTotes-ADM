@@ -241,7 +241,7 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'ytmp4':
             case 'ytmp3':
             case 'ꈍ' : {
-                if(!text.includes('|•||•|')){
+                if(!text.includes('◕') || !text.includes('|•||•|')){
                     //return reply('Fitur sedang di perbaiki dan tidak bisa di gunakan terlebih dahulu')
                     if (!text) {
                         await react('❓')
@@ -255,8 +255,12 @@ module.exports = onic = async (onic, m, command, mek) => {
                         await react('❓')
                         return reply(lang.contoh(prefix, command, 'https://youtu.be/7wfSvv4AHsQ'))
                     }
-                }else{
+                }else if(text.includes('|•||•|')){
                     text = text.split('|•||•|')[0]
+                    text = 'https://music.youtube.com/watch?v='+text
+                    console.log(text)
+                }else{
+                    text = text.split('◕ ')[1]
                     text = 'https://music.youtube.com/watch?v='+text
                     console.log(text)
                 }
@@ -299,21 +303,6 @@ module.exports = onic = async (onic, m, command, mek) => {
                             quoted: m
                         }).catch(async _ => await replyEmo('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```', '❌'))
                         
-                        if(!text.includes('|•||•|')) await YoutubeTranscript.fetchTranscript(text.replaceAll('https://music.youtube.com/watch?v=','https://youtu.be/')).then(async data =>{
-                            let transkeip = ''
-                            for (const item of data) {
-                                const totalSeconds = Math.floor(item.offset / 1000); // Convert offset to total seconds
-                                const minutes = Math.floor(totalSeconds / 60);
-                                const seconds = totalSeconds % 60;
-                                
-                                // Format minutes and seconds with leading zeros if needed
-                                const formattedOffset = `${minutes.toString().padStart(2, '0')}.${seconds.toString().padStart(2, '0')}`;
-                                
-                                transkeip += await `${formattedOffset} - *${item.text}*\n\n`
-                            }
-                            await reply(await transkeip)
-                        }).catch(console.log)
-
                         await react('✅')
                     } else {
                         let resoluse = Object.getOwnPropertyNames(_video)
@@ -369,7 +358,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     }
                 } else {
                     await react('❌')
-                    await reply('Periksa Link anda apakah error jika tidak, coba ulang, Jika masih tidak bisa Hubungi Owner Jika perlu')
+                    await reply(`Periksa Link anda apakah error ${text} jika tidak, coba ulang, Jika masih tidak bisa Hubungi Owner Jika perlu`)
                 }
 
 
@@ -379,9 +368,10 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'mainkan':
             case 'music':
             case 'lagu': {
-                /*
+                
                 //with poll
                 await react('⏳')
+                 
                 await ytcapi.initalize()
 
                 let result = JSON.parse(JSON.stringify(await ytcapi.getSearchSuggestions(text)))
@@ -398,7 +388,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Saran pencarian di YouTube Music.\nPilih salah satu Untuk mencari:', result)
 
                 await react('✅')
-                */
+                
                 
                 /*
                 //no poll || no list
@@ -479,6 +469,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 }
                 */
                 
+                /*
                 await react('⏳')
                 await ytcapi.initalize()
 
@@ -505,7 +496,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await reply(txt)
 
                 await react('✅')
-                
+                */
             }
             break
             case 'play>':
@@ -514,19 +505,29 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'lagu>':
             case 'playx':
             case '⊡': {
-                /*
+                // /*
                 //play with poll by sitotes
                 await react('⏳')
                 await ytcapi.initalize()
+                console.log(text)
                 if (text ? false : true) return await reply('Tidak ada lagu dengan judul seperti itu, coba judul lain')
-                let data = await ytcapi.search(text)
+                let data = await ytcapi.search(text, "song")
                 data.content = data.content.filter(item => item.type === "song")
                 data.content = data.content.map((item) => `ꈍ ${item.name}\n⊡ ${item.artist.name}\n\n◕ ${item.videoId}`)
                 await react('✈️')
-                await onic.sendPoll(m.chat, 'Menemukan '+data.content.length+' Lagu di YouTube Music.\nPilih salah satu Untuk memainkan:', data.content)
+                console.log('resek'+JSON.stringify(data.content.length ,null , 2))
+                for(let i = 0; i<data.content.length; i = i+12){
+                    let json = data.content.slice(i, i+12)
+                    if(data.content.slice(i, i+12).length<2) json = result.slice(i-1, i+12)
+                    if(data.content.length<2) json = [json[0], json[0]]
+                    await onic.sendPoll(m.chat, 'Menemukan '+data.content.slice(i, i+12).length+' Lagu di YouTube Music.\nPilih salah satu Untuk memutar:', json)
+                }
+                
                 await react('✅')
                 
-                */
+                // */
+                
+                /*
                 if(text.includes('|•||•|')) text = text.split('|•||•|')[1]
                 console.log(text)
                 await react('⏳')
@@ -547,6 +548,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await reply(txt)
                 
                 await react('✅')
+                */
             }
             break
             case 'pinters':
@@ -554,55 +556,55 @@ module.exports = onic = async (onic, m, command, mek) => {
             case 'pint':
             case 'pinimg':
             case 'pinterest': {
-                // if(command=='pinimg'){
-                    // let url = `https://i.pinimg.com/${text.split('\n\n')[0]? text.split('\n\n')[0]: text}.jpg`
-                    // let caption = `${text.split('\n\n')[1]? text.split('\n\n')[1]: text}`
-                    // await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
-                        // await react('🤔')
-                        // await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
-                            // await react('❌')
-                            // await onic.sendPesan(m.chat, {
-                                // text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
-                            // }, {
-                                // quoted: m
-                            // })
-                            // return ''
-                        // })
-                    // })
-                // }else{
-                    // await react('⏳')
-    
-                    // let result = await pinterest(text)
-                    // for(let i = 0; i<result.length; i++){
-                        // result[i] = await `pinimg ${result[i].replaceAll('https://i.pinimg.com/', '').replaceAll('.jpg', '')}\n\nGambar ${i+1}`
-                    // }
-                    // await react('✈️')
-                    // await result
-                    // for(let i = 0; i<result.length; i = i+12){
-                        // let json = result.slice(i, i+12)
-                        // if(result.slice(i, i+12).length<2) json = result.slice(i-1, i+12)
-                        // if(result.length<2) json = [json[0], json[0]]
-                        // await onic.sendPoll(m.chat, 'Menemukan '+result.slice(i, i+12).length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', json)
-                    // }
-                    // if(!result.length) return await replyEmo('Coba yang lain kak\n\n'+ JSON.stringify(await result),'😔')
-                    // await react('✅')
-                // }
-                
-                await react('⏳')
-                let result = await pinterest(text)
-                await react('✈️')
-                await result
-                let alok = Math.floor(Math.random() * result.length)
-                await onic.sendImageUrl(m.chat, result[alok], result[alok], m).catch(async _ => {
-                    await react('❌')
-                    await onic.sendPesan(m.chat, {
-                        text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
-                    }, {
-                        quoted: m
+                if(command=='pinimg'){
+                    let url = `https://i.pinimg.com/${text.split('\n\n')[0]? text.split('\n\n')[0]: text}.jpg`
+                    let caption = `${text.split('\n\n')[1]? text.split('\n\n')[1]: text}`
+                    await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
+                        await react('🤔')
+                        await onic.sendImageUrl(m.chat, url, caption, m).catch(async _ => {
+                            await react('❌')
+                            await onic.sendPesan(m.chat, {
+                                text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                            }, {
+                                quoted: m
+                            })
+                            return ''
+                        })
                     })
-                    return ''
-                })
-                await react('✅')
+                }else{
+                    await react('⏳')
+    
+                    let result = await pinterest(text)
+                    for(let i = 0; i<result.length; i++){
+                        result[i] = await `pinimg ${result[i].replaceAll('https://i.pinimg.com/', '').replaceAll('.jpg', '')}\n\nGambar ${i+1}`
+                    }
+                    await react('✈️')
+                    await result
+                    for(let i = 0; i<result.length; i = i+12){
+                        let json = result.slice(i, i+12)
+                        if(result.slice(i, i+12).length<2) json = result.slice(i-1, i+12)
+                        if(result.length<2) json = [json[0], json[0]]
+                        await onic.sendPoll(m.chat, 'Menemukan '+result.slice(i, i+12).length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', json)
+                    }
+                    if(!result.length) return await replyEmo('Coba yang lain kak\n\n'+ JSON.stringify(await result),'😔')
+                    await react('✅')
+                }
+                
+                // await react('⏳')
+                // let result = await pinterest(text)
+                // await react('✈️')
+                // await result
+                // let alok = Math.floor(Math.random() * result.length)
+                // await onic.sendImageUrl(m.chat, result[alok], result[alok], m).catch(async _ => {
+                    // await react('❌')
+                    // await onic.sendPesan(m.chat, {
+                        // text: '*Terjadi kesalahan Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                    // }, {
+                        // quoted: m
+                    // })
+                    // return ''
+                // })
+                // await react('✅')
             }
             break
         }

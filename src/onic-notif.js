@@ -17,7 +17,7 @@ const {
     makeCacheableSignalKeyStore,
     PHONENUMBER_MCC,
     WAMessageKey,
-    
+
     smsg,
     getBuffer,
     fetchJson,
@@ -34,7 +34,7 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
             cb(module)
         })
     }
-    
+
     function uncache(module = '.') {
         return new Promise((resolve, reject) => {
             try {
@@ -45,13 +45,19 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
             }
         })
     }
-    
+
     try {
         nocache('./slebeww', module => console.log(` "${module}" Telah diupdate!`))
         nocache('./storyReplay', module => console.log(` "${module}" Telah diupdate!`))
-        
-        
-        
+
+        nocache('./commands/convert-sticker')
+        nocache('./commands/download-media')
+        nocache('./commands/game-rpg')
+        nocache('./commands/google-it')
+        nocache('./commands/group-only')
+        nocache('./commands/openai-gpt')
+        nocache('./commands/wibu-docpusat')
+
         onic.ev.on('messages.upsert', async chatUpdate => {
             // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
             try {
@@ -72,10 +78,31 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
             }
         })
 
+        onic.ev.on('messages.update', async chatUpdate => {
+            // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
+            try {
+                for (const { key, update } of chatUpdate) {
+                    if (update.pollUpdates) {
+                        const pollCreation = await getMessage(key)
+                        if (pollCreation) {
+                            let pollUpdate = getAggregateVotesInPollMessage({
+                                message: pollCreation,
+                                pollUpdates: update.pollUpdates,
+                            })
+                            var getPoll = await pollUpdate.filter(v => v.voters.length !== 0)[0]?.name
+                            if (getPoll == undefined) return
+                            await onic.appenTextMessage('#' + getPoll, chatUpdate)
+                        }
+                    }
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        })
+
         onic.ev.process(
             async (events) => {
-                if (events['connection.update']) {
-                }
+                if (events['connection.update']) {}
 
                 if (events['creds.update']) {
                     await saveCreds()
@@ -94,33 +121,7 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                     // console.log('recv call event', events.call)
                 }
 
-                if (events['messaging-history.set']) {
-                }
-
-                if (events['messages.update']) {
-                    // console.log(
-                    // JSON.stringify(events['messages.update'], undefined, 2)
-                    // )
-
-                    for (const {
-                            key,
-                            update
-                        }
-                        of events['messages.update']) {
-                        if (update.pollUpdates) {
-                            const pollCreation = await getMessage(key)
-                            if (pollCreation) {
-                                console.log(
-                                    'got poll update, aggregation: ',
-                                    getAggregateVotesInPollMessage({
-                                        message: pollCreation,
-                                        pollUpdates: update.pollUpdates,
-                                    })
-                                )
-                            }
-                        }
-                    }
-                }
+                if (events['messaging-history.set']) {}
 
                 if (events['message-receipt.update']) {
                     // console.log(events['message-receipt.update'])
@@ -138,11 +139,10 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                     // console.log(events['chats.update'])
                 }
 
-                if (events['contacts.update']) {
-                }
+                if (events['contacts.update']) {}
             }
         )
-        
+
 
         onic.decodeJid = (jid) => {
             if (!jid) return jid
@@ -164,10 +164,10 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                 const msg = await store.loadMessage(key.remoteJid, key.id)
                 return msg?.message || undefined
             }
-    
+
             return proto.Message.fromObject({})
         }
-    
+
     } catch (err) {
         console.log(err.stack)
     } finally {

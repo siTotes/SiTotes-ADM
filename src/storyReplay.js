@@ -1,3 +1,7 @@
+
+const home = (path) => __base + path
+
+
 require('./options/settings')
 let ownstatus = true
 const {
