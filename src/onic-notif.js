@@ -18,7 +18,6 @@ const {
     PHONENUMBER_MCC,
     WAMessageKey,
 
-    smsg,
     getBuffer,
     fetchJson,
     delays,
@@ -57,19 +56,27 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
         nocache('./commands/group-only')
         nocache('./commands/openai-gpt')
         nocache('./commands/wibu-docpusat')
-
+        
+        var smgmsusu = require(home('./lib/simple'))
+        var smsg = smgmsusu.smsg
+        nocache(home('./lib/simple'), async module => {
+            smgmsusu = require(module)
+            smsg = smgmsusu.smsg
+        })
+        
         onic.ev.on('messages.upsert', async chatUpdate => {
             // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
             try {
                 mek = chatUpdate.messages[0]
                 if (!mek.message) return
                 mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-                if (!onic.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
-                if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
+                if (!onic.public && !mek.key.fromMe && chatUpdate.type === 'notify') if(chatUpdate.typePoll?false:true) return
+                if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) if(chatUpdate.typePoll?false:true) return
                 m = smsg(onic, mek, store)
                 if (m.id == __nbl.chekid[m.chat]) return console.log('dobel detek')
                 if (m.mtype == 'pollUpdateMessage') return
                 __nbl.chekid[m.chat] = m.id
+                
 
                 if (mek.key && mek.key.remoteJid === 'status@broadcast') return require("./storyReplay")(onic, m, chatUpdate, mek, store)
                 require("./slebeww")(onic, m, chatUpdate, mek, store)
@@ -91,6 +98,7 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                             })
                             var getPoll = await pollUpdate.filter(v => v.voters.length !== 0)[0]?.name
                             if (getPoll == undefined) return
+                            console.log('#' + getPoll)
                             await onic.appenTextMessage('#' + getPoll, chatUpdate)
                         }
                     }
@@ -153,7 +161,6 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
         }
 
         onic.public = true
-        onic.serializeM = (m) => smsg(onic, m, store)
 
 
 

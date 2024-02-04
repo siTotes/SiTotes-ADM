@@ -54,6 +54,9 @@ const {
 
 module.exports = onic = async (onic, store) => {
     try {
+        onic.serializeM = (m) => smsg(onic, m, store)
+        
+        
         onic.getUrlTotalSize = async (url) => {
             let vv
             await fetch(url, {

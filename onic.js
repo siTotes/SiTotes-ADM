@@ -36,11 +36,11 @@ const useMobile = false
 
 const msgRetryCounterCache = new NodeCache()
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-})
-const question = (text) => new Promise((resolve) => rl.question(text, resolve))
+// const rl = readline.createInterface({
+    // input: process.stdin,
+    // output: process.stdout
+// })
+// const question = (text) => new Promise((resolve) => rl.question(text, resolve))
 const store = useStore ? makeInMemoryStore({
     logger: pino().child({
         level: 'silent',
@@ -161,7 +161,9 @@ async function startonic() {
     })
     
     require('./src/onic-notif')(onic, store, state, saveCreds, version, isLatest)
-    nocache('./src/onic-notif', module => {
+    nocache('./src/onic-notif', async module => {
+        onic.ev.removeAllListeners('messages.upsert');
+        onic.ev.removeAllListeners('messages.update');
         require(module)(onic, store, state, saveCreds, version, isLatest)
         console.log(` "${module}" Telah diupdate!`)
     })

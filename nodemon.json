@@ -1,3 +1,7 @@
 {
-  "ignore": ["./src/.sitotes", "./session"]
+    "ignore": [
+        "./src/.sitotes",
+        "./src/session",
+        "./src/session/creds-file"
+    ]
 }

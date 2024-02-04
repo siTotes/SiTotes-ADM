@@ -79,17 +79,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
         const reply = onic.reply
         const replyEmo = onic.replyEmo
         const react = onic.react
-
-        const msgFilter = require(home('./lib/antispam'));
-        if (!isCreator && !m.key.fromMe && isCmd && msgFilter.isFiltered(m.sender)) {
-            console.log(chalk.black(chalk.bgWhite('[ SPAM ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> Dari'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> Di'), chalk.green(m.isGroup ? pushname : 'Private Chat', m.chat))
-            await reply('Jangan spam, Antri 3 detik!!!')
-            return
-        }
-        if (isCmd) {
-            msgFilter.addFilter(m.sender)
-        }
-
+        
         const casee = (lib) => './commands/' + lib
         const runCase = async (runto, perfic = true) => {
             if (perfic) {
@@ -148,6 +138,16 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
             )
             if (__base.includes('/data/data/com.termux/')) return console.log
+        }
+        
+        const msgFilter = require(home('./lib/antispam'));
+        if (!isCreator && !m.key.fromMe && isCmd && msgFilter.isFiltered(m.sender)) {
+            console.log(chalk.black(chalk.bgWhite('[ SPAM ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> Dari'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> Di'), chalk.green(m.isGroup ? pushname : 'Private Chat', m.chat))
+            await reply('Jangan spam, Antri 3 detik!!!')
+            return
+        }
+        if (isCmd) {
+            msgFilter.addFilter(m.sender)
         }
 
         if (m.message) {
@@ -455,7 +455,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 break
 
                 case 'asu': {
-                    // await onic.sendPoll(m.chat, 'alok', ['1 polls', '2 polls'])
+                    await console.log(await onic.sendPoll(m.chat, 'alok', ['ꈍ keli', 'ꈍ Alok', 'ꈍ Garentod']))
                 }
                 break
                 case 'xnxxs':
