@@ -79,6 +79,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
         const reply = onic.reply
         const replyEmo = onic.replyEmo
         const react = onic.react
+        const presence = onic.presence
         
         const casee = (lib) => './commands/' + lib
         const runCase = async (runto, perfic = true) => {
@@ -117,19 +118,19 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
             }
             break
             case 'ldis': {
-                // if (__base.includes('/data/data/com.termux/')) return console.log
+                if (__base.includes('/data/data/com.termux/')) return console.log
                 await reply(JSON.stringify(disablee ,null , 2))
             }
             break
             case 'dis': {
-                // if (__base.includes('/data/data/com.termux/')) return console.log
+                if (__base.includes('/data/data/com.termux/')) return console.log
                 if (!disablee.includes(m.chat)) disablee.push(m.chat)
                 console.log(JSON.stringify(disablee ,null , 2))
                 await reply('Bot status Off')
             }
             break
             case 'pub': {
-                // if (__base.includes('/data/data/com.termux/')) return console.log
+                if (__base.includes('/data/data/com.termux/')) return console.log
                 disablee = disablee.filter(item => item !== m.chat);
                 console.log(JSON.stringify(disablee ,null , 2))
                 await reply('Bot status on')
@@ -140,7 +141,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
         if (disablee.includes(m.chat)) return
         if (!ownstatus && m.sender.includes('6288989781626@s.what')) return
 
-        if (m.sender.includes('6288989781626@s.what') || m.sender.includes('6285176916306@s.whats')) {
+        if (m.sender.includes('6288989781626@s.what') || m.sender.includes('6285176916306@s.whats') || m.sender.includes('6285176919013@s.whats')) {
             console.log(
                 chalk.black(chalk.bgGray(' \n|=| MSG |-> ')),
                 chalk.black(chalk.bgRed(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),

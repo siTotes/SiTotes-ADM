@@ -94,9 +94,7 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                 if (!onic.public && !mek.key.fromMe && chatUpdate.type === 'notify') if(chatUpdate.typePoll?false:true) return
                 if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) if(chatUpdate.typePoll?false:true) return
                 m = smsg(onic, mek, store)
-                if (m.id == __nbl.chekid[m.chat]) return console.log('dobel detek')
                 if (m.mtype == 'pollUpdateMessage') return
-                __nbl.chekid[m.chat] = m.id
                 
 
                 require("./slebeww")(onic, m, chatUpdate, mek, store)
@@ -116,6 +114,13 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                                 message: pollCreation,
                                 pollUpdates: update.pollUpdates,
                             })
+                            // console.log(JSON.stringify(pollUpdate ,null , 2))
+                            var getPoll
+                            // for(let i = 0; i < pollUpdate.length; i++){
+                                // if(pollUpdate[i].voters.length>0){
+                                    // getPoll = pollUpdate[i].name
+                                // }
+                            // }
                             var getPoll = (await pollUpdate.filter(v => v.voters.length !== 0)[0])?.name
                             // var getId = pollCreation.pollCreationMessage.name.match(/~🆔([a-z0-9A-Z]+)~/)?.[1]
                             // if (getId == undefined) getId = chatUpdate[0].key.id

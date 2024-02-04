@@ -50,6 +50,7 @@ const { YoutubeTranscript } = require('youtube-transcript')
 
 //━━━[ If user chat download-media ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 module.exports = onic = async (onic, m, command, mek) => {
+    await onic.presence(3)
     try {
         var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') && m.message.buttonsResponseMessage.selectedButtonId ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') && m.message.listResponseMessage.singleSelectReply.selectedRowId ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') && m.message.templateButtonReplyMessage.selectedId ? m.message.templateButtonReplyMessage.selectedId : (m.mtype == 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ""
         var budy = (typeof m.text == 'string' ? m.text : '')
@@ -64,7 +65,8 @@ module.exports = onic = async (onic, m, command, mek) => {
         const reply = onic.reply
         const replyEmo = onic.replyEmo
         const react = onic.react
-
+        const presence = onic.presence
+        
 
         switch (command) {
             case 'tt':
@@ -614,6 +616,7 @@ module.exports = onic = async (onic, m, command, mek) => {
         await m.reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + err.stack + '```')
     } finally {
         /**/
+        await onic.presence(1)
         console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');
         svdata()
     }
