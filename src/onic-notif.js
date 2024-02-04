@@ -70,8 +70,8 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                 mek = chatUpdate.messages[0]
                 if (!mek.message) return
                 mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-                if (!onic.public && !mek.key.fromMe && chatUpdate.type === 'notify') if(chatUpdate.typePoll?false:true) return
-                if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) if(chatUpdate.typePoll?false:true) return
+                if (!onic.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
+                if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
                 m = smsg(onic, mek, store)
                 if (m.id == __nbl.chekid[m.chat]) return console.log('dobel detek')
                 if (m.mtype == 'pollUpdateMessage') return
@@ -85,21 +85,45 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
             }
         })
 
+        onic.ev.on('poll-recipient', async chatUpdate => {
+            // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
+            try {
+                mek = chatUpdate.messages[0]
+                if (!mek.message) return
+                mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
+                if (!onic.public && !mek.key.fromMe && chatUpdate.type === 'notify') if(chatUpdate.typePoll?false:true) return
+                if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) if(chatUpdate.typePoll?false:true) return
+                m = smsg(onic, mek, store)
+                if (m.id == __nbl.chekid[m.chat]) return console.log('dobel detek')
+                if (m.mtype == 'pollUpdateMessage') return
+                __nbl.chekid[m.chat] = m.id
+                
+
+                require("./slebeww")(onic, m, chatUpdate, mek, store)
+            } catch (err) {
+                console.log(err)
+            }
+        })
+
         onic.ev.on('messages.update', async chatUpdate => {
             // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
             try {
                 for (const { key, update } of chatUpdate) {
-                    if (update.pollUpdates) {
+                    if (update.pollUpdates && key.fromMe) {
                         const pollCreation = await getMessage(key)
                         if (pollCreation) {
                             let pollUpdate = getAggregateVotesInPollMessage({
                                 message: pollCreation,
                                 pollUpdates: update.pollUpdates,
                             })
-                            var getPoll = await pollUpdate.filter(v => v.voters.length !== 0)[0]?.name
+                            var getPoll = (await pollUpdate.filter(v => v.voters.length !== 0)[0])?.name
+                            // var getId = pollCreation.pollCreationMessage.name.match(/~🆔([a-z0-9A-Z]+)~/)?.[1]
+                            // if (getId == undefined) getId = chatUpdate[0].key.id
                             if (getPoll == undefined) return
+                            
                             console.log('#' + getPoll)
-                            await onic.appenTextMessage('#' + getPoll, chatUpdate)
+                            // console.log('#' + getId)
+                            await onic.appenPollMessage('#' + getPoll, chatUpdate)
                         }
                     }
                 }

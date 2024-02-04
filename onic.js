@@ -164,6 +164,7 @@ async function startonic() {
     nocache('./src/onic-notif', async module => {
         onic.ev.removeAllListeners('messages.upsert');
         onic.ev.removeAllListeners('messages.update');
+        onic.ev.removeAllListeners('poll-recipient');
         require(module)(onic, store, state, saveCreds, version, isLatest)
         console.log(` "${module}" Telah diupdate!`)
     })

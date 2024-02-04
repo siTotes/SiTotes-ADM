@@ -455,7 +455,15 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 break
 
                 case 'asu': {
-                    await console.log(await onic.sendPoll(m.chat, 'alok', ['ꈍ keli', 'ꈍ Alok', 'ꈍ Garentod']))
+                    await console.log(await onic.sendPoll(m.chat, 'alok', ['ꈍ keli', 'ꈍ Alok', 'ꈍ Garentod'], 1, m, {
+                        "contextInfo": {
+                            "stanzaId": "3A5EED184EFD7CA92B5A906E725B1B33",
+                            "participant": "6288989781626@s.whatsapp.net",
+                            "quotedMessage": {
+                              "conversation": ".asu"
+                            }
+                        }
+                    }))
                 }
                 break
                 case 'xnxxs':

@@ -385,7 +385,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     '⊡ '+result+' slow'
                 ]
                 await react('✈️')
-                await onic.sendPoll(m.chat, 'Menemukan '+result.length+' Saran pencarian di YouTube Music.\nPilih salah satu Untuk mencari:', result)
+                await onic.sendPoll(m.chat, `*${ownername}*\n~🆔${m.key.id}~\n\n\n`+'Menemukan '+result.length+' Saran pencarian di YouTube Music.\nPilih salah satu Untuk mencari:', result)
 
                 await react('✅')
                 
@@ -520,7 +520,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                     let json = data.content.slice(i, i+12)
                     if(data.content.slice(i, i+12).length<2) json = result.slice(i-1, i+12)
                     if(data.content.length<2) json = [json[0], json[0]]
-                    await onic.sendPoll(m.chat, 'Menemukan '+data.content.slice(i, i+12).length+' Lagu di YouTube Music.\nPilih salah satu Untuk memutar:', json)
+                    await onic.sendPoll(m.chat, `*${ownername}*\n~🆔${m.key.id}~\n\n\n`+'Menemukan '+data.content.slice(i, i+12).length+' Lagu di YouTube Music.\nPilih salah satu Untuk memutar:', json)
                 }
                 
                 await react('✅')
@@ -584,7 +584,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                         let json = result.slice(i, i+12)
                         if(result.slice(i, i+12).length<2) json = result.slice(i-1, i+12)
                         if(result.length<2) json = [json[0], json[0]]
-                        await onic.sendPoll(m.chat, 'Menemukan '+result.slice(i, i+12).length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', json)
+                        await onic.sendPoll(m.chat, `*${ownername}*\n~🆔${m.key.id}~\n\n\n`+'Menemukan '+result.slice(i, i+12).length+' Gambar di pinterest.\nPilih salah satu Untuk menyimpan:', json)
                     }
                     if(!result.length) return await replyEmo('Coba yang lain kak\n\n'+ JSON.stringify(await result),'😔')
                     await react('✅')
