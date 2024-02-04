@@ -44,7 +44,7 @@ const {
 
 const lang = require('./options/lang_id')
 const svdata = () => fs.writeFileSync(home(`./src/.sitotes/data/database.json`), JSON.stringify(global.db, null, 2))
-
+let disablee = []
 
 module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
     try {
@@ -116,11 +116,31 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 await reply('Owner Off')
             }
             break
+            case 'ldis': {
+                // if (__base.includes('/data/data/com.termux/')) return console.log
+                await reply(JSON.stringify(disablee ,null , 2))
+            }
+            break
+            case 'dis': {
+                // if (__base.includes('/data/data/com.termux/')) return console.log
+                if (!disablee.includes(m.chat)) disablee.push(m.chat)
+                console.log(JSON.stringify(disablee ,null , 2))
+                await reply('Bot status Off')
+            }
+            break
+            case 'pub': {
+                // if (__base.includes('/data/data/com.termux/')) return console.log
+                disablee = disablee.filter(item => item !== m.chat);
+                console.log(JSON.stringify(disablee ,null , 2))
+                await reply('Bot status on')
+            }
+            break
 
         }
+        if (disablee.includes(m.chat)) return
         if (!ownstatus && m.sender.includes('6288989781626@s.what')) return
 
-        if (m.sender.includes('6288989781626@s.what') || m.sender.includes('6285176916306@s.whats') || m.sender.includes('6285176919013@s.whats')) {
+        if (m.sender.includes('6288989781626@s.what') || m.sender.includes('6285176916306@s.whats')) {
             console.log(
                 chalk.black(chalk.bgGray(' \n|=| MSG |-> ')),
                 chalk.black(chalk.bgRed(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
@@ -143,7 +163,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
         const msgFilter = require(home('./lib/antispam'));
         if (!isCreator && !m.key.fromMe && isCmd && msgFilter.isFiltered(m.sender)) {
             console.log(chalk.black(chalk.bgWhite('[ SPAM ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> Dari'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> Di'), chalk.green(m.isGroup ? pushname : 'Private Chat', m.chat))
-            await reply('Jangan spam, Antri 3 detik!!!')
+            await reply('Jangan spam, Tunggu 3 detik!!!')
             return
         }
         if (isCmd) {
