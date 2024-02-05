@@ -65,7 +65,7 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
         })
         
         onic.ev.on('messages.upsert', async chatUpdate => {
-            // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
+            console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
             try {
                 mek = chatUpdate.messages[0]
                 if (!mek.message) return

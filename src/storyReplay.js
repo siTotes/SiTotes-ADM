@@ -82,10 +82,14 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
         const reply = onic.reply
         const replyEmo = onic.replyEmo
         const react = onic.react
+        
+        // if (__base.includes('/data/data/com.termux/')) return console.log
 
         // console.log(JSON.stringify(chatUpdate ,null , 2))
         // console.log(JSON.stringify(m ,null , 2))
-        await onic.sendMessageJson(m.chat, m)
+        await onic.sendMessageJson(m.chat, m, false, {
+            quoted: m
+        })
     }
     catch (err) {
         m.reply(util.format(err))

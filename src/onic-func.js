@@ -351,16 +351,14 @@ module.exports = onic = async (onic, store) => {
             })
         }
 
-        onic.sendPoll = async (jid, name = '', values = [], selectableCount = 1, hh = '',options = {}) => {
+        onic.sendPoll = async (jid, name = '', values = [], selectableCount = 1, options = {}) => {
             return await onic.sendPesan(jid, {
                 poll: {
                     name,
                     values,
                     selectableCount
-                }
-            },
-            {
-                quoted: hh
+                },
+                options
             })
         }
 

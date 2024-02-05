@@ -6,7 +6,7 @@ require(home('./src/options/settings'))
 const fs = require('fs')
 const moment = require("moment-timezone")
 const chalk = require('chalk')
-
+const util = require('util');
 
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
@@ -29,7 +29,10 @@ const {
 const lang = require(home('./src/options/lang_id'))
 
 //━━━[ DOWNLOADER ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
-
+const {
+    xnxxdl,
+    xnxxsearch
+} = require(home('./lib/scraper'))
 //━━━[ DATA BASE ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 
 
@@ -52,7 +55,61 @@ module.exports = onic = async (onic, m, command, mek) => {
 
 
         switch (command) {
-
+            case 'xnxxs':
+            case 'xs':
+            case 'xnxxsearch': {
+                if (!text) return reply(lang.contoh(prefix, command, 'sakura'))
+    
+                await xnxxsearch(`${q}`).then(async data => {
+                    let txt = `*•━━━━[ 😴 ~XNXX~ 🤤 ]━━━━•*\nFitur By: SiTotes 2022\nSaran Feature by: M. Fajar\n\n\n`
+                    let n = 0
+                    for (let i of data.result) {
+                        n++
+                        if (i.title.length > 35) {
+                            txt += `•━━( ${n} )━━━━━━━━━━━━━━━━━━•\n*🍂: ${i.title.substring(0, 35).replaceAll('https', 'ht-s').replaceAll('.',',')}...*\n📎: ${i.link}\n\n`
+                        } else {
+                            txt += `•━━( ${n} )━━━━━━━━━━━━━━━━━━•\n*🍂: ${i.title.replaceAll('https', 'ht-s').replaceAll('.',',')}*\n📎: ${i.link}\n\n`
+                        }
+                    }
+                    txt += `\n\n(#)xdl\n(#€)`
+                    await reply(txt)
+                }).catch(async (err) => {
+                    await reply(util.format(err))
+                })
+            }
+            break
+            case 'xnxxdl':
+            case 'xdl':
+            case 'xnxxdownload': {
+                text = text.split('|•||•|')[0]
+                if (!text) return reply(lang.contoh(prefix, command, 'https://www.xnxx.com/video-136f9p3a/attrape_ma_demi-soeur_vierge_de_18_ans_en_train_de_se_masturber_avec_le_controle_de_ma_console_hentai'))
+                if (!text.includes('https://www.xnxx.com/')) return reply(lang.contoh(prefix, command, 'https://www.xnxx.com/video-136f9p3a/attrape_ma_demi-soeur_vierge_de_18_ans_en_train_de_se_masturber_avec_le_controle_de_ma_console_hentai'))
+    
+    
+                await xnxxdl(args[0]).then(async data => {
+                    let txt = `*----「 DOWNLOAD 」----*
+    
+    📬 Title : ${data.result.title}
+    ⏰ Durasi : ${data.result.durasi}
+    🎭 Width : ${data.result.videoWidth}
+    🌐 Height : ${data.result.videoHeight}
+    🔗 Url : ${data.result.URL}`
+                    await reply(txt)
+                    await react('✈️')
+                    await onic.sendVideoUrl(m.chat, data.result.files.high, false, '', m).catch(async _ => {
+                        await react('❌')
+                        await onic.sendPesan(m.chat, {
+                            text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
+                        }, {
+                            quoted: m
+                        })
+                        return ''
+                    })
+                }).catch(async (err) => {
+                    await reply(util.format(err))
+                })
+            }
+            break
 
         }
 

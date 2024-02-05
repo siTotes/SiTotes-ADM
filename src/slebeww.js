@@ -37,10 +37,6 @@ const {
 const {
     TelegraPh
 } = require(home('./lib/uploader'))
-const {
-    xnxxdl,
-    xnxxsearch
-} = require(home('./lib/scraper'))
 
 const lang = require('./options/lang_id')
 const svdata = () => fs.writeFileSync(home(`./src/.sitotes/data/database.json`), JSON.stringify(global.db, null, 2))
@@ -474,72 +470,32 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                     await runCase('google-it', true)
                 }
                 break
-
-                case 'asu': {
-                    await console.log(await onic.sendPoll(m.chat, 'alok', ['ꈍ keli', 'ꈍ Alok', 'ꈍ Garentod'], 1, m, {
-                        "contextInfo": {
-                            "stanzaId": "3A5EED184EFD7CA92B5A906E725B1B33",
-                            "participant": "6288989781626@s.whatsapp.net",
-                            "quotedMessage": {
-                              "conversation": ".asu"
-                            }
-                        }
-                    }))
-                }
-                break
+                case 'xnxxdl':
+                case 'xdl':
+                case 'xnxxdownload':
                 case 'xnxxs':
                 case 'xs':
                 case 'xnxxsearch': {
-                    if (!text) return reply(lang.contoh(prefix, command, 'sakura'))
-
-                    await xnxxsearch(`${q}`).then(async data => {
-                        let txt = `*•━━━━[ 😴 ~XNXX~ 🤤 ]━━━━•*\nFitur By: SiTotes 2022\nSaran Feature by: M. Fajar\n\n\n`
-                        let n = 0
-                        for (let i of data.result) {
-                            n++
-                            if (i.title.length > 35) {
-                                txt += `•━━( ${n} )━━━━━━━━━━━━━━━━━━•\n*🍂: ${i.title.substring(0, 35).replaceAll('https', 'ht-s').replaceAll('.',',')}...*\n📎: ${i.link}\n\n`
-                            } else {
-                                txt += `•━━( ${n} )━━━━━━━━━━━━━━━━━━•\n*🍂: ${i.title.replaceAll('https', 'ht-s').replaceAll('.',',')}*\n📎: ${i.link}\n\n`
-                            }
-                        }
-                        txt += `\n\n(#)xdl\n(#€)`
-                        await reply(txt)
-                    }).catch(async (err) => {
-                        await reply(util.format(err))
-                    })
+                    await runCase('nsfw-porn', true)
                 }
                 break
-                case 'xnxxdl':
-                case 'xdl':
-                case 'xnxxdownload': {
-                    text = text.split('|•||•|')[0]
-                    if (!text) return reply(lang.contoh(prefix, command, 'https://www.xnxx.com/video-136f9p3a/attrape_ma_demi-soeur_vierge_de_18_ans_en_train_de_se_masturber_avec_le_controle_de_ma_console_hentai'))
-                    if (!text.includes('https://www.xnxx.com/')) return reply(lang.contoh(prefix, command, 'https://www.xnxx.com/video-136f9p3a/attrape_ma_demi-soeur_vierge_de_18_ans_en_train_de_se_masturber_avec_le_controle_de_ma_console_hentai'))
 
-
-                    await xnxxdl(args[0]).then(async data => {
-                        let txt = `*----「 DOWNLOAD 」----*
-    	
-    📬 Title : ${data.result.title}
-    ⏰ Durasi : ${data.result.durasi}
-    🎭 Width : ${data.result.videoWidth}
-    🌐 Height : ${data.result.videoHeight}
-    🔗 Url : ${data.result.URL}`
-                        await reply(txt)
-                        await react('✈️')
-                        await onic.sendVideoUrl(m.chat, data.result.files.high, false, '', m).catch(async _ => {
-                            await react('❌')
-                            await onic.sendPesan(m.chat, {
-                                text: '*Terjadi kesalahan mengirim kan ke anda Coba ulang kak,*\n*jika masih tidak bisa, tolong bagikan ke owner:*\n\n```' + _ + '```'
-                            }, {
-                                quoted: m
-                            })
-                            return ''
-                        })
-                    }).catch(async (err) => {
-                        await reply(util.format(err))
-                    })
+                case 'setrr':
+                case 'setrmdr':
+                case 'setreminder':{
+                    if(!m.quoted) return await reply('Balas/reply pesan yang mau di ingatkan 😄')
+                    await onic.sendMessageJson(m.chat, m.quoted.fakeObj, true)
+                }
+                break
+                case 'todat':{
+                    if(!m.quoted) return await reply('Balas/reply pesan yang mau dijadikan data 😄')
+                    await console.log(await store.loadMessage(m.chat, m.quoted.id, onic))
+                }
+                break
+                case 'dat':{
+                    if(!text) return await reply('Data tidak benar, data harus berupa json')
+                    console.log(text)
+                    await onic.sendMessageJson(m.chat, JSON.parse(text))
                 }
                 break
             }
