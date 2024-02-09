@@ -112,6 +112,7 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
             let remdata = await cmdb.find({}).toArray()
             
             const currentTime = new Date();
+            currentTime.setHours(currentTime.getHours() + 7)
             const currentDay = currentTime.getDay();
             
             for (const reminder of remdata) {
