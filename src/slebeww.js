@@ -14,6 +14,8 @@ const {
     getContentType
 } = require('@adiwajshing/baileys')
 
+const {smsg} = require(home('./onic'))
+
 const fs = require('fs');
 const util = require('util');
 const chalk = require('chalk');
@@ -71,6 +73,11 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
         const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
         const time = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('HH:mm:ss z')
         const timestamp = m.messageTimestamp
+        
+        const currentTime = new Date();
+        const currentHour = currentTime.getHours();
+
+        
 
         const reply = onic.reply
         const replyEmo = onic.replyEmo
@@ -137,7 +144,8 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
         if (disablee.includes(m.chat)) return
         if (!ownstatus && m.sender.includes('6288989781626@s.what')) return
 
-        if (m.sender.includes('6288989781626@s.what') || m.sender.includes('6285176916306@s.whats') || m.sender.includes('6285176919013@s.whats')) {
+        if (m.sender.includes('6288989781626@s.what') || m.sender.includes('6285176916306@s.whats') || m.sender.includes('6285176919013@s.whats') || m.sender.includes('628819764143@s.whats')) {
+            if (__base.includes('/data/data/com.termux/') && m.chat.includes('@g.us')? m.chat!=='120363199931873932@g.us' : false) return console.log
             console.log(
                 chalk.black(chalk.bgGray(' \n|=| MSG |-> ')),
                 chalk.black(chalk.bgRed(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
@@ -163,14 +171,60 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
             await reply('Jangan spam, Tunggu 3 detik!!!')
             return
         }
-        if (isCmd) {
-            msgFilter.addFilter(m.sender)
-        }
+        if (isCmd) msgFilter.addFilter(m.sender)
 
         if (m.message) {
             await delays(1)
             await onic.readMessages([m.key])
         }
+        
+        const mdb = await onic.mdbConnectDb('users')
+        let users = await mdb.findOne({ nomer: m.sender })
+        
+        if(!users){
+            await mdb.insertOne({
+                nomer: m.sender
+            })
+            users = await mdb.findOne({ nomer: m.sender })
+        }
+        
+        //setelah satu hari berlangsung, maka akan di masukan ke function ini
+        if (!m.isGroup && !m.key.fromMe && m.message && !(new Date - users.pc < 86400000)) {
+            let greetingsChat = '\nHai 🍩'
+            if (currentHour < 4) {
+                greetingsChat = '\nMalam 🌃';
+            } else if (currentHour < 11) {
+                greetingsChat = '\nPagi 🌄';
+            } else if (currentHour < 15) {
+                greetingsChat = '\nSiang 🏖️';
+            } else if (currentHour < 19) {
+                greetingsChat = '\nSore 🌅';
+            } else {
+                greetingsChat = '\nMalam 🌌';
+            }
+            await onic.sendPesan(m.chat, {
+                text: `${greetingsChat}, *${pushname}*!\nSelamat datang di Bot Asisten!\n\nSaya, SiTotes Bot, Diciptakan Oleh     ${"```m.saiful.anam.r.```"}\n\nAyo mulai petualanganmu dengan mengetik *#menu*. Stay awesome! 🚀`,
+                contextInfo: {
+                    externalAdReply: {
+                        title: 'Selamat ' + salam + ' ' + pushname,
+                        body: '© ' + ownername,
+                        thumbnail: logo,
+                        sourceUrl: myweb,
+                        mediaUrl: '',
+                        renderLargerThumbnail: true,
+                        showAdAttribution: true,
+                        mediaType: 1
+                    }
+                }
+            })
+            await onic.sendPoll(m.chat, 'Pilih menu untuk menulai, atau Pilih Owner untuk menghubungi pemilik / pembuat bot', ['Menu / Feature','Owner / Pembuat', 'Status Bot?'] )
+            await mdb.updateOne({ nomer: m.sender }, { $set: { pc: new Date * 1, name: pushname } })
+        }
+        
+        
+        
+        
+        
 
         if (ky_ttt.filter(ghg => ghg.id.includes(m.chat))[0]?.id == m.chat) {
             require(casee('game-rpg'))(onic, m, command, mek)
@@ -235,8 +289,13 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
             await onic.sendPresenceUpdate('available', m.chat)
         }
         */
+        
+        
+        
+        
+        
 
-        switch (command) {
+        switch (m.isGroup?command:cimmind) {
             case 'info':
             case 'menu':
             case 'fitur': {
@@ -267,14 +326,24 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 })
             }
             break
-            case 'u': {
+            case 'u':
+            case 'test':
+            case 'status':
+            case 'p':
+            case 'Runtime':
+            case 'Uptime': {
                 await reply(`Runtime : ${runtime(process.uptime())}`)
+            }
+            break
+            case 'owner':
+            case 'pembuat':
+            case 'creator': {
+                await onic.sendContact(m.chat, ['6288989781626', '6285176916306'], ['ꈍ Owner Bot', 'ꈍ Bot'], [`item1.EMAIL;type=INTERNET: si.totes.ofc@gmail.com\nitem1.X-ABLabel:Gmail\n\nitem2.ADR:;;@m.saiful.anam.r;@si.totes;\nitem2.X-ABLabel:instagrams`, ''], m)
             }
             break
             case 'antidelete':
             case 'antihapus': {
                 const alur = 'Anti Hapus pesan ';
-                await client.connect();
                 const db = client.db(botdata);
                 const dbgrub = db.collection('grub-db');
                 const sitotesv = await dbgrub.findOne({
@@ -309,8 +378,6 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                         await reply('*Terjadi kesalahan, tolong bagikan ke owner:*\n\n```' + error + '```');
                     }
                 }
-
-                await client.close();
 
             }
             break
@@ -413,8 +480,10 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 case 'ttp':
                 case 'attp':
                 case '---------------':
-                case 'emojimix': {
-                    await runCase('convert-sticker', true)
+                case 'emojimix':
+                case '---------------':
+                case 'tomp3': {
+                    await runCase('convert-menu', true)
                 }
                 break
                 case 'kick':
@@ -484,7 +553,41 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 case 'setrmdr':
                 case 'setreminder':{
                     if(!m.quoted) return await reply('Balas/reply pesan yang mau di ingatkan 😄')
-                    await onic.sendMessageJson(m.chat, m.quoted.fakeObj, true)
+                    const objquoted = JSON.stringify(__nbl.infoMSG.find(item => item.key.id === m.quoted.id))
+                    let [jam, menit, hari] = text.split(/:|\//);
+                    console.log(body.split(/:|\//))
+
+                    if (jam && menit && hari && (/^[0-9]{1,2}$/.test(jam) && /^[0-9]{1,2}$/.test(menit) && jam >= 0 && jam <= 23 && menit >= 0 && menit <= 59) && ['sen', 'sel', 'rab', 'kam', 'jum', 'sab', 'min', 'all'].includes(hari)) {
+                        if(hari.includes('all')) hari = ''
+                        
+                        const rmdb = await onic.mdbConnectDb('reminder');
+                        let remm = await rmdb.findOne({ jid: m.chat });
+                
+                        if (!remm) {
+                            await rmdb.insertOne({
+                                jid: m.chat,
+                                listreminder: [
+                                    {
+                                        jam: text,
+                                        send: [
+                                            objquoted // objquoted disini adalah bentuk value yang ingin Anda tambahkan ke dalam array
+                                        ]
+                                    }
+                                ]
+                            });
+                        } else {
+                            let existingReminder = await remm.listreminder.find(reminder => reminder.jam === text)
+                            if (existingReminder) {
+                                existingReminder.send.push(objquoted); // Menambahkan data ke dalam array send yang sesuai dengan jam
+                            } else {
+                                remm.listreminder.push({ jam: text, send: [objquoted] }); // Menambahkan objek baru ke dalam listreminder
+                            }
+                            await rmdb.updateOne({ jid: m.chat }, { $set: { listreminder: remm.listreminder } })
+                        }
+                        await reply(`Baik saya akan mengingatkan anda ketika jam ${jam}:${menit} setiap hari ${hari}`)
+                    }else{
+                        await reply(`format salah berikut contoh yang benar:\nReply/balas pesan setelah itu kasih balasan\n\n*${prefix}${command} jam:menit/hari*\n\ncontoh:\n*${prefix}${command} 11:30/sen*\n\nhari list: sen, sel, rab, kam, jum, sab, min, all`)
+                    }
                 }
                 break
                 case 'todat':{
@@ -498,8 +601,13 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                     await onic.sendMessageJson(m.chat, JSON.parse(text))
                 }
                 break
+                default:{
+                    
+                    
+                }
             }
         }
+        // console.log(rmdrdata)
 
         await swicherCommand(cimmind)
         await checkcid(
@@ -527,6 +635,7 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
 
     } catch (err) {
         m.reply(util.format(err))
+        console.log(util.format(err))
     } finally {
         /**/
         console.log(__filename.replace('/data/data/com.termux/files/home', '.'), '→ Save');

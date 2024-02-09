@@ -67,6 +67,7 @@ const {
     client
 } = require('./lib/dbmongosle')
 
+const cron = require('node-cron')
 const figlet = require('figlet')
 
 global.db = JSON.parse(fs.readFileSync("./src/.sitotes/data/database.json"))
@@ -81,10 +82,13 @@ if (global.db) global.db.data = {
 __nbl.ttlerr = 0
 __nbl.isduakali = 0
 __nbl.chekid = {}
+__nbl.lcInfo = './src/.sitotes/data/data-msg.json'
+__nbl.infoMSG = JSON.parse(fs.readFileSync(__nbl.lcInfo))
 
 console.log(chalk.hex('#FF9F84').bold('SiTotes Bot Wait Running...'))
 
 async function startonic() {
+
     const {
         state,
         saveCreds
@@ -160,26 +164,32 @@ async function startonic() {
         console.log(` "${module}" Telah diupdate!`)
     })
     
+    await onic.mdbConnect();
+    
     require('./src/onic-notif')(onic, store, state, saveCreds, version, isLatest)
     nocache('./src/onic-notif', async module => {
         onic.ev.removeAllListeners('messages.upsert');
         onic.ev.removeAllListeners('messages.update');
         onic.ev.removeAllListeners('poll-recipient');
+        onic.ev.removeAllListeners('schedule-trigger');
         require(module)(onic, store, state, saveCreds, version, isLatest)
         console.log(` "${module}" Telah diupdate!`)
     })
-
+    
     onic.ev.on('connection.update', async (update) => {
+        console.log(JSON.stringify(update ,null , 2))
         const {
             connection,
             lastDisconnect,
         } = update
         if (connection === 'close') {
             __nbl.ttlerr++
+            await onic.mdbClosed()
             let reason = new Boom(lastDisconnect?.error)?.output.statusCode
             if (reason === DisconnectReason.badSession) {
                 console.log(chalk.hex('#FF6158')(`SENDER → File Sesi Buruk, Harap Hapus Sesi dan Pindai Lagi`));
-                setTimeout(startonic, 10000)
+                // setTimeout(startonic, 10000)
+                throw new Error('Bot Crash → By sitotes anti Stuck reload')
             } else if (reason === DisconnectReason.connectionClosed) {
                 console.log(chalk.hex('#FF6158')("SENDER → Koneksi ditutup, menghubungkan kembali...."));
                 //setTimeout(startonic, 10000)
@@ -213,6 +223,10 @@ async function startonic() {
 
         }
     })
+    
+    cron.schedule('* * * * *', async() => {
+        await onic.ev.emit('schedule-trigger', new Date())
+    });
 
     
     return onic

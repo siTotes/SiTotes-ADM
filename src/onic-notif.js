@@ -49,7 +49,7 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
         nocache('./slebeww', module => console.log(` "${module}" Telah diupdate!`))
         nocache('./storyReplay', module => console.log(` "${module}" Telah diupdate!`))
 
-        nocache('./commands/convert-sticker')
+        nocache('./commands/convert-menu')
         nocache('./commands/download-media')
         nocache('./commands/game-rpg')
         nocache('./commands/google-it')
@@ -65,7 +65,7 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
         })
         
         onic.ev.on('messages.upsert', async chatUpdate => {
-            console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
+            // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
             try {
                 mek = chatUpdate.messages[0]
                 if (!mek.message) return
@@ -77,7 +77,6 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                 if (m.mtype == 'pollUpdateMessage') return
                 __nbl.chekid[m.chat] = m.id
                 
-
                 if (mek.key && mek.key.remoteJid === 'status@broadcast') return require("./storyReplay")(onic, m, chatUpdate, mek, store)
                 require("./slebeww")(onic, m, chatUpdate, mek, store)
             } catch (err) {
@@ -101,6 +100,72 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
             } catch (err) {
                 console.log(err)
             }
+        })
+
+        onic.ev.on('schedule-trigger', async timeUpdate => {
+            console.log(chalk.black(chalk.bgWhite(timeUpdate)))
+            
+            
+            //reminder message user
+            
+            // const cmdb = await onic.mdbConnectDb('reminder');
+            // let remdata = await cmdb.find({}).toArray()
+            let remdata = [
+  {
+    "_id": "65c593d5e2dd62de9a072578",
+    "jid": "628819764143@s.whatsapp.net",
+    "listreminder": [
+      {
+        "jam": "06:00/all",
+        "send": [
+          "{\"key\":{\"remoteJid\":\"628819764143@s.whatsapp.net\",\"fromMe\":false,\"id\":\"731B2221B9E94246BA0A982CFB503DFF\"},\"messageTimestamp\":1707444890,\"pushName\":\"Siti Rohmah\",\"broadcast\":false,\"message\":{\"conversation\":\"Waktunya makan sekarang\",\"messageContextInfo\":{\"deviceListMetadata\":{\"recipientKeyHash\":\"ezK5NLH/7bsPFw==\",\"recipientTimestamp\":\"1706844270\"},\"deviceListMetadataVersion\":2}},\"id\":\"731B2221B9E94246BA0A982CFB503DFF\",\"isBaileys\":false,\"chat\":\"628819764143@s.whatsapp.net\",\"fromMe\":false,\"isGroup\":false,\"sender\":\"628819764143@s.whatsapp.net\",\"mtype\":\"conversation\",\"msg\":\"Waktunya makan sekarang\",\"body\":\"Waktunya makan sekarang\",\"quoted\":null,\"mentionedJid\":[],\"text\":\"Waktunya makan sekarang\"}",
+          "{\"key\":{\"remoteJid\":\"628819764143@s.whatsapp.net\",\"fromMe\":false,\"id\":\"731B2221B9E94246BA0A982CFB503DFF\"},\"messageTimestamp\":1707444890,\"pushName\":\"Siti Rohmah\",\"broadcast\":false,\"message\":{\"conversation\":\"Waktunya makan sekarang\",\"messageContextInfo\":{\"deviceListMetadata\":{\"recipientKeyHash\":\"ezK5NLH/7bsPFw==\",\"recipientTimestamp\":\"1706844270\"},\"deviceListMetadataVersion\":2}},\"id\":\"731B2221B9E94246BA0A982CFB503DFF\",\"isBaileys\":false,\"chat\":\"628819764143@s.whatsapp.net\",\"fromMe\":false,\"isGroup\":false,\"sender\":\"628819764143@s.whatsapp.net\",\"mtype\":\"conversation\",\"msg\":\"Waktunya makan sekarang\",\"body\":\"Waktunya makan sekarang\",\"quoted\":null,\"mentionedJid\":[],\"text\":\"Waktunya makan sekarang\"}"
+        ]
+      },
+      {
+        "jam": `12:${new Date().getMinutes()}/jum`,
+        "send": [
+          "{\"key\":{\"remoteJid\":\"628819764143@s.whatsapp.net\",\"fromMe\":false,\"id\":\"4CCB1E59F0802307D618CD939E521A92\"},\"messageTimestamp\":1707447261,\"pushName\":\"Siti Rohmah\",\"broadcast\":false,\"message\":{\"conversation\":\"waktu solat dhuhur\",\"messageContextInfo\":{\"deviceListMetadata\":{\"recipientKeyHash\":\"ezK5NLH/7bsPFw==\",\"recipientTimestamp\":\"1706844270\"},\"deviceListMetadataVersion\":2}},\"id\":\"4CCB1E59F0802307D618CD939E521A92\",\"isBaileys\":false,\"chat\":\"628819764143@s.whatsapp.net\",\"fromMe\":false,\"isGroup\":false,\"sender\":\"628819764143@s.whatsapp.net\",\"mtype\":\"conversation\",\"msg\":\"waktu solat dhuhur\",\"body\":\"waktu solat dhuhur\",\"quoted\":null,\"mentionedJid\":[],\"text\":\"waktu solat dhuhur\"}"
+        ]
+      },
+      {
+        "jam": `12:${new Date().getMinutes()}/all`,
+        "send": [
+          "{\"key\":{\"remoteJid\":\"628819764143@s.whatsapp.net\",\"fromMe\":false,\"id\":\"731B2221B9E94246BA0A982CFB503DFF\"},\"messageTimestamp\":1707444890,\"pushName\":\"Siti Rohmah\",\"broadcast\":false,\"message\":{\"conversation\":\"Waktunya makan sekarang\",\"messageContextInfo\":{\"deviceListMetadata\":{\"recipientKeyHash\":\"ezK5NLH/7bsPFw==\",\"recipientTimestamp\":\"1706844270\"},\"deviceListMetadataVersion\":2}},\"id\":\"731B2221B9E94246BA0A982CFB503DFF\",\"isBaileys\":false,\"chat\":\"628819764143@s.whatsapp.net\",\"fromMe\":false,\"isGroup\":false,\"sender\":\"628819764143@s.whatsapp.net\",\"mtype\":\"conversation\",\"msg\":\"Waktunya makan sekarang\",\"body\":\"Waktunya makan sekarang\",\"quoted\":null,\"mentionedJid\":[],\"text\":\"Waktunya makan sekarang\"}"
+        ]
+      },
+      {
+        "jam": "11:43/jum",
+        "send": [
+          "{\"key\":{\"remoteJid\":\"628819764143@s.whatsapp.net\",\"fromMe\":false,\"id\":\"AAC2D231BF20D75821A334ADEFF9FE2A\"},\"messageTimestamp\":1707447498,\"pushName\":\"Siti Rohmah\",\"broadcast\":false,\"message\":{\"conversation\":\"menyiapkan baju olahraga\",\"messageContextInfo\":{\"deviceListMetadata\":{\"recipientKeyHash\":\"ezK5NLH/7bsPFw==\",\"recipientTimestamp\":\"1706844270\"},\"deviceListMetadataVersion\":2}},\"id\":\"AAC2D231BF20D75821A334ADEFF9FE2A\",\"isBaileys\":false,\"chat\":\"628819764143@s.whatsapp.net\",\"fromMe\":false,\"isGroup\":false,\"sender\":\"628819764143@s.whatsapp.net\",\"mtype\":\"conversation\",\"msg\":\"menyiapkan baju olahraga\",\"body\":\"menyiapkan baju olahraga\",\"quoted\":null,\"mentionedJid\":[],\"text\":\"menyiapkan baju olahraga\"}"
+        ]
+      }
+    ]
+  }
+]
+            
+            const currentTime = new Date();
+            const currentDay = currentTime.getDay();
+            
+            remdata.forEach(reminder => {
+                reminder.listreminder.forEach(async entry => {
+                    const reminderTime = entry.jam;
+                    const [hour, minute, days] = reminderTime.split(/:|\//)
+            
+                    const reminderDate = new Date();
+                    reminderDate.setHours(parseInt(hour));
+                    reminderDate.setMinutes(parseInt(minute));
+            
+                    const daysArray = (days === 'sen')? [1]: (days === 'sel')? [2]: (days === 'rab')? [3]: (days === 'kam')? [4]: (days === 'jum')? [5]: (days === 'sab')? [6]: (days === 'min')? [0]: (days === 'all')? [0, 1, 2, 3, 4, 5, 6]: [0]
+            
+                    if (reminderDate.getHours() === currentTime.getHours() && reminderDate.getMinutes() === currentTime.getMinutes() && daysArray.includes(currentDay)) {
+                        console.log(`${reminderTime}`);
+                        await entry.send.forEach(async mekr => {
+                            await onic.sendMessageJson(reminder.jid, JSON.parse(mekr))
+                        })
+                    }else console.log(reminderTime + false)
+                })
+            })
         })
 
         onic.ev.on('messages.update', async chatUpdate => {
@@ -139,6 +204,29 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
 
         onic.ev.process(
             async (events) => {
+                if (events['messages.upsert']) {
+                    mek = events['messages.upsert'].messages[0]
+                    if (!mek.message) return
+                    mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
+                    m = smsg(onic, mek, store)
+                    if (m.mtype == 'pollUpdateMessage') return
+                    if (m.mtype == 'reactionMessage') return
+                
+                    
+                    // console.log(events['messages.upsert'])
+                    __nbl.infoMSG.push(JSON.parse(JSON.stringify(mek)))
+                
+                    fs.writeFileSync(__nbl.lcInfo, await onic.jsonFineFormated(__nbl.infoMSG))
+                    __nbl.infoMSG = JSON.parse(fs.readFileSync(__nbl.lcInfo))
+                    if (__nbl.infoMSG.length === 5000) {
+                        __nbl.infoMSG.splice(0, 3000)
+                        // fs.writeFileSync(__nbl.lcInfo, JSON.stringify(__nbl.infoMSG, null, 2))
+                        
+                        fs.writeFileSync(__nbl.lcInfo, await onic.jsonFineFormated(__nbl.infoMSG))
+                        __nbl.infoMSG = JSON.parse(fs.readFileSync(__nbl.lcInfo))
+                    }
+                }
+                
                 if (events['connection.update']) {}
 
                 if (events['creds.update']) {

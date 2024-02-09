@@ -8,6 +8,7 @@ global.autoread = true // auto read message
 global.anticall = true //anti call, jika true maka org yg nelpon bot auto di blokir
 global.allowGrub = true
 
+global.botdata = "BD_SiTotes"
 global.botname = "SiTotes-Md" //namabot kalian
 global.ownername = 'Bot᭄ SiTotes ×፝֟͜×  |  v' + fs.readFileSync(home('./versi'), 'utf-8').trim()+'-dev' //nama kalian
 global.myweb = "https://web.sitotes.repl.co" //bebas asal jan hapus

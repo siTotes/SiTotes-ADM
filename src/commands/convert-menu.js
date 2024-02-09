@@ -36,6 +36,12 @@ const {
 const lang = require(home('./src/options/lang_id'))
 const gdapis = require(home('./lib/gdriveapis'))
 const cv = require(home('./lib/con2vert'))
+const {
+  toAudio,
+  toPTT,
+  toVideo,
+  ffmpeg
+} = require(home('./lib/converter'))
 
 //━━━[ DATA BASE ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 
@@ -241,6 +247,25 @@ module.exports = onic = async (onic, m, command, mek) => {
                     await react('✅')
                 }
             }
+            break
+            case 'tomp3': {
+                let textbahasa = `Reply/balas pesan media mp4/video yang ingin di jadikan lagu\n\n${prefix}${command}`
+                if (/document/.test(mime)) return await reply(textbahasa)
+                if (!/video/.test(mime) && !/audio/.test(mime)) return await reply(textbahasa)
+                if (!quoted) return await reply(textbahasa)
+                await react('⌛')
+                let media = await quoted.download()
+                let audio = await toAudio(media, 'mp4')
+                await react('✈️')
+                await onic.sendPesan(m.chat, {
+                    audio: audio,
+                    mimetype: 'audio/mpeg'
+                }, {
+                    quoted: m
+                })
+                await react('✅')
+            }
+            
             break
         }
 

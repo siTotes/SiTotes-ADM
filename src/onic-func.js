@@ -1,5 +1,6 @@
 const home = (path) => __base + path
 
+require('./options/settings')
 const {
     useMultiFileAuthState,
     DisconnectReason,
@@ -57,6 +58,18 @@ module.exports = onic = async (onic, store) => {
         onic.serializeM = (m) => smsg(onic, m, store)
         
         
+        onic.jsonFineFormated = async (json) => {
+            return await JSON.stringify(json, null, 2)
+                .replace(/(\n\s{4,})/g, ' ')
+                .replace(/\[\{/g, '[\n  {')
+                .replace(/},\n\s+\{/g, '},\n  {')
+                .replace(/\}\]/g, '}\n]')
+                .replaceAll('\n  }', ' }')
+                .replace('[\n ', '[')
+                .replace(' }\n]', ' } ]')
+                
+        }
+        
         onic.getUrlTotalSize = async (url) => {
             let vv
             await fetch(url, {
@@ -67,6 +80,20 @@ module.exports = onic = async (onic, store) => {
                 vv = onic.caculedSize(v)
             })
             return await vv
+        }
+        
+        onic.mdbConnect = async () => {
+            await client.connect();
+        }
+        
+        onic.mdbConnectDb = async (colectname) => {
+            await client.connect();
+            const db = await client.db(botdata);
+            return await db.collection(colectname);
+        }
+        
+        onic.mdbClosed = async () => {
+            return await client.close();
         }
 
         onic.caculedSize = (bytes) => {
@@ -238,6 +265,7 @@ module.exports = onic = async (onic, store) => {
 
             return outpot
         }
+        
 
         onic.sendText = (jid, text, quoted = '', options) => onic.sendPesan(jid, {
             text: text,
@@ -265,12 +293,20 @@ module.exports = onic = async (onic, store) => {
             return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
         }
 
-        onic.sendContact = async (jid, kon, quoted = '', opts = {}) => {
+        onic.sendContact = async (jid, kon, name, vcardc, quoted = '', opts = {}) => {
             let list = []
-            for (let i of kon) {
+            for (let i = 0; i<kon.length; i++) {
+                let nama = (name[i] == '')? await onic.getName(kon[i] + '@s.whatsapp.net'): name[i]
                 list.push({
-                    displayName: await onic.getName(i + '@s.whatsapp.net'),
-                    vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${await onic.getName(i + '@s.whatsapp.net')}\nFN:${await onic.getName(i + '@s.whatsapp.net')}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`
+                    displayName: nama,
+                    vcard: `BEGIN:VCARD
+VERSION:3.0
+N:${nama}
+FN:${nama}
+item1.TEL;waid=${kon[i]}:${kon[i]}
+item1.X-ABLabel:Ponsel
+${vcardc[i]}
+END:VCARD`
                 })
             }
             onic.sendPesan(jid, {
