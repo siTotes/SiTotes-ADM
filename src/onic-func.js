@@ -170,10 +170,10 @@ module.exports = onic = async (onic, store) => {
                     }
                 } catch {}
             }
-            await onic.relayMessage(jid, waMessage.message, {
+            
+            return await onic.relayMessage(jid, waMessage.message, {
                 messageId: waMessage.key.id
             })
-            return waMessage
         }
 
 

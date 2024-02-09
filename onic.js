@@ -164,8 +164,6 @@ async function startonic() {
         console.log(` "${module}" Telah diupdate!`)
     })
     
-    await onic.mdbConnect();
-    
     require('./src/onic-notif')(onic, store, state, saveCreds, version, isLatest)
     nocache('./src/onic-notif', async module => {
         onic.ev.removeAllListeners('messages.upsert');
@@ -177,7 +175,6 @@ async function startonic() {
     })
     
     onic.ev.on('connection.update', async (update) => {
-        console.log(JSON.stringify(update ,null , 2))
         const {
             connection,
             lastDisconnect,
@@ -220,6 +217,7 @@ async function startonic() {
         if (update.connection == "open" || update.receivedPendingNotifications == "true") {
             await store.chats.all()
             console.log(chalk.hex('#FFAD99').bold(`Terhubung dengan = ` + JSON.stringify(onic.user, null, 2)))
+            await onic.mdbConnect();
 
         }
     })
