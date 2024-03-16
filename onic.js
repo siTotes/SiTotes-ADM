@@ -83,7 +83,7 @@ __nbl.ttlerr = 0
 __nbl.isduakali = 0
 __nbl.chekid = {}
 __nbl.lcInfo = './src/.sitotes/data/data-msg.json'
-__nbl.infoMSG = JSON.parse(fs.readFileSync(__nbl.lcInfo))
+__nbl.infoMSG = JSON.parse(JSON.stringify(fs.readFileSync(__nbl.lcInfo), null, 1))
 
 console.log(chalk.hex('#FF9F84').bold('SiTotes Bot Wait Running...'))
 
