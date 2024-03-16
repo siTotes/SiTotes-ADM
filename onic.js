@@ -83,8 +83,12 @@ __nbl.ttlerr = 0
 __nbl.isduakali = 0
 __nbl.chekid = {}
 __nbl.lcInfo = './src/.sitotes/data/data-msg.json'
-__nbl.infoMSG = JSON.parse(fs.readFileSync(__nbl.lcInfo))
-
+try {
+    __nbl.infoMSG = JSON.parse(fs.readFileSync(__nbl.lcInfo));
+} catch (error) {
+    console.error("Error reading or parsing file:", error);
+    __nbl.infoMSG = [];
+}
 console.log(chalk.hex('#FF9F84').bold('SiTotes Bot Wait Running...'))
 
 async function startonic() {
