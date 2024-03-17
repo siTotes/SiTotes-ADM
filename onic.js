@@ -53,6 +53,7 @@ try {
 } catch (error) {
     fs.writeFileSync('./src/session/baileys_store_multi.json', '{"chats":[],"contacts":{},"messages":{},"labels":[],"labelAssociations":[]}')
     store?.readFromFile('./src/session/baileys_store_multi.json')
+    throw new Error('Bot Crash → By sitotes anti loop')
 }
 setInterval(() => {
     store?.writeToFile('./src/session/baileys_store_multi.json')
