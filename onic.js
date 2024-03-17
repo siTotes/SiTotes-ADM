@@ -47,12 +47,16 @@ const store = useStore ? makeInMemoryStore({
         stream: 'store'
     })
 }) : undefined
-store?.readFromFile('./src/session/baileys_store_multi.json')
+
+try {
+    store?.readFromFile('./src/session/baileys_store_multi.json')
+} catch (error) {
+    fs.writeFileSync('./src/session/baileys_store_multi.json', '{"chats":[],"contacts":{},"messages":{},"labels":[],"labelAssociations":[]}')
+    store?.readFromFile('./src/session/baileys_store_multi.json')
+}
 setInterval(() => {
     store?.writeToFile('./src/session/baileys_store_multi.json')
 }, 10000)
-
-
 
 
 const chalk = require('chalk')
