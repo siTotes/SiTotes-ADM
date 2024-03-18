@@ -86,6 +86,7 @@ if (global.db) global.db.data = {
 
 __nbl.ttlerr = 0
 __nbl.isduakali = 0
+__nbl.resetcache = 0
 __nbl.chekid = {}
 __nbl.lcInfo = './src/.sitotes/data/data-msg.json'
 try {

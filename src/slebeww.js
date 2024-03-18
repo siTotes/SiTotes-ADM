@@ -45,14 +45,6 @@ const svdata = () => fs.writeFileSync(home(`./src/.sitotes/data/database.json`),
 let disablee = []
 
 
-
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-const ggai = JSON.parse(fs.readFileSync(home('./lib/.api/Google-GenerativeAI.json')))
-const genAI = new GoogleGenerativeAI(ggai[0] + ggai[1]);
-const mdlGProVision = genAI.getGenerativeModel({ model: "gemini-pro-vision" })
-const mdlGPro = genAI.getGenerativeModel({ model: "gemini-pro"});
-
 module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
     try {
         var body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : '' //omzee
@@ -545,8 +537,25 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 break
                 case 'gsearch':
                 case 'googlesearch':
-                case 'google': {
+                case 'google':
+                case '---------------':
+                case 'setrr':
+                case 'setrmdr':
+                case 'setreminder':{
                     await runCase('google-it', true)
+                }
+                break
+                case 'gemini':
+                case 'geminiai':
+                case 'googlegemini':
+                case 'googlegeminiai':
+                case 'googleai':
+                case 'googlebard':
+                case 'bardai':
+                case 'bard':
+                case 'gbard':
+                case 'goai': {
+                    await runCase('google-it', false)
                 }
                 break
                 case 'xnxxdl':
@@ -558,105 +567,10 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                     await runCase('nsfw-porn', true)
                 }
                 break
-
-                case 'setrr':
-                case 'setrmdr':
-                case 'setreminder':{
-                    if(!m.quoted) return await reply('Balas/reply pesan yang mau di ingatkan 😄')
-                    const objquoted = JSON.stringify(__nbl.infoMSG.find(item => item.key.id === m.quoted.id))
-                    let [jam, menit, hari] = text.split(/:|\//);
-                    console.log(body.split(/:|\//))
-
-                    if (jam && menit && hari && (/^[0-9]{1,2}$/.test(jam) && /^[0-9]{1,2}$/.test(menit) && jam >= 0 && jam <= 23 && menit >= 0 && menit <= 59) && ['sen', 'sel', 'rab', 'kam', 'jum', 'sab', 'min', 'all'].includes(hari)) {
-                        if(hari.includes('all')) hari = ''
-                        
-                        const rmdb = await onic.mdbConnectDb('reminder');
-                        let remm = await rmdb.findOne({ jid: m.chat });
-                
-                        if (!remm) {
-                            await rmdb.insertOne({
-                                jid: m.chat,
-                                listreminder: [
-                                    {
-                                        jam: text,
-                                        send: [
-                                            objquoted // objquoted disini adalah bentuk value yang ingin Anda tambahkan ke dalam array
-                                        ]
-                                    }
-                                ]
-                            });
-                        } else {
-                            let existingReminder = await remm.listreminder.find(reminder => reminder.jam === text)
-                            if (existingReminder) {
-                                existingReminder.send.push(objquoted); // Menambahkan data ke dalam array send yang sesuai dengan jam
-                            } else {
-                                remm.listreminder.push({ jam: text, send: [objquoted] }); // Menambahkan objek baru ke dalam listreminder
-                            }
-                            await rmdb.updateOne({ jid: m.chat }, { $set: { listreminder: remm.listreminder } })
-                        }
-                        await reply(`Baik saya akan mengingatkan anda ketika jam ${jam}:${menit} setiap hari ${hari}`)
-                    }else{
-                        await reply(`format salah berikut contoh yang benar:\nReply/balas pesan setelah itu kasih balasan\n\n*${prefix}${command} jam:menit/hari*\n\ncontoh:\n*${prefix}${command} 11:30/sen*\n\nhari list: sen, sel, rab, kam, jum, sab, min, all`)
-                    }
-                }
-                break
-                case 'todat':{
-                    if(!m.quoted) return await reply('Balas/reply pesan yang mau dijadikan data 😄')
-                    await console.log(await store.loadMessage(m.chat, m.quoted.id, onic))
-                }
-                break
-                case 'dat':{
-                    if(!text) return await reply('Data tidak benar, data harus berupa json')
-                    console.log(text)
-                    await onic.sendMessageJson(m.chat, JSON.parse(text))
-                }
-                break
-                
-                
-                case 'gemini':
-                case 'geminiai':
-                case 'googlegemini':
-                case 'googlegeminiai':
-                case 'googleai':
-                case 'googlebard':
-                case 'bardai':
-                case 'bard':
-                case 'gbard':
-                case 'goai':{
-                    await react('⌛')
-                    if(!text) return await replyEmo(prefix+command+ ' *`isi pertanyaan di sini`*\n\ncontoh:\n'+prefix+command+' apakah kucing bisa salto', '😇')
-                    if(/image/.test(mime)){
-                        let dadl = Buffer.from(await quoted.download())
-                        const imageParts = [
-                            fileToGenerativePart(dadl),
-                        ];
-                        const gpros = await mdlGProVision.generateContent([text, ...imageParts])
-                        const gres = await gpros.response
-                        const gtxt = await gres.text()
-                        await react('🐣')
-                        await reply(gtxt)
-                    }else{
-                        const gpros = await mdlGPro.generateContent(text)
-                        const gres = await gpros.response
-                        const gtxt = await gres.text()
-                        await react('🐣')
-                        await reply(gtxt)
-                    }
-                    await react('✅')
-                }
-                break
                 default:{
                     
                     
                 }
-            }
-            function fileToGenerativePart(path) {
-                return {
-                    inlineData: {
-                        data: path.toString("base64"),
-                        mimeType: "image/png"
-                    },
-                };
             }
         }
         // console.log(rmdrdata)

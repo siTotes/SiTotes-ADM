@@ -117,57 +117,57 @@ exports.allmenu = (prefix) => {
 ││
 *│├╭→ #Tiktok*
 │││
-││├ ${prefix}tt
-││├ ${prefix}downloadtiktok
-││├ ${prefix}tiktokunduh
-││├ ${prefix}tiktok
+││├ ${prefix}tt ${'`https://url`'}
+││├ ${prefix}downloadtiktok ${'`https://url`'}
+││├ ${prefix}tiktokunduh ${'`https://url`'}
+││├ ${prefix}tiktok ${'`https://url`'}
 ││╰×
 ││
 *│├╭→ #Instagram*
 │││
-││├ ${prefix}ig
-││├ ${prefix}igdl
-││├ ${prefix}igdownload
-││├ ${prefix}igunduh
-││├ ${prefix}igsv
-││├ ${prefix}instagramdl
-││├ ${prefix}instagram
-││├ ${prefix}instagrams
-││├ ${prefix}instagramsdl
-││├ ${prefix}instagramunduh
-││├ ${prefix}igreel
-││├ ${prefix}igvideo
-││├ ${prefix}igimage
-││├ ${prefix}igpost
+││├ ${prefix}ig ${'`https://url`'}
+││├ ${prefix}igdl ${'`https://url`'}
+││├ ${prefix}igdownload ${'`https://url`'}
+││├ ${prefix}igunduh ${'`https://url`'}
+││├ ${prefix}igsv ${'`https://url`'}
+││├ ${prefix}instagramdl ${'`https://url`'}
+││├ ${prefix}instagram ${'`https://url`'}
+││├ ${prefix}instagrams ${'`https://url`'}
+││├ ${prefix}instagramsdl ${'`https://url`'}
+││├ ${prefix}instagramunduh ${'`https://url`'}
+││├ ${prefix}igreel ${'`https://url`'}
+││├ ${prefix}igvideo ${'`https://url`'}
+││├ ${prefix}igimage ${'`https://url`'}
+││├ ${prefix}igpost ${'`https://url`'}
 ││╰×
 ││
 *│├╭→ #Youtube*
 │││
-││├ ${prefix}youtube
-││├ ${prefix}youtubedownload
-││├ ${prefix}youtubedl
-││├ ${prefix}ytdl
-││├ ${prefix}youtubemp4
-││├ ${prefix}youtubemp3
-││├ ${prefix}ytmp4
-││├ ${prefix}ytmp3
+││├ ${prefix}youtube ${'`https://url`'}
+││├ ${prefix}youtubedownload ${'`https://url`'}
+││├ ${prefix}youtubedl ${'`https://url`'}
+││├ ${prefix}ytdl ${'`https://url`'}
+││├ ${prefix}youtubemp4 ${'`https://url`'}
+││├ ${prefix}youtubemp3 ${'`https://url`'}
+││├ ${prefix}ytmp4 ${'`https://url`'}
+││├ ${prefix}ytmp3 ${'`https://url`'}
 ││╰×
 ││
 *│├╭→ #Youtube Music Apis*
 │││
-││├ ${prefix}mainkan  *judul
-││├ ${prefix}music    *judul
-││├ ${prefix}play     *judul
-││├ ${prefix}lagu     *judul
+││├ ${prefix}mainkan ${'`judul`'}
+││├ ${prefix}music ${'`judul`'}
+││├ ${prefix}play ${'`judul`'}
+││├ ${prefix}lagu ${'`judul`'}
 │││
 ││╰×
 ││
 *│├╭→ #Pinterest*
 │││
-││├ ${prefix}pinters  *srch
-││├ ${prefix}pintrs    *srch
-││├ ${prefix}pint     *srch
-││├ ${prefix}pinterest  *srch
+││├ ${prefix}pinters ${'`srch`'}
+││├ ${prefix}pintrs ${'`srch`'}
+││├ ${prefix}pint ${'`srch`'}
+││├ ${prefix}pinterest ${'`srch`'}
 │││
 ││╰×
 ││
@@ -178,13 +178,13 @@ exports.allmenu = (prefix) => {
 ││
 *│├╭→ #ChatGpt / Openai*
 │││
-││├ bot   *pertanyaan
-││├ ai   *pertanyaan
+││├ bot ${'`pertanyaan`'}
+││├ ai ${'`pertanyaan`'}
 ││╰×
 ││
 *│├╭→ #Funn / Random Macth*
 │││
-││├ ${prefix}rate   *contoh seberapa alay gwe
+││├ ${prefix}rate ${'`contoh seberapa alay gwe`'}
 ││╰×
 ││
 │╰─────────────•
@@ -207,13 +207,36 @@ exports.allmenu = (prefix) => {
 ││
 *│├╭→ #Google Pencarian*
 │││
-││├ ${prefix}google *search
+││├ ${prefix}google ${'`srch`'}
 │││
 ││╰×
 ││
-*│├╭→ #Google Emojimix*
+*│├╭→ #Google AI*
 │││
-││├ ${prefix}emojimix 😁+🥴
+││├ gemini ${'`pertanyaan`'}
+││├ geminiai ${'`pertanyaan`'}
+││├ googlegemini ${'`pertanyaan`'}
+││├ googlegeminiai ${'`pertanyaan`'}
+││├ googleai ${'`pertanyaan`'}
+││├ googlebard ${'`pertanyaan`'}
+││├ bardai ${'`pertanyaan`'}
+││├ bard ${'`pertanyaan`'}
+││├ gbard ${'`pertanyaan`'}
+││├ goai ${'`pertanyaan`'}
+│││
+││╰×
+││
+*│├╭→ #Google Pengingat*
+│││
+││├ ${prefix}setrr
+││├ ${prefix}setrmdr
+││├ ${prefix}setreminder
+│││
+││╰×
+││
+*│├╭→ #Emojimix Sticker*
+│││
+││├ ${prefix}emojimix ${'`😁+🥴`'}
 │││
 ││╰×
 ││
@@ -230,16 +253,10 @@ exports.allmenu = (prefix) => {
 ││
 *│├╭→ #Memegen Api*
 │││
-││├ ${prefix}smeme
-││├ ${prefix}smemegen
-││├ ${prefix}stickermeme
-││├ ${prefix}smeme2
-││╰×
-││
-*│├╭→ #Attp/ttp Api*
-│││
-││├ ${prefix}ttp
-││├ ${prefix}attp
+││├ ${prefix}smeme ${'`teks`'}
+││├ ${prefix}smemegen ${'`teks`'}
+││├ ${prefix}stickermeme ${'`teks`'}
+││├ ${prefix}smeme2 ${'`teks`'}
 ││╰×
 ││
 │╰─────────────•
@@ -249,31 +266,31 @@ exports.allmenu = (prefix) => {
 ││
 *│├╭→ #Kick / Mengeluarkan*
 │││
-││├ ${prefix}kick
-││├ ${prefix}keluarkan
-││├ ${prefix}hapus
-││├ ${prefix}remove
+││├ ${prefix}kick ${'`@user`'}
+││├ ${prefix}keluarkan ${'`@user`'}
+││├ ${prefix}hapus ${'`@user`'}
+││├ ${prefix}remove ${'`@user`'}
 ││╰×
 ││
 *│├╭→ #Add / Menambah*
 │││
-││├ ${prefix}add
-││├ ${prefix}tambah
-││├ ${prefix}new
+││├ ${prefix}add ${'`+62757`'}
+││├ ${prefix}tambah ${'`+62757`'}
+││├ ${prefix}new ${'`+62757`'}
 ││╰×
 ││
 *│├╭→ #Promote / JadikanAdmin*
 │││
-││├ ${prefix}promote
-││├ ${prefix}naikan
-││├ ${prefix}jabatkan
+││├ ${prefix}promote ${'`@user`'}
+││├ ${prefix}naikan ${'`@user`'}
+││├ ${prefix}jabatkan ${'`@user`'}
 ││╰×
 ││
 *│├╭→ #Demote / Jadikan Tidak Admin*
 │││
-││├ ${prefix}demote
-││├ ${prefix}turunkan
-││├ ${prefix}kucilkan
+││├ ${prefix}demote ${'`@user`'}
+││├ ${prefix}turunkan ${'`@user`'}
+││├ ${prefix}kucilkan ${'`@user`'}
 ││╰×
 ││
 *│├╭→ #ListOnline / Yang on di grub*
@@ -284,15 +301,15 @@ exports.allmenu = (prefix) => {
 ││
 *│├╭→ #TagAll / Sebut semua orang*
 │││
-││├ ${prefix}tagall   *teks
-││├ ${prefix}infoall   *teks
-││├ ${prefix}tagsemua   *teks
+││├ ${prefix}tagall ${'`teks`'}
+││├ ${prefix}infoall ${'`teks`'}
+││├ ${prefix}tagsemua ${'`teks`'}
 ││╰×
 ││
 *│├╭→ #HideTag / TagAll tanpa Tag*
 │││
-││├ ${prefix}h   *teks
-││├ ${prefix}hidetag   *teks
+││├ ${prefix}h ${'`teks`'}
+││├ ${prefix}hidetag ${'`teks`'}
 ││╰×
 ││
 │╰──────────•

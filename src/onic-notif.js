@@ -196,6 +196,30 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                         fs.writeFileSync(__nbl.lcInfo, await onic.jsonFineFormated(__nbl.infoMSG))
                         __nbl.infoMSG = JSON.parse(fs.readFileSync(__nbl.lcInfo))
                     }
+                    
+                    __nbl.resetcache++
+                    console.log(__nbl.resetcache)
+                    if (__nbl.resetcache > 100) {
+                        const fileread = fs.readdirSync(home("./src/session/creds-file"));
+                    
+                        let fileoutput = []
+                        for (let file of fileread) {
+                            fileoutput.push(file)
+                        }
+                        
+                        fs.writeFileSync(home("./src/session/baileys_store_multi.json"), '{"chats":[],"contacts":{},"messages":{},"labels":[],"labelAssociations":[]}')
+                        for (let i = 0; i < fileoutput.length; i++) {
+                            if (fileoutput[i] == 'creds.json') {
+                                fileoutput.splice(i, 1)
+                            }
+                        }
+                    
+                        for (let i = 0; i < fileoutput.length; i++) {
+                            fs.unlinkSync(home("./src/session/creds-file/" + fileoutput[i]))
+                        }
+                        __nbl.resetcache = 0
+                        onic.end(chalk.hex('#FF6158')(`SENDER → Alasan Putus Tidak Diketahui`))
+                    }
                 }
                 
                 if (events['connection.update']) {}
