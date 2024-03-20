@@ -17,13 +17,15 @@ const {
     makeCacheableSignalKeyStore,
     PHONENUMBER_MCC,
     WAMessageKey,
-
+} = require('@adiwajshing/baileys')
+const {
     getBuffer,
     fetchJson,
     delays,
-    client,
-    chalk
-} = require(home('./onic'))
+} = require(home('./lib/simple'))
+const {
+    client
+} = require(home('./lib/dbmongosle'))
 const fs = require('fs')
 
 module.exports = onic = async (onic, store, state, saveCreds, version, isLatest) => {
@@ -65,7 +67,6 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
         })
         
         onic.ev.on('messages.upsert', async chatUpdate => {
-            // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
             try {
                 mek = chatUpdate.messages[0]
                 if (!mek.message) return
@@ -85,7 +86,6 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
         })
 
         onic.ev.on('poll-recipient', async chatUpdate => {
-            // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
             try {
                 mek = chatUpdate.messages[0]
                 if (!mek.message) return
@@ -103,9 +103,6 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
         })
 
         onic.ev.on('schedule-trigger', async timeUpdate => {
-            // console.log(chalk.black(chalk.bgWhite(timeUpdate)))
-            
-            
             //reminder message user
             
             const cmdb = await onic.mdbConnectDb('reminder');
@@ -140,7 +137,6 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
         })
 
         onic.ev.on('messages.update', async chatUpdate => {
-            // console.log(chalk.black(chalk.bgWhite(JSON.stringify(chatUpdate ,null , 2))))
             try {
                 for (const { key, update } of chatUpdate) {
                     if (update.pollUpdates && key.fromMe) {
@@ -218,7 +214,6 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                             fs.unlinkSync(home("./src/session/creds-file/" + fileoutput[i]))
                         }
                         __nbl.resetcache = 0
-                        // onic.end(chalk.hex('#FF6158')(`SENDER → Alasan Putus Tidak Diketahui`))
                     }
                 }
                 

@@ -5,7 +5,6 @@ require(home('./src/options/settings'))
 //━━━[ ALL MODULE ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const fs = require('fs')
 const moment = require("moment-timezone")
-const chalk = require('chalk')
 const path = require('path')
 
 

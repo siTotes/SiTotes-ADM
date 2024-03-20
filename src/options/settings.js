@@ -1,7 +1,6 @@
 const home = (path) => __base + path
 
 const fs = require('fs')
-const chalk = require('chalk')
 
 global.firtsChat = true //send firts message to new user
 global.autoread = true // auto read message
@@ -33,7 +32,7 @@ global.sp = '⭔'
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {
     fs.unwatchFile(file)
-    console.log(chalk.redBright(`Update'${__filename}'`))
+    console.log(`Update'${__filename}'`)
     delete require.cache[file]
     require(file)
 })

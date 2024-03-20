@@ -17,18 +17,28 @@ const {
     proto,
     makeCacheableSignalKeyStore,
     PHONENUMBER_MCC,
-    WAMessageKey,
-    
-    smsg,
+    WAMessageKey
+} = require('@adiwajshing/baileys')
+
+const fs = require('fs');
+const util = require('util');
+const moment = require('moment-timezone');
+const {
     getBuffer,
+    hitungmundur,
+    bytesToSize,
+    checkBandwidth,
+    runtime,
     fetchJson,
-    delays,
-    client,
-    chalk
-} = require(home('./onic'))
-
-const fs = require('fs')
-
+    getGroupAdmins,
+    msToDate,
+    isUrl,
+    tanggal,
+    delays
+} = require(home('./lib/simple'))
+const {
+    client
+} = require(home('./lib/dbmongosle'))
 
 
 const axios = require('axios')

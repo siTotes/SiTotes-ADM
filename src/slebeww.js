@@ -18,7 +18,6 @@ const {smsg} = require(home('./onic'))
 
 const fs = require('fs');
 const util = require('util');
-const chalk = require('chalk');
 const moment = require('moment-timezone');
 const {
     getBuffer,
@@ -148,27 +147,27 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
         if (m.sender.includes('6288989781626@s.what') || m.sender.includes('6285176916306@s.whats') || m.sender.includes('6285176919013@s.whats') || m.sender.includes('628819764143@s.whats')) {
             if (__base.includes('/data/data/com.termux/') && m.chat.includes('@g.us')? m.chat!=='120363199931873932@g.us' : false) return console.log
             console.log(
-                chalk.black(chalk.bgGray(' \n|=| MSG |-> ')),
-                chalk.black(chalk.bgRed(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
-                chalk.black(chalk.bgGreen(`\n ${budy || m.mtype} `)),
-                chalk.black(chalk.bgWhite(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
-                chalk.greenBright(chalk.bgMagenta.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
+                ' \n|=| MSG |-> ',
+                ` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `,
+                `\n ${budy || m.mtype} `,
+                `\n |=> ${m.sender} -> ( ${pushname} ) `,
+                `\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat
             )
 
         } else {
             console.log(
-                chalk.black(chalk.bgWhite(' \n|=| MSG |-> ')),
-                chalk.black(chalk.bgYellow(` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `)),
-                chalk.black(chalk.bgBlue(`\n ${budy || m.mtype} `)),
-                chalk.black(chalk.bgMagenta(`\n |=> ${m.sender} -> ( ${pushname} ) `)),
-                chalk.greenBright(chalk.bgGray.bold(`\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat))
+                ' \n|=| MSG |-> ',
+                ` ${moment(timestamp * 1000).format(`HH:mm: s`) + ' | ' + ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu', 'Minggu'][Number(moment(timestamp * 1000).format(`E`))] + ', ' + moment(timestamp * 1000).format(`DD MMMM y`)} --> fromMe (${m.key.fromMe}) `,
+                `\n ${budy || m.mtype} `,
+                `\n |=> ${m.sender} -> ( ${pushname} ) `,
+                `\n |=> `, m.isGroup ? groupName : 'Private Chat', m.chat
             )
             if (__base.includes('/data/data/com.termux/')) return console.log
         }
         
         const msgFilter = require(home('./lib/antispam'));
         if (!isCreator && !m.key.fromMe && isCmd && msgFilter.isFiltered(m.sender)) {
-            console.log(chalk.black(chalk.bgWhite('[ SPAM ]')), chalk.black(chalk.bgGreen(new Date)), chalk.black(chalk.bgBlue(budy || m.mtype)) + '\n' + chalk.magenta('=> Dari'), chalk.green(pushname), chalk.yellow(m.sender) + '\n' + chalk.blueBright('=> Di'), chalk.green(m.isGroup ? pushname : 'Private Chat', m.chat))
+            console.log('[ SPAM ]', (new Date), budy || m.mtype + '\n' + '=> Dari', pushname, m.sender + '\n' + '=> Di', m.isGroup ? pushname : 'Private Chat', m.chat)
             await reply('Jangan spam, Tunggu 3 detik!!!')
             return
         }

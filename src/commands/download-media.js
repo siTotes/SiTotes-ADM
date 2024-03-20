@@ -5,7 +5,6 @@ require(home('./src/options/settings'))
 //━━━[ ALL MODULE ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const fs = require('fs')
 const moment = require("moment-timezone")
-const chalk = require('chalk')
 
 
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
@@ -44,7 +43,6 @@ const {
 } = require(home('./lib/scraper'))
 const YoutubeMusicApi = require('youtube-music-api')
 const ytcapi = new YoutubeMusicApi()
-const { YoutubeTranscript } = require('youtube-transcript')
 
 //━━━[ DATA BASE ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 

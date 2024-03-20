@@ -18,7 +18,6 @@ const {
 
 const fs = require('fs');
 const util = require('util');
-const chalk = require('chalk');
 const moment = require('moment-timezone');
 const {
     getBuffer,
