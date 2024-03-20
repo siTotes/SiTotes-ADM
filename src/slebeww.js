@@ -541,7 +541,10 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 case '---------------':
                 case 'setrr':
                 case 'setrmdr':
-                case 'setreminder':{
+                case 'setreminder':
+                case '---------------':
+                case 'todat':
+                case 'dat':{
                     await runCase('google-it', true)
                 }
                 break
@@ -565,6 +568,43 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 case 'xs':
                 case 'xnxxsearch': {
                     await runCase('nsfw-porn', true)
+                }
+                break
+                case 'pppanjanggc':
+                case 'setppgc2':
+                case 'setpppanjanggc': {
+                    await react('🌸')
+                    const jimp_1 = require('jimp')
+                    async function pepe(media) {
+                        const jimp = await jimp_1.read(media)
+                        const min = jimp.getWidth()
+                        const max = jimp.getHeight()
+                        const cropped = jimp.crop(0, 0, min, max)
+                        return {
+                            img: await cropped.scaleToFit(720, 720).getBufferAsync(jimp_1.MIME_JPEG),
+                            preview: await cropped.normalize().getBufferAsync(jimp_1.MIME_JPEG)
+                        }
+                    }
+                    let media = await onic.downloadAndSaveMediaMessage(quoted)
+                    var {
+                        img
+                    } = await pepe(media)
+                    await onic.query({
+                        tag: 'iq',
+                        attrs: {
+                            to: m.chat,
+                            type: 'set',
+                            xmlns: 'w:profile:picture'
+                        },
+                        content: [{
+                            tag: 'picture',
+                            attrs: {
+                                type: 'image'
+                            },
+                            content: img
+                        }]
+                    })
+                    await react('✅')
                 }
                 break
                 default:{

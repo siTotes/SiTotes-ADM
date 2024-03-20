@@ -207,7 +207,7 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                             fileoutput.push(file)
                         }
                         
-                        fs.writeFileSync(home("./src/session/baileys_store_multi.json"), '{"chats":[],"contacts":{},"messages":{},"labels":[],"labelAssociations":[]}')
+                        // fs.writeFileSync(home("./src/session/baileys_store_multi.json"), '{"chats":[],"contacts":{},"messages":{},"labels":[],"labelAssociations":[]}')
                         for (let i = 0; i < fileoutput.length; i++) {
                             if (fileoutput[i] == 'creds.json') {
                                 fileoutput.splice(i, 1)
@@ -218,7 +218,7 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
                             fs.unlinkSync(home("./src/session/creds-file/" + fileoutput[i]))
                         }
                         __nbl.resetcache = 0
-                        onic.end(chalk.hex('#FF6158')(`SENDER → Alasan Putus Tidak Diketahui`))
+                        // onic.end(chalk.hex('#FF6158')(`SENDER → Alasan Putus Tidak Diketahui`))
                     }
                 }
                 
