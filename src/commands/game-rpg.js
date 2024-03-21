@@ -12,27 +12,9 @@ const threshold = 0.72
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
 const {
-    smsg,
-    getGroupAdmins,
-    formatp,
-    tanggal,
-    tanggal_,
-    tanggal__,
-    formatDate,
-    getTime,
-    isUrl,
-    sleep,
-    clockString,
-    runtime,
-    fetchJson,
-    getBuffer,
-    jsonformat,
-    format,
-    logic,
-    generateProfilePicture,
-    parseMention,
-    getRandom
-} = require(home('./lib/myfunc'))
+    delays,
+    getBuffer
+} = require(home('./lib/simple'))
 const lang = require(home('./src/options/lang_id'))
 
 //━━━[ @BOCHILTEAM ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
@@ -317,7 +299,7 @@ module.exports = onic = async (onic, m, command, mek) => {
     
                 console.log("Jawaban: " + soal.jawaban)
                 svdata()
-                await sleep(2 * 60000)
+                await delays(120)
                 if (_tebakgambar[m.chat]) {
                     delete _tebakgambar[m.chat]
                     await reply(`⏱️ *Waktu Habis* 😩\n✠━━━━━━━━━━━━✠\n   *› Jawabanya:* ${soal.jawaban}\n✠━━━━━━━━━━━━✠\nIngin bermain lagi?  ketik :\n*#tebakgambar*`)
@@ -347,7 +329,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 svdata()
                 console.log("Jawaban: " + soal.jawaban)
     
-                await sleep(3 * 60000)
+                await delays(180)
                 if (_caklontong[m.chat]) {
                     delete _caklontong[m.chat]
                     await reply(`⏱️ *Waktu Habis* 😩\n✠━━━━━━━━━━━━✠\n   *› Soal:* ${soal.soal}\n   *› Jawabanya:* ${soal.jawaban}\n   *› Keterangan:* ${soal.deskripsi}\n✠━━━━━━━━━━━━✠\nIngin bermain lagi?  ketik :\n*#caklontong*`)
@@ -382,7 +364,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 svdata()
                 console.log("Jawaban: " + soal.jawaban)
     
-                await sleep(2 * 60000)
+                await delays(120)
                 if (_family100[m.chat]) {
                     let benar = 0;
                     let tinggal = 0;
@@ -439,7 +421,7 @@ module.exports = onic = async (onic, m, command, mek) => {
                 await reply(ucapan, {
                     mentionedJid: [tty.player1, tty.player2]
                 })
-                await sleep(10 * 60000)
+                await delays(600)
                 if (_caklontong[m.chat]) {
                     naa = ky_ttt.filter(hhg => !hhg.id.includes(m.chat))
                     await reply(`Data tictactoe Cleaning..`)

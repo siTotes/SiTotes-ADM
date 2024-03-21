@@ -9,27 +9,8 @@ const moment = require("moment-timezone")
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
 const {
-    smsg,
     getGroupAdmins,
-    formatp,
-    tanggal,
-    tanggal_,
-    tanggal__,
-    formatDate,
-    getTime,
-    isUrl,
-    sleep,
-    clockString,
-    runtime,
-    fetchJson,
-    getBuffer,
-    jsonformat,
-    format,
-    logic,
-    generateProfilePicture,
-    parseMention,
-    getRandom
-} = require(home('./lib/myfunc'))
+} = require(home('./lib/simple'))
 const lang = require(home('./src/options/lang_id'))
 
 //━━━[ DATA BASE ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\

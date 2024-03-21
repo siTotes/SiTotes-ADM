@@ -11,27 +11,8 @@ const path = require('path')
 //━━━[ @SITOTES LIB ]━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\\
 const svdata = () => fs.writeFileSync(home(`/src/.sitotes/data/database.json`), JSON.stringify(db, null, 2))
 const {
-    smsg,
-    getGroupAdmins,
-    formatp,
-    tanggal,
-    tanggal_,
-    tanggal__,
-    formatDate,
-    getTime,
-    isUrl,
-    sleep,
-    clockString,
-    runtime,
-    fetchJson,
-    getBuffer,
-    jsonformat,
-    format,
-    logic,
-    generateProfilePicture,
-    parseMention,
-    getRandom
-} = require(home('./lib/myfunc'))
+    fetchJson
+} = require(home('./lib/simple'))
 const lang = require(home('./src/options/lang_id'))
 const gdapis = require(home('./lib/gdriveapis'))
 const cv = require(home('./lib/con2vert'))
