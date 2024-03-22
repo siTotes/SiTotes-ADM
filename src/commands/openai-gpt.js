@@ -124,8 +124,10 @@ for(let i = 0; i<dataRekayasa.length; i++){
         let rating = Math.floor(Math.random() * 11) + dataRekayasa[i].outPersen;
         await reply(`Rate: ${text} (${rating}%)`)
     } else {
-        let rating = Math.floor(Math.random() * 101)
-        await reply(`Rate: ${text} (${rating}%)`)
+        if(dataRekayasa.length - 1 = i){
+            let rating = Math.floor(Math.random() * 101)
+            await reply(`Rate: ${text} (${rating}%)`)
+        }
     }
 }
 
