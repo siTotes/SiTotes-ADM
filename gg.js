@@ -10,6 +10,11 @@ const dataRekayasa = [
     outPersen: 60
   },
   {
+    nama1: "saipul",
+    nama2: "bila",
+    outPersen: 60
+  },
+  {
     nama1: "yoga",
     nama2: "monic",
     outPersen: 60
@@ -51,16 +56,18 @@ const dataRekayasa = [
   }
 ]
 
+
+text = '.rate seberapa cocok nabila dan Saipul'
+
 for(let i = 0; i<dataRekayasa.length; i++){
     if (text.toLowerCase().includes(dataRekayasa[i].nama1) && text.toLowerCase().includes(dataRekayasa[i].nama2)) {
-        let rating = Math.floor(Math.random() * 11) + dataRekayasa[i].outPersen;
-        await reply(`Rate: ${text} (${rating}%)`)
+        let rating = Math.floor(Math.random() * 41) + dataRekayasa[i].outPersen;
+        console.log(`Rate: ${text} (${rating}%)`)
+        break
     } else {
-        let rating = Math.floor(Math.random() * 101)
-        await reply(`Rate: ${text} (${rating}%)`)
+        if(i === dataRekayasa.length - 1){
+            let rating = Math.floor(Math.random() * 101)
+            console.log(`Rate: ${text} (${rating}%)`)
+        }
     }
 }
-
-
-
-

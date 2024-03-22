@@ -126,13 +126,14 @@ const dataRekayasa = [
 
 for(let i = 0; i<dataRekayasa.length; i++){
     if (text.toLowerCase().includes(dataRekayasa[i].nama1) && text.toLowerCase().includes(dataRekayasa[i].nama2)) {
-        let rating = Math.floor(Math.random() * 11) + dataRekayasa[i].outPersen;
+        let rating = Math.floor(Math.random() * 41) + dataRekayasa[i].outPersen;
         await reply(`Rate: ${text} (${rating}%)`)
         break
     } else {
         if(i === dataRekayasa.length - 1){
             let rating = Math.floor(Math.random() * 101)
             await reply(`Rate: ${text} (${rating}%)`)
+            break
         }
     }
 }
