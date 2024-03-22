@@ -78,6 +78,11 @@ const dataRekayasa = [
     outPersen: 60
   },
   {
+    nama1: "saipul",
+    nama2: "bila",
+    outPersen: 60
+  },
+  {
     nama1: "yoga",
     nama2: "monic",
     outPersen: 60
