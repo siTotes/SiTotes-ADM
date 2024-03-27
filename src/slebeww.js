@@ -14,7 +14,12 @@ const {
     getContentType
 } = require('@adiwajshing/baileys')
 
-const {smsg} = require(home('./onic'))
+const {smsg} = require(home('./lib/simple'))
+
+const {
+    toAudio,
+    toPTT
+} = require(home('./lib/converter'))
 
 const fs = require('fs');
 const util = require('util');
@@ -633,6 +638,27 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 let so = (m.quoted.mtype == 'viewOnceMessageV2Extension'||'viewOnceMessageV2'||'viewOnceMessage' ? vnot.message[m.quoted.mtype].message[getContentType(vnot.message[m.quoted.mtype].message)] : vnot.message[m.quoted.mtype])
                 so.viewOnce = false
                 console.log(JSON.stringify(vnot ,null , 2))
+                await onic.sendMessageJson(m.chat, vnot)
+            }
+            break
+            case 'mc': {
+                if (!/video/.test(mime) && !/audio/.test(mime)) return await reply('Reply media brow')
+                if (!quoted) return await reply('Tidak mereply apapun, reply media')
+                if ((quoted.msg || quoted).seconds > 900) return await reply('Maximum 60 seconds!')
+                await react('🦶')
+                let media = await quoted.download()
+                let audio = await toAudio(media, 'mp4')
+                await onic.sendMessage(m.chat, {
+                    audio: audio,
+                    mimetype: 'audio/mpeg',
+                    ptt: false
+                })
+            }
+            case 'vn': {
+                if (!quoted) return await reply('Tidak mereply apapun, reply media')
+                await react('🦶')
+                let vnot = (quoted.msg || quoted).fakeObj
+                vnot.message.audioMessage.ptt = true
                 await onic.sendMessageJson(m.chat, vnot)
             }
             break

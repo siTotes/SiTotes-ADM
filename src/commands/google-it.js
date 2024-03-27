@@ -43,6 +43,7 @@ module.exports = onic = async (onic, m, command, mek, store) => {
         const type = Object.keys(mek.message)[0];
         const isCmd = mek.key.fromMe ? /^[$]/.test(body) : /^[°•π÷×¶∆£¢€¥®™�✓_=|~!?#/$%^&.+-,\\\©^]/.test(body)
         const prefix = isCmd ? budy[0] : ''
+        const botNumber = await onic.decodeJid(onic.user.id)
         const salam = moment(Date.now()).tz(timezone).locale('id').format('a')
         const pushname = m.pushName || "No Name"
         const args = body.trim().split(/ +/).slice(1)
