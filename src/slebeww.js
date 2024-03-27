@@ -87,9 +87,9 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
         const casee = (lib) => './commands/' + lib
         const runCase = async (runto, perfic = true) => {
             if (perfic) {
-                if (isCmd) require(casee(runto))(onic, m, command, mek)
+                if (isCmd) require(casee(runto))(onic, m, command, mek, store)
             } else {
-                if (!isCmd) require(casee(runto))(onic, m, cimmind, mek)
+                if (!isCmd) require(casee(runto))(onic, m, cimmind, mek, store)
             }
 
         }
@@ -606,6 +606,66 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                     await react('✅')
                 }
                 break
+                case '*':
+            case '×':
+            case '🌟': {
+                if(!quoted) return
+                await onic.sendMessageJson(onic.user.id, (quoted.msg || quoted).fakeObj)
+            }
+            break
+            case 'send': {
+                if(!quoted) return
+                if(!text) return
+                await onic.sendMessageJson(text.replaceAll('https://', ''), (quoted.msg || quoted).fakeObj)
+            }
+            break
+            case 'onc': {
+                if (!quoted) return await reply('Tidak mereply apapun, reply media')
+                await onic.sendReaction(m.chat, m.key, '🦶')
+                let vnot = (quoted.msg || quoted).fakeObj
+                vnot.message[m.quoted.mtype].viewOnce = true
+                await onic.sendMessageJson(m.chat, vnot)
+            }
+            case '2x': {
+                if (!quoted) return await reply('Tidak mereply apapun, reply media')
+                await onic.sendReaction(m.chat, m.key, '🦶')
+                let vnot = (quoted.msg || quoted).fakeObj
+                let so = (m.quoted.mtype == 'viewOnceMessageV2Extension'||'viewOnceMessageV2'||'viewOnceMessage' ? vnot.message[m.quoted.mtype].message[getContentType(vnot.message[m.quoted.mtype].message)] : vnot.message[m.quoted.mtype])
+                so.viewOnce = false
+                console.log(JSON.stringify(vnot ,null , 2))
+                await onic.sendMessageJson(m.chat, vnot)
+            }
+            break
+            
+            
+            
+            //template
+            case 'paymient':{
+                onic.relayMessage(m.chat, {
+                    "requestPaymentMessage": {
+                        amount: {
+                            value: 2022000,
+                            offset: 0,
+                            currencyCode: 'IDR'
+                        },
+                        amount1000: 1000000000000000,
+                        background: null,
+                        currencyCodeIso4217: 'USD',
+                        expiryTimestamp: 0,
+                        noteMessage: {
+                            extendedTextMessage: {
+                                text: `hy kids, is your moom this is trauma dan jadi friendly, dan asing`
+                            }
+                        },
+                        requestFrom: m.sender
+                    }
+                }, {})
+            
+            }
+            break
+            case 'bsw':{
+            }
+            break
                 default:{
                     
                     

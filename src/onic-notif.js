@@ -67,6 +67,11 @@ module.exports = onic = async (onic, store, state, saveCreds, version, isLatest)
         })
         
         onic.ev.on('messages.upsert', async chatUpdate => {
+            console.log()
+            console.log()
+            console.log(JSON.stringify(chatUpdate ,null , 2))
+            console.log()
+            console.log()
             try {
                 mek = chatUpdate.messages[0]
                 if (!mek.message) return
