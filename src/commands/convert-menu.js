@@ -228,6 +228,44 @@ module.exports = onic = async (onic, m, command, mek) => {
                 }
             }
             break
+            case 'emojireal':
+            case 'emojihd':
+            case 'emojigoogle':
+            case 'emojisticker':
+            case 'emojistiker':
+            case 'emoji':{
+                if (!text) return reply(`Example : ${prefix + command} 😅`)
+                await react('⌛')
+                const response = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(text)}`);
+                const results = response.results;
+                
+                const formattedResults = results.map(res => {
+                    const tags = res.tags.join(' + ');
+                    const linkpath = res.url.replace('https://www.gstatic.com/android/keyboard/emojikitchen/', '');
+                    return `*ꈍ(   ${tags}   )ꈍ*\n\n⊡ ${linkpath}`;
+                });
+                
+                const chunkSize = 12;
+                for (let i = 0; i < formattedResults.length; i += chunkSize) {
+                    let chunk = formattedResults.slice(i, i + chunkSize);
+                    let count = chunk.length;
+                    if(count<2) chunk = [chunk[0], chunk[0]]
+                    await react('✈️')
+                    await onic.sendPoll(m.chat, `*${ownername}*\n~🆔${m.key.id}~\n\n\n`+'Menemukan '+count+' Sticker buatan Google.\nPilih salah satu Untuk menyimpan:', chunk)
+                }
+                await react('✅')
+            }
+            break
+            case '*ꈍ(': {
+                await react('✈️')
+                const linkuut = `https://www.gstatic.com/android/keyboard/emojikitchen/${text.split('\n\n⊡ ')[1]}`
+                await onic.sendImageAsSticker(m.chat, linkuut, m, {
+                    packname: global.packname,
+                    author: global.author
+                }).catch(async _ => await replyEmo(lang.doneErr('Sticker('+_+')'), '❌'))
+                await react('✅')
+            }
+            break
             case 'tomp3': {
                 let textbahasa = `Reply/balas pesan media mp4/video yang ingin di jadikan lagu\n\n${prefix}${command}`
                 if (/document/.test(mime)) return await reply(textbahasa)

@@ -488,6 +488,14 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                 case '---------------':
                 case 'emojimix':
                 case '---------------':
+                case 'emojireal':
+                case 'emojihd':
+                case 'emojigoogle':
+                case 'emojisticker':
+                case 'emojistiker':
+                case 'emoji':
+                case '*ꈍ(':
+                case '---------------':
                 case 'tomp3': {
                     await runCase('convert-menu', true)
                 }
@@ -687,6 +695,14 @@ module.exports = onic = async (onic, m, chatUpdate, mek, store) => {
                     }
                 }, {})
             
+            }
+            break
+            case 'poll':{
+                if(!text) await reply("Masuk kan text json `"+`${prefix}${command}`+" ['hy', 'hy2']`")
+                await react('🤙')
+                await reply(JSON.stringify(JSON.parse(text) ,null , 2))
+                await onic.sendPoll(m.chat, `͏͏͏͏`, JSON.parse(text))
+                await react('✅')
             }
             break
             case 'bsw':{
